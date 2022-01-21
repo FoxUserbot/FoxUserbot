@@ -1,1 +1,2 @@
-# foxuserbot
+# FoxUserbot
+Simple userbot for Telegram.
