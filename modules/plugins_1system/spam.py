@@ -42,8 +42,8 @@ async def spam(client, message):
 
 @Client.on_message(filters.command("help_spam", prefixes=my_prefix()) & filters.me)
 async def help_spam(client, message):
-    await message.edit(f"""```{my_prefix()}stspam [ID] [Count] [Delay]``` - **Start sticker spam.**
-```{my_prefix()}spam [Count] [Delay] [Text]``` - **Start message spam.**""")
+    await message.edit(f"""{my_prefix()}stspam [ID] [Count] [Delay] - Start sticker spam.
+```{my_prefix()}spam [Count] [Delay] [Text]``` -Start message spam.""")
 
 
 module_list['Spam'] = f'Many commands. View them: {my_prefix()}help_spam'

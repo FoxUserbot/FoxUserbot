@@ -22,15 +22,18 @@ def get_pic(city):
 
 @Client.on_message(filters.command("weather", prefixes=my_prefix()) & filters.me)
 async def weather(client, message):
-    city = message.command[1]
-    await message.edit("Check weather...")
-    r = requests.get(f"https://wttr.in/{city}?m?M?0?q?T&lang=en")
-    await message.edit(f"🗺 You sity/village: {city}\n{r.text}")
-    await client.send_photo(
+    try:
+        city = message.command[1]
+        await message.edit("Check weather...")
+        r = requests.get(f"https://wttr.in/{city}?m?M?0?q?T&lang=en")
+        await message.edit(f"🗺 You sity/village: {city}\n{r.text}")
+        await client.send_photo(
         chat_id=message.chat.id,
         photo=get_pic(city),
         reply_to_message_id=message.id)
-    os.remove(f"{city}.png")
+        os.remove(f"{city}.png")
+    except Exception as e:
+        await message.edit(f"Error | {e}")
 
 
 module_list['Weather'] = f'{my_prefix()}weather [city]'

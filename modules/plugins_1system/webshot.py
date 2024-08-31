@@ -11,12 +11,8 @@ async def webshot(client, message):
         full_link = f"https://mini.s-shot.ru/1920x1080/JPEG/1024/Z100/?{user_link.replace('https://', '')}"
         await client.send_photo(message.chat.id, full_link, caption=f"**Screenshot of the page ⟶** {user_link}")
         await message.delete()
+    except IndexError:
+        await message.edit("Don't have link!")
     except Exception as error:
         await message.delete()
-        await client.send_message(
-            message.chat.id, f"**Something went wrong\n\nLog:{error}...**"
-        )
-
-
-module_list['Webshot'] = f'{my_prefix()}webshot [link]'
-file_list['Webshot'] = 'webshot.py'
+        await client.send_message()

@@ -13,7 +13,7 @@ requirements = [
     "pystyle",
     "wikipedia",
     "gTTS",
-    "beautifulsoup4",
+    "lyricsgenius",
     "--upgrade"
 ]
 

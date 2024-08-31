@@ -16,7 +16,6 @@ async def stats(client, message):
     sg = 0
     c = 0
     b = 0
-    a_chat = 0
     group = ["supergroup", "group"]
     iter_dialog = client.get_dialogs()
     async for dialog in iter_dialog:
@@ -28,9 +27,6 @@ async def stats(client, message):
             g += 1
         elif dialog.chat.type == ChatType.SUPERGROUP:
             sg += 1
-            user_s = await dialog.chat.get_member(int(client.me.id))
-            if user_s.status in ("creator", "administrator"):
-                a_chat += 1
         elif dialog.chat.type == ChatType.CHANNEL:
             c += 1
     end = datetime.now()
@@ -41,8 +37,7 @@ async def stats(client, message):
     supergroup_chat = f"**Supergroups:** {sg}\n"
     channel_chat = f"**Channels:** {c}\n"
     bot_chat = f"**Bots:** {b}\n"
-    owner_chat = f"**Creators:** {a_chat}"
-    statistic = private_chat + group_chat + supergroup_chat + channel_chat + bot_chat + owner_chat
+    statistic = private_chat + group_chat + supergroup_chat + channel_chat + bot_chat
     await message.edit(f"You stats:\n{statistic}\nParsed {ms} seconds")
 
 
