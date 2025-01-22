@@ -80,7 +80,9 @@ async def d_send_music(client, message):
         await client.delete_messages("me", saved.id)
     except TimeoutError:
         await message.edit("That didn't work out")
-        await asyncio.sleep(2)
+    except: 
+        await message.edit("I can't find music!")
+    await asyncio.sleep(2)
     await message.delete()
 
 
@@ -112,7 +114,9 @@ async def l_send_music(client, message):
         )
     except TimeoutError:
         await message.edit("That didn't work out")
-        await asyncio.sleep(2)
+    except:
+        await message.edit("I can't find music!")
+    await asyncio.sleep(2)
     await message.delete()
 
 
