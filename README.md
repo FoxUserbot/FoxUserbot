@@ -2,9 +2,11 @@
     <img src="https://github.com/FoxUserbot/FoxUserbot/raw/main/logo.png" width="500" alt="FoxUserbot">
     </a>
     <br>
-    <b>FoxUserbot 2.0</b>
+    <b>FoxUserbot 2.1</b>
     <br>
     <b>Telegram userbot with the easiest installation</b>
+    <br>
+    <b>Used Kurigram (Fork Pyrogram)</b>
     <br>
     <a href='https://github.com/FoxUserbot/Modules'>
         Custom modules
