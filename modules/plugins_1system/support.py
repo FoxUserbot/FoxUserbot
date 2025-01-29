@@ -9,7 +9,7 @@ async def support(client, message):
     await client.send_photo(
         chat_id=message.chat.id,
         photo="https://github.com/FoxUserbot/FoxUserbot/raw/main/logo.png",
-        caption="Supports: @a9_fm , @ArThirtyFour"
+        caption="Github: https://github.com/FoxUserbot/FoxUserbot"
     )
 
 
