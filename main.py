@@ -26,7 +26,7 @@ def check_structure():
 
 
 def autoupdater():
-    pip.main(["uninstall", "pyrogram", "-y"])
+    pip.main(["uninstall", "pyrogram", "kurigram", "-y"])
     pip.main(requirements_install)
 
 
