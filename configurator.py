@@ -2,8 +2,8 @@
 import os
 import sys
 import configparser
-config_id = "29679445"
-config_hash = "e656a7489649d542ceb3c326f54345ba"
+config_id = "25383990"
+config_hash = "de1f540ac08280ad5b6abcb0de1e9ad9"
 config_model = "FoxUserbot"
 config = configparser.ConfigParser()
 config.read("config.ini")
