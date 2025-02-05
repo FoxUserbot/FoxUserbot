@@ -128,8 +128,12 @@ except KeyboardInterrupt:
 
 @Client.on_message(filters.command("nowplayed", prefixes=my_prefix()) & filters.me)
 async def nowplayed(client, message):
-    currentSong = open("temp/lastfm_current_song.txt", "r+", encoding="utf-8").readline() 
-    await message.edit(f"[🎶] Now playing: `{currentSong}`")
+    try:
+        currentSong = open("temp/lastfm_current_song.txt", "r+", encoding="utf-8").readline() 
+        await message.edit(f"[🎶] Now playing: `{currentSong}`")
+    except FileNotFoundError:
+        open("temp/lastfm_username.txt", "w+", encoding="utf-8")
+        nowplayed(client , message)
 
 @Client.on_message(filters.command("lastfm_config", prefixes=my_prefix()) & filters.me)
 async def lastfm_config(client, message):
