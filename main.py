@@ -26,9 +26,29 @@ def check_structure():
 
 
 def autoupdater():
-    pip.main(["uninstall", "pyrogram", "kurigram", "-y"])
-    pip.main(requirements_install)
+    # Check pyrogram and kurigram
+    try:
+        from pyrogram import Client
+    except ImportError:
+        try:
+            os.remove("firstlaunch.temp")
+        except OSError:
+            pass
 
+    first_launched = False
+    try:
+        with open("firstlaunch.temp", "r", encoding="utf-8") as f:
+            if (f.readline().strip() == "1"):
+                first_launched = True
+    except FileNotFoundError:
+        pass
+
+    if not first_launched:
+        pip.main(["uninstall", "pyrogram", "kurigram", "-y"])
+        with open("firstlaunch.temp", "w", encoding="utf-8") as f:
+            f.write("1")
+
+    pip.main(requirements_install)
 
 def logger():
     logging.basicConfig(
