@@ -29,7 +29,7 @@ async def helps(client, message):
 <b>🦊 | FoxUserbot RUNNING</b>
 <b>🔒 | Version: {version}</b>
 <b>🐍 | Python: {python_version()}</b>
-<b>🥧 | Pyrogram: {__version__}</b>
+<b>🥧 | Kurigram: {__version__}</b>
 <b>💼 | Modules: {len(module_list)}</b>
 
 <b><a href={link}>❓ | List of all commands. </a></b>

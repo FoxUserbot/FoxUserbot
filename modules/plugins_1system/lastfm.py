@@ -2,7 +2,6 @@ from pyrogram import Client, filters
 from modules.plugins_1system.settings.main_settings import module_list, file_list
 from prefix import my_prefix
 
-
 from xml.dom import minidom
 import urllib.request
 import time
@@ -12,16 +11,14 @@ import random
 import os
 import asyncio
 
-
 currentUsername = ""
 try:
-    with open("temp/lastfm_username.txt", "r") as file:
+    with open("temp/lastfm_username.txt", "r+", encoding="utf-8") as file:
         currentUsername = file.readline().strip()
         if not currentUsername:
             raise ValueError
 except Exception as fff:
     currentUsername = "None"
-
 
 # Variable
 userName = str(currentUsername)
@@ -53,7 +50,6 @@ def get_proxy():
         proxylist.extend(proxies_list)
         return proxies_list
 
-
 def send_request(url):
     try:
         try:
@@ -79,7 +75,6 @@ def send_request(url):
             proxylist.remove(proxy_host)
         return None
 
-
 def checkForNewSong():
     global runCheck, waitTime, currentTrackURL
 
@@ -94,18 +89,16 @@ def checkForNewSong():
                 songName = currentTrack.getElementsByTagName('name')[0].firstChild.nodeValue
                 songArtist = currentTrack.getElementsByTagName('artist')[0].firstChild.nodeValue
                 songInfo = f"{songName} — {songArtist}"
-
                 encoding = 'cp1251' if os.name == 'nt' else 'utf-8'
                 songInfo = songInfo.encode(encoding, errors='ignore').decode(encoding)
-
                 try:
-                    with open("temp/lastfm_current_song.txt", "r") as file:
+                    with open("temp/lastfm_current_song.txt", "r+", encoding="utf-8") as file:
                         currentSongFile = file.readline()
                 except:
                     currentSongFile = "Nothing Currently Playing"
 
                 if currentSongFile != songInfo:
-                    with open("temp/lastfm_current_song.txt", "w") as file:
+                    with open("temp/lastfm_current_song.txt", "w+", encoding="utf-8") as file:
                         file.write(songInfo)
 
                 time.sleep(waitTime)
@@ -115,12 +108,10 @@ def checkForNewSong():
     else:
         print("Sleep...")
 
-
-
 # Асинх поток
 try:
     try:
-        currentUsername = open("temp/lastfm_username.txt", "r").readline() 
+        currentUsername = open("temp/lastfm_username.txt", "r+", encoding="utf-8").readline() 
         if len(currentUsername) == 0:
             raise ValueError
     except Exception as fff:
@@ -135,37 +126,39 @@ try:
 except KeyboardInterrupt:
     raise ValueError
 
-
 @Client.on_message(filters.command("nowplayed", prefixes=my_prefix()) & filters.me)
 async def nowplayed(client, message):
-    currentSong = open("temp/lastfm_current_song.txt", "r").readline() 
-    await message.edit(f"[🎶] Now playing: `{currentSong}`")
-
+    try:
+        currentSong = open("temp/lastfm_current_song.txt", "r+", encoding="utf-8").readline() 
+        await message.edit(f"[🎶] Now playing: `{currentSong}`")
+    except FileNotFoundError:
+        open("temp/lastfm_username.txt", "w+", encoding="utf-8")
+        nowplayed(client , message)
 
 @Client.on_message(filters.command("lastfm_config", prefixes=my_prefix()) & filters.me)
 async def lastfm_config(client, message):
     username = message.text.split()[1]
     
-    usernameF = open("temp/lastfm_username.txt", "w")
+    usernameF = open("temp/lastfm_username.txt", "w+", encoding="utf-8")
     usernameF.write(username)
     usernameF.close()
     
     channel_telegram = message.text.split()[2]
     
-    channel_telegramF = open("temp/lastfm_channel.txt", "w")
+    channel_telegramF = open("temp/lastfm_channel.txt", "w+", encoding="utf-8")
     channel_telegramF.write(channel_telegram)
     channel_telegramF.close()
     
     id_in_channel_telegram = message.text.split()[3]
     
-    id_in_channel_telegramF = open("temp/lastfm_id_in_channel_telegram.txt", "w")
+    id_in_channel_telegramF = open("temp/lastfm_id_in_channel_telegram.txt", "w+", encoding="utf-8")
     id_in_channel_telegramF.write(id_in_channel_telegram)
     id_in_channel_telegramF.close()
     
     autostart = message.text.split()[4]
     
     if autostart == "True":
-        autostartF = open("temp/lastfm_autostart.txt", "w")
+        autostartF = open("temp/lastfm_autostart.txt", "w+", encoding="utf-8")
         autostartF.write(autostart)
         autostartF.close()
     else:
@@ -177,26 +170,25 @@ async def lastfm_config(client, message):
     
     await message.edit(f"LastFM: {username}\nChannel: {channel_telegram}\nID: {id_in_channel_telegram}\nAutostart: {autostart}")
 
-
 @Client.on_message((filters.command("autoplayed", prefixes=my_prefix()) & filters.me) | (filters.command("last_fm_trigger_start", prefixes="") & filters.me & filters.chat("me")))
 async def autoplayed(client, message):
     await message.edit("STARTED!")
     await asyncio.sleep(5)
     await message.delete()
     while True:
-        channel = open("temp/lastfm_channel.txt", "r").readline() 
+        channel = open("temp/lastfm_channel.txt", "r+", encoding="utf-8").readline() 
         try:
             channel = int(channel)
         except:
             channel = str(channel)
 
-        id_in_channel_telegram = int(open("temp/lastfm_id_in_channel_telegram.txt", "r").readline())
+        id_in_channel_telegram = int(open("temp/lastfm_id_in_channel_telegram.txt", "r+", encoding="utf-8").readline())
 
-        currentSong = open("temp/lastfm_current_song.txt", "r").readline() 
+        currentSong = open("temp/lastfm_current_song.txt", "r+", encoding="utf-8").readline() 
         
         text = f"Now playing: `{currentSong}`"
         try:
-            cache = open("temp/lastfm_cache.txt", "r").readline() 
+            cache = open("temp/lastfm_cache.txt", "r+", encoding="utf-8").readline() 
         except:
             cache = "None"
         
@@ -210,14 +202,13 @@ async def autoplayed(client, message):
                     text=F"[🎶] {text}",
                 )
                 # Cache
-                cache = open("temp/lastfm_cache.txt", "w")
+                cache = open("temp/lastfm_cache.txt", "w+", encoding="utf-8")
                 cache.write(text)
                 cache.close()
             except Exception as ff:
                 print(ff)
         
         await asyncio.sleep(5)
-
 
 module_list['LastFM'] = f'{my_prefix()}nowplayed | {my_prefix()}autoplayed | {my_prefix()}lastfm_config [LastFM Nickname] [Username/ID Channel] [ID Message] [Autostart: True/False]'
 file_list['LastFM'] = 'lastfm.py'

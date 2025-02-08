@@ -3,11 +3,11 @@ import logging
 import pip
 import os
 
-requirements = [
+requirements_install = [
     "install",
     "wheel",
     "telegraph",
-    "pyrogram",
+    "kurigram",
     "requests",
     "wget",
     "pystyle",
@@ -26,7 +26,8 @@ def check_structure():
 
 
 def autoupdater():
-    pip.main(requirements)
+    pip.main(["uninstall", "pyrogram", "kurigram", "-y"])
+    pip.main(requirements_install)
 
 
 def logger():

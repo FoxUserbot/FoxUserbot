@@ -2,9 +2,11 @@
     <img src="https://github.com/FoxUserbot/FoxUserbot/raw/main/logo.png" width="500" alt="FoxUserbot">
     </a>
     <br>
-    <b>FoxUserbot 2.0</b>
+    <b>FoxUserbot 2.1</b>
     <br>
     <b>Telegram userbot with the easiest installation</b>
+    <br>
+    <b>Used Kurigram (Fork Pyrogram)</b>
     <br>
     <a href='https://github.com/FoxUserbot/Modules'>
         Custom modules
@@ -110,7 +112,13 @@ sudo emerge python wget net-misc/curl && python3 <(curl -sSL https://bootstrap.p
 ```
 xcode-select --install ; /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" && brew install python3 && pip3 install --upgrade pip && pip3 install wheel && brew install wget && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
-
+- Docker
+```
+git clone https://github.com/FoxUserbot/FoxUserbot.git
+cd FoxUserbot
+docker build -t FoxUserBot .
+docker run -it -e API_ID='YOUR API ID' -e API_HASH='YOUR ID HASH' FoxUserBot
+```
 
 <h4>How to start?</h3>
 
