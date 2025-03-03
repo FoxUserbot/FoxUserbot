@@ -7,12 +7,12 @@ requirements_install = [
     "install",
     "wheel",
     "telegraph",
-    "kurigram",
     "requests",
     "wget",
     "pystyle",
     "wikipedia",
     "gTTS",
+    "kurigram",
     "lyricsgenius",
     "--upgrade"
 ]
@@ -42,6 +42,9 @@ def autoupdater():
                 first_launched = True
     except FileNotFoundError:
         pass
+
+
+
 
     if not first_launched:
         pip.main(["uninstall", "pyrogram", "kurigram", "-y"])
