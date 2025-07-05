@@ -78,10 +78,10 @@ AI will automatically convert the module from Telethon to Pyrogram for this User
 <h1>Install and Start</h1>
 <h2>How to install?</h2>
 
-- Termux
+- Termux (Only CLI because LocalTunnel dosen't work on Termux)
 
 ```
-pkg update -y && pkg install python3 wget nodejs -y && npm install -g localtunnel && termux-wake-lock && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
+pkg update -y && pkg install python3 wget -y && && termux-wake-lock && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py --cli)
 ```
 
 - APT (Debian based)

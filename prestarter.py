@@ -17,13 +17,14 @@ def prestart(api_id, api_hash, device_mod):
         asyncio.set_event_loop(loop)
     
     app = Client("my_account", api_id=api_id, api_hash=api_hash, device_model=device_mod)
-    print("📝 Логирование: Проверка подключения к Telegram")
+    print("📝 Logging: Checking connection to Telegram")
     
     async def check_connection():
         await app.connect()
-        print("📝 Логирование: Подключение успешно")
+        print("📝 Logging: Connection successful")
         await app.disconnect()
-        print("📝 Логирование: Отключение после проверки")
+        print("📝 Logging: Disconnection after checking")
+
     
     loop.run_until_complete(check_connection())
     with app:

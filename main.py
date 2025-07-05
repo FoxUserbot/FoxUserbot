@@ -91,12 +91,25 @@ def userbot():
     
     api_id, api_hash, device_mod = my_api()
 
+    if "--cli" in sys.argv:
+        print("🦊 Running in CLI mode...")
+        client = Client(
+            "my_account",
+            api_id=api_id,
+            api_hash=api_hash,
+            device_model=device_mod,
+            plugins=dict(root="modules"),
+        )
+        client.run()
+        return
+
     if not os.path.exists("my_account.session"):
         print("🦊 First launch! Authorization required...")        
         success, user = start_web_auth(api_id, api_hash, device_mod)
         
         if not success or user is None:
             print("❌ Authorization failed!")
+
             return
         else:
             if not os.path.exists("my_account.session"):
