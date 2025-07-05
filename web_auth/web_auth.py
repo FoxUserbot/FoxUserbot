@@ -1,0 +1,252 @@
+import asyncio
+import logging
+import threading
+import time
+import shutil
+import subprocess
+import os
+import socket
+
+from typing import Optional, Tuple
+
+from flask import Flask, render_template_string, request, redirect, url_for, jsonify
+from pyrogram.client import Client
+from pyrogram.errors import RPCError, SessionPasswordNeeded
+from pyrogram.types import User, TermsOfService
+
+
+app = Flask(__name__)
+code_input = None
+auth_completel = False
+auth_result = None
+current_step = "phone"
+current_phone = "+7"
+sent_code_hash = None 
+user_data = {'api_id': 0, 'api_hash': '', 'device_mod': ''}
+
+
+HTML_TEMPLATE = open('web_auth/site.html', 'r', encoding='utf-8').read()
+
+
+@app.route('/', methods=['GET', 'POST'])
+def auth_web():
+    global code_input, auth_complete, current_step, current_phone
+    
+    if request.method == 'POST':
+        if 'phone' in request.form:
+            current_phone = request.form['phone']
+            current_step = 'code' 
+            return redirect(url_for('auth_web', step='code', phone=current_phone))
+            
+        elif 'code' in request.form:
+            code_input = request.form['code']
+            auth_complete = True 
+            current_step = 'code' 
+            return redirect(url_for('auth_web', step='code', phone=current_phone))
+            
+        elif 'password' in request.form:
+            code_input = request.form['password']
+            auth_complete = True 
+            current_step = 'success' 
+            return redirect(url_for('auth_web', step='success'))
+    
+    step = request.args.get('step', current_step)
+    phone = request.args.get('phone', current_phone)
+    error = request.args.get('error', '')
+    
+    if step == 'password':
+        current_step = 'password'
+        current_phone = phone
+    
+    return render_template_string(HTML_TEMPLATE, step=step, phone=phone, error=error)
+
+@app.route('/check_step', methods=['GET'])
+def check_step():
+    global current_step
+    return {'step': current_step}
+
+@app.route('/submit_code', methods=['POST'])
+def submit_code():
+    global code_input, auth_complete, current_step
+    code = request.form.get('code')
+    phone = request.args.get('phone') 
+    
+    if not code:
+        return jsonify({'error': 'Missing code'}), 400
+    
+    code_input = code
+    auth_complete = True
+    print(f"📝 Logging: Code entered: {code}")
+    return jsonify({'message': 'Code received'})
+
+
+@app.route('/submit_password', methods=['POST'])
+def submit_password():
+    global code_input, auth_complete, current_step
+    password = request.form.get('password')
+    
+    if not password:
+        return jsonify({'error': 'Missing password'}), 400
+    
+    code_input = password
+    auth_complete = True
+    print("📝 Logging: 2FA password entered")
+    return jsonify({'message': 'Password received'})
+
+def find_free_port() -> int:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(('localhost', 0))
+        return s.getsockname()[1]
+
+def ensure_localtunnel():
+    if not shutil.which('npm'):
+        print("❌ npm not found! ")
+        return False
+    try:
+        result = subprocess.run(['npm', 'list', '-g', 'localtunnel'], capture_output=True, text=True)
+        if 'empty' in result.stdout or 'missing' in result.stdout or 'not found' in result.stdout:
+            print("Installing localtunnel...")
+            subprocess.run(['sudo', 'npm', 'install', '-g', 'localtunnel'], check=True)
+        return True
+    except Exception as e:
+        print(f"❌ Error installing localtunnel: {e}")
+        return False
+    return True
+
+def get_public_url(port: int) -> Optional[str]:
+    if not ensure_localtunnel():
+        return None
+
+    localtunnel_output_file = "localtunnel_output.txt"
+    if os.path.exists(localtunnel_output_file):
+        os.remove(localtunnel_output_file)
+
+    try:
+        subprocess.Popen(
+            f'npx localtunnel --port {port} > {localtunnel_output_file} 2>&1 &',
+            shell=True,
+            preexec_fn=os.setsid
+        )
+        
+        timeout = 20 
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            if os.path.exists(localtunnel_output_file):
+                with open(localtunnel_output_file, 'r') as file:
+                    content = file.read()
+                    lines = content.splitlines()
+                    for line in lines:
+                        if 'https://' in line:
+                            return line.strip()
+            time.sleep(1) 
+        return None 
+    except Exception as e:
+        print(f"📝 Logging: Error starting localtunnel or getting public URL: {e}")
+        return None
+
+def run_web_server(port: int):
+    public_url = get_public_url(port)
+    if public_url:
+        print(f"🌐 Public URL: {public_url}")
+   
+    app.run(host='127.0.0.1', port=port, debug=False, use_reloader=False) 
+
+async def web_auth(api_id: int, api_hash: str, device_model: str) -> Tuple[bool, Optional[User]]:
+    global code_input, auth_complete, auth_result, current_step, current_phone, sent_code_hash
+
+    code_input = None
+    auth_complete = False
+    auth_result = None
+    current_step = "phone"
+    current_phone = "+7"
+    sent_code_hash = None 
+ 
+    user_data['api_id'] = api_id
+    user_data['api_hash'] = api_hash
+    user_data['device_mod'] = device_model
+
+    port = find_free_port()
+
+    web_thread = threading.Thread(target=lambda: run_web_server(port), daemon=True)
+    web_thread.start()
+
+    client = Client(
+        "my_account",
+        api_id=api_id,
+        api_hash=api_hash,
+        device_model=device_model
+    )
+
+    try:
+        await client.connect()
+        
+        while current_step == "phone":
+            await asyncio.sleep(1) 
+        
+        sent_code = await client.send_code(current_phone)
+        sent_code_hash = sent_code.phone_code_hash 
+
+        current_step = "code" 
+
+        while not auth_complete:
+            await asyncio.sleep(1) 
+        
+        code = code_input
+        if not code: 
+            raise ValueError("Code was not entered")
+
+        auth_complete = False 
+        code_input = None 
+
+        try:
+            signed_in = await client.sign_in(current_phone, sent_code_hash, code)
+
+            if isinstance(signed_in, User):
+                current_step = 'success'
+                auth_result = signed_in
+                return True, signed_in
+
+        except SessionPasswordNeeded:
+            current_step = "password" 
+            auth_complete = False 
+            code_input = None 
+            
+            while not auth_complete:
+                await asyncio.sleep(1) 
+            
+            password = code_input
+            if not password:
+                raise ValueError("Password was not entered")
+
+            await client.check_password(password)
+            user = await client.get_me()
+            current_step = 'success'
+            auth_result = user
+            return True, user
+
+        signed_up = await client.sign_up(current_phone, sent_code_hash, "FoxUserbot")
+
+        if isinstance(signed_up, TermsOfService):
+            await client.accept_terms_of_service(str(signed_up.id))
+        
+        auth_result = signed_up
+        return True, signed_up
+
+    except RPCError as e:
+        logging.error(f"RPC Error: {e}")
+        auth_result = None
+        current_step = "error" 
+        return False, None
+    except Exception as e:
+        logging.error(f"Auth Error: {e}")
+        auth_result = None
+        current_step = "error" 
+        return False, None
+    finally:
+        try:
+            await client.disconnect()
+        except:
+            pass
+
+def start_web_auth(api_id, api_hash, device_model) -> Tuple[bool, Optional[User]]:
+    return asyncio.run(web_auth(api_id, api_hash, device_model)) 

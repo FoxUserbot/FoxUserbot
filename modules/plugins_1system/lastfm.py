@@ -29,7 +29,7 @@ waitTime = 15
 noSongPlaying = "Nothing Currently Playing"
 killprocess = False
 
-proxylist = []
+proxylist = ["127.0.0.1:2080"]
 workproxy = []
 
 def get_proxy():

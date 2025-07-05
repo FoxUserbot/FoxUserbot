@@ -2,7 +2,7 @@
     <img src="https://github.com/FoxUserbot/FoxUserbot/raw/main/logo.png" width="500" alt="FoxUserbot">
     </a>
     <br>
-    <b>FoxUserbot 2.1</b>
+    <b>FoxUserbot 2.2</b>
     <br>
     <b>Telegram userbot with the easiest installation</b>
     <br>
@@ -67,57 +67,63 @@ module_list['Example'] = f'{my_prefix()}example_edit'
 file_list['Example'] = 'example.py'
 ```
 
+<h2>How to add Hikka/Heroku modules?</h2>
+
+To add modules from Hikka/Heroku, there is a special compatibility layer called <b>Wine Hikka</b>. To use it, download the module file itself from the <a href='https://github.com/FoxUserbot/Modules'>modules repository</a> and reply to the Hikka module with <code>[prefix]wine_hikka</code> or <code>[prefix]wine_hikka [link]</code>.
+
+AI will automatically convert the module from Telethon to Pyrogram for this UserBot, save it in the <code>modules/plugins_2custom/</code> folder and restart it.
+
+<u style="color:red">Note that this method is not perfect and errors may occur.</u>
+
 <h1>Install and Start</h1>
 <h2>How to install?</h2>
-
 
 - Termux
 
 ```
-pkg update -y && pkg install python3 wget -y && termux-wake-lock && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
+pkg update -y && pkg install python3 wget nodejs -y && npm install -g localtunnel && termux-wake-lock && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 
 - APT (Debian based)
 
 
 ```
-apt update -y && sudo apt install python3 python3-pip wget -y && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
+apt update -y && sudo apt install python3 python3-pip wget nodejs npm -y && sudo npm install -g localtunnel && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 
 - Astra Linux (if python < 3.7, else go to "Debian based")
 
 ```
-apt update -y && sudo apt install curl wget -y && sh <(curl -sSL https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/main/HowToGetPython3_8.sh) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
+apt update -y && sudo apt install curl wget nodejs npm -y && sudo npm install -g localtunnel && sh <(curl -sSL https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/main/HowToGetPython3_8.sh) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 
 - YUM (RHEL based)
 
 ```
-yum -y update && sudo yum install wget python3 curl -y && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
+yum -y update && sudo yum install wget python3 curl nodejs npm -y && sudo npm install -g localtunnel && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 
 - PACMAN (Arch based)
 
 ```
-sudo pacman -Sy python3 wget curl && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
+sudo pacman -Sy python3 wget curl nodejs npm && sudo npm install -g localtunnel && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 
 - EMERGE (Gentoo)
 ```
-sudo emerge python wget net-misc/curl && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
+sudo emerge python wget net-misc/curl nodejs && sudo npm install -g localtunnel && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 
 - MacOS
 
 ```
-xcode-select --install ; /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" && brew install python3 && pip3 install --upgrade pip && pip3 install wheel && brew install wget && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm foxub.$$ && cd FoxUserbot-main && python3 main.py)
+xcode-select --install ; /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" && brew install python3 && pip3 install --upgrade pip && pip3 install wheel && brew install wget nodejs && npm install -g localtunnel && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 - Docker
+
 ```
-git clone https://github.com/FoxUserbot/FoxUserbot.git
-cd FoxUserbot
-docker build -t FoxUserBot .
-docker run -it -e API_ID='YOUR API ID' -e API_HASH='YOUR ID HASH' FoxUserBot
+docker build -t foxuserbot .
+docker run -p 5555:5555 foxuserbot
 ```
 
 <h4>How to start?</h3>
@@ -129,7 +135,8 @@ termux-wake-lock ; cd FoxUserbot-main && python3 main.py
 <h3>Windows</h2>
 <h4>Install</h3>
 
-- Install <a href="https://www.python.org/downloads/">python3</a>
+- Install <a href="https://www.python.org/downloads/">python3</a> and <a href="https://nodejs.org/">Node.js</a>
+  
 
 - Download and Unzip <a href="https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip">This file</a>
 
