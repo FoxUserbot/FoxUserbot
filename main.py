@@ -16,11 +16,12 @@ requirements_install = [
     "lyricsgenius",
     "flask",
     "--upgrade",
-    "--break-system-packages"
 ]
 
 
 def check_structure():
+    if os.path.exists("localtunnel_output.txt"):
+        os.remove("localtunnel_output.txt")
     if not os.path.exists("temp"):
         os.mkdir("temp")
     if not os.path.exists("temp/autoanswer_DB"):
@@ -28,7 +29,7 @@ def check_structure():
 
 
 def autoupdater():
-    # Check pyrogram and kurigram
+
     try:
         from pyrogram.client import Client
     except ImportError:
@@ -74,7 +75,8 @@ async def start_userbot(app):
         print("📝 Logging: Session already exists, restart not required")
     else:
         print("📝 Logging: First authorization, restarting main script")
-        os.remove("nohup.out")
+        if os.path.exists("localtunnel_output.txt"):
+            os.remove("localtunnel_output.txt")
         os.execv(sys.executable, [sys.executable] + sys.argv)
 
 
@@ -99,7 +101,8 @@ def userbot():
         else:
             if not os.path.exists("my_account.session"):
                 print("📝 Restarting...")
-                os.remove("nohup.out")
+                if os.path.exists("localtunnel_output.txt"):
+                    os.remove("localtunnel_output.txt")
                 os.execv(sys.executable, [sys.executable] + sys.argv)
                 
             else:

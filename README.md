@@ -2,7 +2,7 @@
     <img src="https://github.com/FoxUserbot/FoxUserbot/raw/main/logo.png" width="500" alt="FoxUserbot">
     </a>
     <br>
-    <b>FoxUserbot 2.1</b>
+    <b>FoxUserbot 2.2</b>
     <br>
     <b>Telegram userbot with the easiest installation</b>
     <br>
