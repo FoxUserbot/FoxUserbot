@@ -24,6 +24,7 @@ def prestart(api_id, api_hash, device_mod):
         print("📝 Logging: Connection successful")
         await app.disconnect()
         print("📝 Logging: Disconnection after checking")
+
     
     loop.run_until_complete(check_connection())
     with app:
