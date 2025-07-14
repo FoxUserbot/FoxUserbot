@@ -2,7 +2,7 @@
     <img src="https://github.com/FoxUserbot/FoxUserbot/raw/main/logo.png" width="500" alt="FoxUserbot">
     </a>
     <br>
-    <b>FoxUserbot 2.2</b>
+    <b>FoxUserbot 2.3</b>
     <br>
     <b>Telegram userbot with the easiest installation</b>
     <br>
@@ -45,7 +45,7 @@ from prefix import my_prefix
 
 # If you need to install an external module via pip
 # import the following line of code and install the library with the required parameter
-
+#
 # from requirements_installer import install_library
 # install_library("requests -U") 
 #
@@ -57,12 +57,19 @@ from prefix import my_prefix
 # install_library("requests==2.32.3") 
 #
 # ^^^ pip3 install requests -U
-
+#
+# =================================================
+#
+# if you need to call any command after restarting
+# with open("triggers/example_autostart", "w", encoding="utf-8") as f:
+#        f.write("example_edit")
+# ================ ^^^ enter the command that should be run after the userbot is restarted
 
 @Client.on_message(filters.command("example_edit", prefixes=my_prefix()) & filters.me)
 async def example_edit(client, message):
     await message.edit("<code>This is an example module</code>")
-    
+
+   
 module_list['Example'] = f'{my_prefix()}example_edit'
 file_list['Example'] = 'example.py'
 ```
@@ -137,7 +144,6 @@ termux-wake-lock ; cd FoxUserbot-main && python3 main.py
 
 - Install <a href="https://www.python.org/downloads/">python3</a> and <a href="https://nodejs.org/">Node.js</a>
   
-
 - Download and Unzip <a href="https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip">This file</a>
 
 - Open main.py
@@ -154,9 +160,6 @@ termux-wake-lock ; cd FoxUserbot-main && python3 main.py
 <a href="https://t.me/foxteam0">
 <img alt="Telegram" src="https://img.shields.io/badge/Telegram_Channel-0a0a0a?style=for-the-badge&logo=telegram">
 </a>
-    
-<h1>Credits</h1>
-➤ A9FM <a href="https://github.com/A9FM">Github</a> | <a href="https://github.com/a9_fm">Telegram</a> <br>
 
 ---
 
