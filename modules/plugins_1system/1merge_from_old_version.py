@@ -15,6 +15,7 @@ if os.path.isdir("plugins"):
 # 2.1 > 2.2
 if os.path.exists("modules/plugins_1system/support.py"):
     os.remove("modules/plugins_1system/support.py")
+
 # 2.2 > 2.3
 if os.path.isdir("temp/autoanswer_DB"):
     shutil.move("temp/autoanswer_DB", "userdata/autoanswer_DB")
@@ -52,3 +53,4 @@ for _ in modules:
             os.remove(f"modules/plugins_1system/{_}")
     except Exception as fff:
         print(fff)
+
