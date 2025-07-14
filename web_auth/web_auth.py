@@ -9,7 +9,7 @@ import socket
 
 from typing import Optional, Tuple
 
-from flask import Flask, render_template_string, request, redirect, url_for, jsonify
+from flask import Flask, render_template_string, request, redirect, url_for, jsonify, send_from_directory
 from pyrogram.client import Client
 from pyrogram.errors import RPCError, SessionPasswordNeeded
 from pyrogram.types import User, TermsOfService
@@ -17,7 +17,7 @@ from pyrogram.types import User, TermsOfService
 
 app = Flask(__name__)
 code_input = None
-auth_completel = False
+auth_complete = False
 auth_result = None
 current_step = "phone"
 current_phone = "+7"
@@ -27,6 +27,10 @@ user_data = {'api_id': 0, 'api_hash': '', 'device_mod': ''}
 
 HTML_TEMPLATE = open('web_auth/site.html', 'r', encoding='utf-8').read()
 
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory('web_auth/static', filename)
 
 @app.route('/', methods=['GET', 'POST'])
 def auth_web():
@@ -147,9 +151,19 @@ def get_public_url(port: int) -> Optional[str]:
 def run_web_server(port: int):
     public_url = get_public_url(port)
     if public_url:
-        print(f"🌐 Public URL: {public_url}")
+        try:
+            password = subprocess.run(["curl", "https://loca.lt/mytunnelpassword"], capture_output=True, text=True).stdout.strip()
+            if password:
+                print(f"🌐 Public URL: {public_url}")
+                print(f"🔑 Password: {password}")
+            else:
+                print(f"🌐 Public URL: {public_url}")
+        except Exception as e:
+            print(f"🌐 Public URL: {public_url}")
+            print(f"❌ Could not fetch password: {e}")
    
     app.run(host='127.0.0.1', port=port, debug=False, use_reloader=False) 
+    
 
 async def web_auth(api_id: int, api_hash: str, device_model: str) -> Tuple[bool, Optional[User]]:
     global code_input, auth_complete, auth_result, current_step, current_phone, sent_code_hash

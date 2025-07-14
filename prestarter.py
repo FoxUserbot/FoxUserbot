@@ -24,7 +24,6 @@ def prestart(api_id, api_hash, device_mod):
         print("📝 Logging: Connection successful")
         await app.disconnect()
         print("📝 Logging: Disconnection after checking")
-
     
     loop.run_until_complete(check_connection())
     with app:
@@ -38,6 +37,9 @@ def prestart(api_id, api_hash, device_mod):
                 app.send_message(int(sys.argv[1]), text)
             except Exception as f:
                 app.send_message("me", f"Got error: {f}\n\n" + text)
-        # last.fm trigger
-        if Path(f"temp/lastfm_autostart.txt").is_file():
-            app.send_message("me", "last_fm_trigger_start", schedule_date=(datetime.now() + timedelta(seconds=70)))
+                
+        # check triggers
+        for i in os.listdir("triggers"):
+            with open(f"triggers/{i}", 'r') as f:
+                text = f.read().strip()
+                app.send_message("me", text, schedule_date=(datetime.now() + timedelta(seconds=70)))
