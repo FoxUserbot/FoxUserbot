@@ -2,18 +2,15 @@
 import logging
 import pip
 import os
+import time
 
 requirements_install = [
     "install",
     "wheel",
     "telegraph",
-    "requests",
     "wget",
     "pystyle",
-    "wikipedia",
-    "gTTS",
     "kurigram",
-    "lyricsgenius",
     "flask",
     "--upgrade",
 ]
@@ -24,12 +21,13 @@ def check_structure():
         os.remove("localtunnel_output.txt")
     if not os.path.exists("temp"):
         os.mkdir("temp")
-    if not os.path.exists("temp/autoanswer_DB"):
-        os.mkdir("temp/autoanswer_DB")
+    if not os.path.exists("userdata"):
+        os.mkdir("userdata")
+    if not os.path.exists("triggers"):
+        os.mkdir("triggers")
 
 
 def autoupdater():
-
     try:
         from pyrogram.client import Client
     except ImportError:
@@ -46,15 +44,15 @@ def autoupdater():
     except FileNotFoundError:
         pass
 
-
-
-
     if not first_launched:
         pip.main(["uninstall", "pyrogram", "kurigram", "-y"])
         with open("firstlaunch.temp", "w", encoding="utf-8") as f:
             f.write("1")
 
     pip.main(requirements_install)
+
+
+
 
 def logger():
     logging.basicConfig(
@@ -64,6 +62,7 @@ def logger():
         datefmt="%d-%b-%y %H:%M:%S",
         level=logging.INFO
     )
+
 
 
 async def start_userbot(app):
@@ -89,48 +88,63 @@ def userbot():
     import sys
     import asyncio
     
+    
+    safe_mode = False
+    if "--safe" in sys.argv:
+        safe_mode = True
+        print("🦊 Starting in safe mode (only system plugins)...")
+    
+    
     api_id, api_hash, device_mod = my_api()
 
-    if "--cli" in sys.argv:
-        print("🦊 Running in CLI mode...")
-        client = Client(
-            "my_account",
-            api_id=api_id,
-            api_hash=api_hash,
-            device_model=device_mod,
-            plugins=dict(root="modules"),
-        )
-        client.run()
-        return
-
     if not os.path.exists("my_account.session"):
-        print("🦊 First launch! Authorization required...")        
-        success, user = start_web_auth(api_id, api_hash, device_mod)
-        
-        if not success or user is None:
-            print("❌ Authorization failed! ")
-            return
-        else:
-            if not os.path.exists("my_account.session"):
-                print("📝 Restarting...")
-                if os.path.exists("localtunnel_output.txt"):
-                    os.remove("localtunnel_output.txt")
-                os.execv(sys.executable, [sys.executable] + sys.argv)
-                
+        print("🦊 First launch! Authorization required...")  
+        if "--cli" in sys.argv:
+            print("🦊 Running in CLI mode...")
+            client = Client(
+                "my_account",
+                api_id=api_id,
+                api_hash=api_hash,
+                device_model=device_mod,
+            )
+            client.start()
+            client.stop()
+        else:      
+            success, user = start_web_auth(api_id, api_hash, device_mod)
+            
+            if not success or user is None:
+                print("❌ Authorization failed! ")
+                return
             else:
-                print("🦊 Session already exists, authorization not required")
+                if not os.path.exists("my_account.session"):
+                    print("📝 Restarting...")
+                    if os.path.exists("localtunnel_output.txt"):
+                        os.remove("localtunnel_output.txt")
+                    os.execv(sys.executable, [sys.executable] + sys.argv)
+                    
+                else:
+                    print("🦊 Session already exists, authorization not required")
     else:
         print("🦊 Session already exists, authorization not required")
     
     prestart(api_id, api_hash, device_mod)
 
-    client = Client(
-        "my_account",
-        api_id=api_id,
-        api_hash=api_hash,
-        device_model=device_mod,
-        plugins=dict(root="modules"),
-    ).run()
+    try: # try start with custom modules
+        client = Client(
+            "my_account",
+            api_id=api_id,
+            api_hash=api_hash,
+            device_model=device_mod,
+            plugins=dict(root="modules" if not safe_mode else "modules/plugins_1system"),
+        ).run()
+    except Exception as e: # emergency mode
+        if not safe_mode:
+            print(f"🦊 Error detected: {e}")
+            print("🦊 Restarting in safe mode (only system plugins)...")
+            os.execv(sys.executable, [sys.executable] + sys.argv + ["--safe"])
+        else:
+            print(f"🦊 Critical error in safe mode: {e}")
+            logging.critical(f"Critical error in safe mode: {e}")
 
 
 if __name__ == "__main__":
