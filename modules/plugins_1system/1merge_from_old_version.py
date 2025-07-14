@@ -44,7 +44,6 @@ modules = ["user_info.py", "weather.py", "webshot.py", "wikipedia.py", "switch.p
            "find_music.py", "gen_pass.py", "hearts.py", "afk.py", "autoanswer.py", "autoonline.py",
            "autoread.py", "chance.py", "demotivator.py"]
 for _ in modules:
-    print(_)
     try:
         if os.path.exists(f"modules/plugins_1system/{_}"):
             link = f"https://raw.githubusercontent.com/FoxUserbot/Modules/refs/heads/main/{_}"
