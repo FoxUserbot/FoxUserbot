@@ -8,3 +8,5 @@ my_account.session-journal
 firstlaunch.temp
 temp/
 nohup.out
+triggers/
+userdata/
