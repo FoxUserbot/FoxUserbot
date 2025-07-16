@@ -10,7 +10,6 @@ requirements_install = [
     "telegraph",
     "wget",
     "pystyle",
-    "kurigram",
     "flask",
     "--upgrade",
 ]
@@ -50,7 +49,7 @@ def autoupdater():
             f.write("1")
 
     pip.main(requirements_install)
-
+    pip.main(["install", "kurigram==2.1.37"]) # Куримузон мудила не ломай ебучий куриграм
 
 
 

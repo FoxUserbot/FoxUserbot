@@ -1,10 +1,8 @@
-from pyrogram import Client, filters, __version__
-from pyrogram.errors import ChatSendPhotosForbidden
+from pyrogram import Client, filters
+from pyrogram.errors import ChatSendPhotosForbidden , WebpageMediaEmpty
 from modules.plugins_1system.settings.main_settings import module_list, version
 from prefix import my_prefix
-
 from telegraph import Telegraph
-from platform import python_version
 import random
 
 
@@ -48,8 +46,15 @@ def get_text(message):
 async def helps(client, message):
     try:
         await message.delete()
-        da = await client.send_photo(message.chat.id, "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/photos/userbot_info.png", caption="Loading the help menu. Please, wait...", message_thread_id=message.message_thread_id)
+        da = await client.send_photo(message.chat.id, photo="https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/photos/foxuserbot_info.jpg", caption="Loading the help menu. Please, wait...", message_thread_id=message.message_thread_id)
         await client.edit_message_caption(message.chat.id, da.id, get_text(message))
+    except WebpageMediaEmpty:
+        try:
+            await message.delete()
+            await client.send_photo(message.chat.id, "photos/foxuserbot_info.jpg", caption=get_text(message), message_thread_id=message.message_thread_id)
+        except ChatSendPhotosForbidden:
+            await message.delete()
+            await client.send_message(message.chat.id, get_text(message), message_thread_id=message.message_thread_id)
     except ChatSendPhotosForbidden:
         await message.delete()
         await client.send_message(message.chat.id, get_text(message), message_thread_id=message.message_thread_id)
