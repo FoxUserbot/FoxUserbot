@@ -48,11 +48,11 @@ def get_text(message):
 async def helps(client, message):
     try:
         await message.delete()
-        da = await client.send_photo(message.chat.id, "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/logo_banner.png",caption="Loading the help menu. Please, wait...")
+        da = await client.send_photo(message.chat.id, "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/photos/userbot_info.png", caption="Loading the help menu. Please, wait...", message_thread_id=message.message_thread_id)
         await client.edit_message_caption(message.chat.id, da.id, get_text(message))
     except ChatSendPhotosForbidden:
         await message.delete()
-        await client.send_message(message.chat.id, get_text(message))
+        await client.send_message(message.chat.id, get_text(message), message_thread_id=message.message_thread_id)
 
 
 module_list['Help'] = f'{my_prefix()}help'

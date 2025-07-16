@@ -24,10 +24,10 @@
             <form method="POST" class="needs-validation" novalidate>
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="phone" name="phone" placeholder="+XXXXXXXXXXX" 
-                           value="{{ phone }}" required pattern="^\+[0-9\s]{8,}$">
+                           value="{{ phone }}" required pattern="^(\+?\d[\d\s]{7,})$">
                     <label for="phone">Phone Number</label>
                     <div class="invalid-feedback">
-                        Please enter a valid phone number starting with + (min 8 digits)
+                        Please enter a valid phone number (min 8 digits, + optional)
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">
