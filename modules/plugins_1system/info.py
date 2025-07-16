@@ -46,7 +46,7 @@ async def info(client, message):
     await message.delete()
     await client.send_photo(
         chat_id=message.chat.id,
-        photo="https://github.com/FoxUserbot/FoxUserbot/raw/main/info_banner.jpg",
+        photo="https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/photos/info_banner.jpg",
         caption=get_info(message),
         message_thread_id=message.message_thread_id
     )
