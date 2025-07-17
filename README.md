@@ -88,43 +88,43 @@ AI will automatically convert the module from Telethon to Pyrogram for this User
 - Termux (Only CLI because LocalTunnel dosen't work on Termux)
 
 ```
-pkg update -y && pkg install python3 python3-venv wget unzip -y && termux-wake-lock && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py --cli)
+pkg update -y && pkg install python3 wget -y && && termux-wake-lock && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py --cli)
 ```
-> [!IMPORTANT]
-> Further installation (except for macOS and Docker) must be done as root or use sudo
+
 - APT (Debian based)
 
+
 ```
-apt update -y && apt install python3 python3-pip python3-venv wget unzip nodejs npm -y && npm install -g localtunnel && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
+apt update -y && sudo apt install python3 python3-pip wget nodejs npm -y && sudo npm install -g localtunnel && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 
 - Astra Linux (if python < 3.7, else go to "Debian based")
 
 ```
-apt update -y && apt install python3-venv curl wget unzip nodejs npm -y && npm install -g localtunnel && sh <(curl -sSL https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/main/HowToGetPython3_8.sh) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
+apt update -y && sudo apt install curl wget nodejs npm -y && sudo npm install -g localtunnel && sh <(curl -sSL https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/main/HowToGetPython3_8.sh) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 
 - YUM (RHEL based)
 
 ```
-yum -y update && yum install wget python3 python3-pip curl unzip nodejs npm -y && npm install -g localtunnel && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
+yum -y update && sudo yum install wget python3 curl nodejs npm -y && sudo npm install -g localtunnel && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 
 - PACMAN (Arch based)
 
 ```
-pacman -Sy python3 wget curl unzip nodejs npm && npm install -g localtunnel && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
+sudo pacman -Sy python3 wget curl nodejs npm && sudo npm install -g localtunnel && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 
 - EMERGE (Gentoo)
 ```
-emerge python dev-python/virtualenv wget net-misc/curl unzip nodejs && npm install -g localtunnel && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
+sudo emerge python wget net-misc/curl nodejs && sudo npm install -g localtunnel && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 
 - MacOS
 
 ```
-xcode-select --install ; /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" && brew install python3 && pip3 install --upgrade pip && pip3 install wheel && brew install wget unzip nodejs && npm install -g localtunnel && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
+xcode-select --install ; /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" && brew install python3 && pip3 install --upgrade pip && pip3 install wheel && brew install wget nodejs && npm install -g localtunnel && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm foxub.$$ && cd FoxUserbot-main && python3 main.py)
 ```
 - Docker
 
@@ -132,20 +132,6 @@ xcode-select --install ; /bin/bash -c "$(curl -fsSL https://raw.githubuserconten
 docker build -t foxuserbot .
 docker run -p 5555:5555 foxuserbot
 ```
-> [!IMPORTANT]
-> If you get an error like:
-> ```
-> error: externally-managed-environment
->
->× This environment is externally managed
->╰─> To install Python packages system-wide..
->```
->Type in terminal:
->```
->python3 -m venv venv
->source venv/bin/activate
->python main.py
->```
 
 <h4>How to start?</h3>
 
