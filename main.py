@@ -3,16 +3,10 @@ import logging
 import pip
 import os
 import time
+import sys
+import re
 
-requirements_install = [
-    "install",
-    "wheel",
-    "telegraph",
-    "wget",
-    "pystyle",
-    "flask",
-    "--upgrade",
-]
+from requirements_installer import install_library
 
 
 def check_structure():
@@ -20,6 +14,11 @@ def check_structure():
         os.remove("localtunnel_output.txt")
     if not os.path.exists("temp"):
         os.mkdir("temp")
+    try:
+        if os.path.exists("temp/fox_userbot.log"):
+            os.remove("temp/fox_userbot.log")
+    except:
+        pass
     if not os.path.exists("userdata"):
         os.mkdir("userdata")
     if not os.path.exists("triggers"):
@@ -48,20 +47,11 @@ def autoupdater():
         with open("firstlaunch.temp", "w", encoding="utf-8") as f:
             f.write("1")
 
-    pip.main(requirements_install)
-    pip.main(["install", "kurigram==2.1.37"]) # Куримузон мудила не ломай ебучий куриграм
-
-
-
-def logger():
-    logging.basicConfig(
-        filename="temp/fox_userbot.log",
-        filemode="w",
-        format="%(asctime)s - %(message)s",
-        datefmt="%d-%b-%y %H:%M:%S",
-        level=logging.INFO
-    )
-
+    # install requirements for userbot
+    install_library('wheel telegraph wget pystyle flask -U')
+    install_library('kurigram==2.1.37')
+    setup_logging()
+    logger.info("Logging restored after installing dependencies")
 
 
 async def start_userbot(app):
@@ -70,12 +60,35 @@ async def start_userbot(app):
     import sys
     session_file = "my_account.session"
     if os.path.exists(session_file):
-        print("📝 Logging: Session already exists, restart not required")
+        logger.info("[Session]: Session already exists, restart not required")
     else:
-        print("📝 Logging: First authorization, restarting main script")
+        logger.info("[Session]: First authorization, restarting main script")
         if os.path.exists("localtunnel_output.txt"):
             os.remove("localtunnel_output.txt")
         os.execv(sys.executable, [sys.executable] + sys.argv)
+
+
+def setup_logging():
+    log_file = 'temp/fox_userbot.log'
+    
+    # Удаляем все старые обработчики
+    root_logger = logging.getLogger()
+    for handler in root_logger.handlers[:]:
+        root_logger.removeHandler(handler)
+    
+    # Настраиваем новые обработчики
+    file_handler = logging.FileHandler(log_file, encoding='utf-8')
+    console_handler = logging.StreamHandler()
+    
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(formatter)
+    console_handler.setFormatter(formatter)
+    
+    root_logger.addHandler(file_handler)
+    root_logger.addHandler(console_handler)
+    root_logger.setLevel(logging.INFO)
+    
+    return root_logger
 
 
 def userbot():
@@ -91,15 +104,14 @@ def userbot():
     safe_mode = False
     if "--safe" in sys.argv:
         safe_mode = True
-        print("🦊 Starting in safe mode (only system plugins)...")
-    
+        logger.warning("[Userbot] Starting in safe mode (only system plugins)...")
     
     api_id, api_hash, device_mod = my_api()
 
     if not os.path.exists("my_account.session"):
-        print("🦊 First launch! Authorization required...")  
+        logger.warning("[Userbot] First launch! Authorization required...")  
         if "--cli" in sys.argv:
-            print("🦊 Running in CLI mode...")
+            logger.info("[Userbot] Running in CLI mode...")
             client = Client(
                 "my_account",
                 api_id=api_id,
@@ -112,19 +124,19 @@ def userbot():
             success, user = start_web_auth(api_id, api_hash, device_mod)
             
             if not success or user is None:
-                print("❌ Authorization failed! ")
+                logger.warning("[Userbot] Authorization failed! ")
                 return
             else:
                 if not os.path.exists("my_account.session"):
-                    print("📝 Restarting...")
+                    logger.warning("[Userbot] Restarting...")
                     if os.path.exists("localtunnel_output.txt"):
                         os.remove("localtunnel_output.txt")
                     os.execv(sys.executable, [sys.executable] + sys.argv)
                     
                 else:
-                    print("🦊 Session already exists, authorization not required")
+                    logger.info("[Userbot] Session already exists, authorization not required")
     else:
-        print("🦊 Session already exists, authorization not required")
+        logger.info("[Userbot] Session already exists, authorization not required")
     
     prestart(api_id, api_hash, device_mod)
 
@@ -138,16 +150,17 @@ def userbot():
         ).run()
     except Exception as e: # emergency mode
         if not safe_mode:
-            print(f"🦊 Error detected: {e}")
-            print("🦊 Restarting in safe mode (only system plugins)...")
+            logger.warning(f"[Userbot] Error detected: {e}")
+            logger.warning(f"[Userbot] Restarting in safe mode (only system plugins)...")
             os.execv(sys.executable, [sys.executable] + sys.argv + ["--safe"])
         else:
-            print(f"🦊 Critical error in safe mode: {e}")
+            logger.warning(f"[Userbot] Critical error in safe mode: {e}")
             logging.critical(f"Critical error in safe mode: {e}")
 
 
 if __name__ == "__main__":
     check_structure()
-    logger()
+    logger = setup_logging()
+    logger.info("Starting FoxUserbot...")
     autoupdater()
     userbot()
