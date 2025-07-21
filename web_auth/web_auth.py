@@ -102,65 +102,55 @@ def find_free_port() -> int:
         s.bind(('localhost', 0))
         return s.getsockname()[1]
 
-def ensure_localtunnel():
-    if not shutil.which('npm'):
-        print("❌ npm not found! ")
-        return False
+def ensure_ssh():
     try:
-        result = subprocess.run(['npm', 'list', '-g', 'localtunnel'], capture_output=True, text=True)
-        if 'empty' in result.stdout or 'missing' in result.stdout or 'not found' in result.stdout:
-            print("Installing localtunnel...")
-            subprocess.run(['sudo', 'npm', 'install', '-g', 'localtunnel'], check=True)
-        return True
+        result = subprocess.run(['ssh', '-V'], capture_output=True, text=True)
+        if result.returncode == 0:
+            return True
+        else:
+            print("❌ SSH not found!")
+            return False
     except Exception as e:
-        print(f"❌ Error installing localtunnel: {e}")
+        print(f"❌ Error checking SSH: {e}")
         return False
-    return True
 
 def get_public_url(port: int) -> Optional[str]:
-    if not ensure_localtunnel():
+    if not ensure_ssh():
         return None
 
-    localtunnel_output_file = "localtunnel_output.txt"
-    if os.path.exists(localtunnel_output_file):
-        os.remove(localtunnel_output_file)
+    localhost_run_output_file = "localhost_run_output.txt"
+    if os.path.exists(localhost_run_output_file):
+        os.remove(localhost_run_output_file)
 
     try:
         subprocess.Popen(
-            f'npx localtunnel --port {port} > {localtunnel_output_file} 2>&1 &',
+            f'ssh -o StrictHostKeyChecking=no -R 80:localhost:{port} nokey@localhost.run > {localhost_run_output_file} 2>&1 &',
             shell=True,
             preexec_fn=os.setsid
         )
         
-        timeout = 20 
+        timeout = 30 
         start_time = time.time()
         while time.time() - start_time < timeout:
-            if os.path.exists(localtunnel_output_file):
-                with open(localtunnel_output_file, 'r') as file:
+            if os.path.exists(localhost_run_output_file):
+                with open(localhost_run_output_file, 'r') as file:
                     content = file.read()
                     lines = content.splitlines()
                     for line in lines:
-                        if 'https://' in line:
-                            return line.strip()
+                        if "tunneled with tls termination" in line:
+                            url = line.split()[-1]
+                            return url
             time.sleep(1) 
+        print("⏰ Timeout reached, no URL found")
         return None 
     except Exception as e:
-        print(f"📝 Logging: Error starting localtunnel or getting public URL: {e}")
+        print(f"📝 Logging: Error starting localhost.run or getting public URL: {e}")
         return None
 
 def run_web_server(port: int):
     public_url = get_public_url(port)
     if public_url:
-        try:
-            password = subprocess.run(["curl", "https://loca.lt/mytunnelpassword"], capture_output=True, text=True).stdout.strip()
-            if password:
-                print(f"🌐 Public URL: {public_url}")
-                print(f"🔑 Password: {password}")
-            else:
-                print(f"🌐 Public URL: {public_url}")
-        except Exception as e:
-            print(f"🌐 Public URL: {public_url}")
-            print(f"❌ Could not fetch password: {e}")
+        print(f"🌐 Public URL: {public_url}")
    
     app.run(host='127.0.0.1', port=port, debug=False, use_reloader=False) 
     

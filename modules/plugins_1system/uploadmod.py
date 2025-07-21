@@ -13,7 +13,8 @@ async def uploadmod(client, message):
         await client.send_document(
             message.chat.id,
             f"modules/plugins_2custom/{file}",
-            caption=f"Module `{module_name}`\nfor FoxUserbot 🦊"
+            caption=f"Module `{module_name}`\nfor FoxUserbot 🦊\n<b>You can install the module by replying [prefix]loadmod</b>",
+            message_thread_id=message.message_thread_id
         )
         await message.delete()
     except Exception as error:

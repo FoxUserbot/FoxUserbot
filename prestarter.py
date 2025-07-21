@@ -27,14 +27,21 @@ def prestart(api_id, api_hash, device_mod):
     
     loop.run_until_complete(check_connection())
     with app:
-        if len(sys.argv) == 4:
+        if len(sys.argv) >= 4:
             restart_type = sys.argv[3]
+            thread_id = None
+            if len(sys.argv) >= 5 and sys.argv[4] != "None":
+                try:
+                    thread_id = int(sys.argv[4])
+                except ValueError:
+                    thread_id = None
+                    
             if restart_type == "1":
                 text = "<code>Update process completed!</code>"
             else:
                 text = "**Userbot succesfully Restarted**"
             try:
-                app.send_message(int(sys.argv[1]), text)
+                app.send_message(int(sys.argv[1]), text, message_thread_id=thread_id)
             except Exception as f:
                 app.send_message("me", f"Got error: {f}\n\n" + text)
                 

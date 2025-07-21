@@ -14,6 +14,7 @@ async def restart(message: Message, restart_type):
         text = "1"
     else:
         text = "2"
+    thread_id = message.message_thread_id if message.message_thread_id else None
 
     if os.name == "nt":
         await os.execvp(
@@ -24,6 +25,7 @@ async def restart(message: Message, restart_type):
                 f"{message.chat.id}",
                 f"{message.id}",
                 f"{text}",
+                f"{thread_id}" if thread_id else "None",
             ],
         )
     else:
@@ -35,6 +37,7 @@ async def restart(message: Message, restart_type):
                 f"{message.chat.id}",
                 f"{message.id}",
                 f"{text}",
+                f"{thread_id}" if thread_id else "None",
             ],
         )
 

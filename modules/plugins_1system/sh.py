@@ -10,15 +10,16 @@ import os
 
 @Client.on_message(filters.command(["shell", "sh"], prefixes=my_prefix()) & filters.me)
 async def example_edit(client, message):
-    if not message.reply_to_message and len(message.command) == 1:
+    if not message.reply_to_message and (len(message.command) == 1):
         return await message.edit(
             "<b>Specify the command in message text or in reply</b>"
         )
     cmd_text = (
-        message.text.split(maxsplit=1)[1]
+        " ".join(message.text.split()[1:])
         if message.reply_to_message is None
         else message.reply_to_message.text
     )
+    if cmd_text is None: cmd_text = " ".join(message.text.split()[1:])
     cmd_obj = Popen(cmd_text, shell=True, stdout=PIPE, stderr=PIPE, text=True)
     await message.edit("<b>Running...</b>")
     text = f"$ <code>{cmd_text}</code>\n\n"
@@ -57,10 +58,10 @@ async def example_edit(client, message):
             file.write(f"{output}")
 
         try:
-            await client.send_document(message.chat.id, f"temp/result{i}.txt", caption=f"<code>{command}</code>")
+            await client.send_document(message.chat.id, f"temp/result{i}.txt", caption=f"<code>{command}</code>" , message_thread_id=message.message_thread_id)
             await message.delete()
         except:
-            await client.send_document(message.chat.id, f"temp/result{i}.txt", caption="Result")
+            await client.send_document(message.chat.id, f"temp/result{i}.txt", caption="Result" , message_thread_id=message.message_thread_id)
             await message.edit(f"<code>{command}</code>")
         os.remove(f"result{i}.txt")
     cmd_obj.kill()

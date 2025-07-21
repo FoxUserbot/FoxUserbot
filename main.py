@@ -10,8 +10,8 @@ from requirements_installer import install_library
 
 
 def check_structure():
-    if os.path.exists("localtunnel_output.txt"):
-        os.remove("localtunnel_output.txt")
+    if os.path.exists("localhost_run_output.txt"):
+        os.remove("localhost_run_output.txt")
     if not os.path.exists("temp"):
         os.mkdir("temp")
     try:
@@ -44,12 +44,16 @@ def autoupdater():
 
     if not first_launched:
         pip.main(["uninstall", "pyrogram", "kurigram", "-y"])
+        try:
+            install_library('tgcrypto -U')
+        except Exception as f:
+            logger.warning(f)
         with open("firstlaunch.temp", "w", encoding="utf-8") as f:
             f.write("1")
-
+    
     # install requirements for userbot
     install_library('wheel telegraph wget pystyle flask -U')
-    install_library('kurigram==2.1.37')
+    install_library('kurigram==2.2.6')
     setup_logging()
     logger.info("Logging restored after installing dependencies")
 
@@ -63,20 +67,17 @@ async def start_userbot(app):
         logger.info("[Session]: Session already exists, restart not required")
     else:
         logger.info("[Session]: First authorization, restarting main script")
-        if os.path.exists("localtunnel_output.txt"):
-            os.remove("localtunnel_output.txt")
+        if os.path.exists("localhost_run_output.txt"):
+            os.remove("localhost_run_output.txt")
         os.execv(sys.executable, [sys.executable] + sys.argv)
 
 
 def setup_logging():
     log_file = 'temp/fox_userbot.log'
-    
-    # Удаляем все старые обработчики
+
     root_logger = logging.getLogger()
     for handler in root_logger.handlers[:]:
         root_logger.removeHandler(handler)
-    
-    # Настраиваем новые обработчики
     file_handler = logging.FileHandler(log_file, encoding='utf-8')
     console_handler = logging.StreamHandler()
     
@@ -117,9 +118,7 @@ def userbot():
                 api_id=api_id,
                 api_hash=api_hash,
                 device_model=device_mod,
-            )
-            client.start()
-            client.stop()
+            ).run()
         else:      
             success, user = start_web_auth(api_id, api_hash, device_mod)
             
@@ -129,8 +128,6 @@ def userbot():
             else:
                 if not os.path.exists("my_account.session"):
                     logger.warning("[Userbot] Restarting...")
-                    if os.path.exists("localtunnel_output.txt"):
-                        os.remove("localtunnel_output.txt")
                     os.execv(sys.executable, [sys.executable] + sys.argv)
                     
                 else:
