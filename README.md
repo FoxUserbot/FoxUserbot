@@ -8,7 +8,7 @@
     <br>
     <b>Used Kurigram (Fork Pyrogram)</b>
     <br>
-    <a href='https://github.com/FoxUserbot/Modules'>
+    <a href='https://github.com/FoxUserbot/CustomModules'>
         Custom modules
     </a>
 <br><br>
@@ -76,7 +76,7 @@ file_list['Example'] = 'example.py'
 
 <h2>How to add Hikka/Heroku modules?</h2>
 
-To add modules from Hikka/Heroku, there is a special compatibility layer called <b>Wine Hikka</b>. To use it, download the module file itself from the <a href='https://github.com/FoxUserbot/Modules'>modules repository</a> and reply to the Hikka module with <code>[prefix]wine_hikka</code> or <code>[prefix]wine_hikka [link]</code>.
+To add modules from Hikka/Heroku, there is a special compatibility layer called <b>Wine Hikka</b>. To use it, download the module file itself from the <a href='https://github.com/FoxUserbot/CustomModules'>modules repository</a> and reply to the Hikka module with <code>[prefix]wine_hikka</code> or <code>[prefix]wine_hikka [link]</code>.
 
 AI will automatically convert the module from Telethon to Pyrogram for this UserBot, save it in the <code>modules/plugins_2custom/</code> folder and restart it.
 
