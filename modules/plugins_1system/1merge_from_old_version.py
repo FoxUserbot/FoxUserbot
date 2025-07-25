@@ -55,4 +55,3 @@ for _ in modules:
 # 2.3 > 2.3.3
 if os.path.exists("first_launch.bat"):
     os.remove("first_launch.bat")
-‎
