@@ -52,4 +52,7 @@ for _ in modules:
             os.remove(f"modules/plugins_1system/{_}")
     except Exception as fff:
         print(fff)
-
+# 2.3 > 2.3.3
+if os.path.exists("first_launch.bat"):
+    os.remove("first_launch.bat")
+‎
