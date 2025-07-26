@@ -3,14 +3,15 @@ import random
 import os
 import shutil
 import wget
+from modules.plugins_1system.restarter import restart_executor
 
 # 1.0 > 2.0
 if os.path.isdir("plugins"):
     i = random.randint(10000, 99999)
     os.rename("plugins", f"modules_old_{i}")
-    Write.Print(f"""[WARNING] Old incompatible modules (modules_old_{i}) detected!
+    print(f"""[WARNING] Old incompatible modules (modules_old_{i}) detected!
 [WARNING] Please rewrite them in a new format and upload them to the
-[WARNING] ==> .modules/plugins_2custom directory\n""", Colors.red_to_yellow, interval=0.0)
+[WARNING] ==> .modules/plugins_2custom directory\n""")
 
 # 2.1 > 2.2
 if os.path.exists("modules/plugins_1system/support.py"):
@@ -43,13 +44,29 @@ modules = ["user_info.py", "weather.py", "webshot.py", "wikipedia.py", "switch.p
            "purge.py", "ignore.py", "kickall.py", "ladder.py", "lastfm.py", "link.py",
            "find_music.py", "gen_pass.py", "hearts.py", "afk.py", "autoanswer.py", "autoonline.py",
            "autoread.py", "chance.py", "demotivator.py"]
+modules_value = 0
 for _ in modules:
     try:
         if os.path.exists(f"modules/plugins_1system/{_}"):
-            link = f"https://raw.githubusercontent.com/FoxUserbot/Modules/refs/heads/main/{_}"
+            link = f"https://raw.githubusercontent.com/FoxUserbot/CustomModules/refs/heads/main/{_}"
             wget.download(link, f"temp/{_}")
             os.replace(f"temp/{_}", f"modules/plugins_2custom/{_}")
             os.remove(f"modules/plugins_1system/{_}")
+            modules_value += 1
     except Exception as fff:
         print(fff)
+if modules_value >= 1:
+    restart_executor()
 
+# 2.3 > 2.3.3
+if os.path.exists("first_launch.bat"):
+    os.remove("first_launch.bat")
+if os.path.exists("check.py"):
+    os.remove("check.py")
+if os.path.exists("help_first_launch.py"):
+    os.remove("help_first_launch.py")
+
+# 2.3.3 > 2.3.4
+if os.path.exists("config.ini"):
+    os.replace("config.ini", "userdata/config.ini")
+    restart_executor()

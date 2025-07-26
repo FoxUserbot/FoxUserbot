@@ -9,37 +9,40 @@ import wget
 import shutil
 
 
+def restart_executor(chat_id=None, message_id=None, text=None, thread=None):
+    if os.name == "nt":
+        os.execvp(
+            "python",
+            [
+                "python",
+                "main.py",
+                f"{chat_id}",
+                f"{message_id}",
+                f"{text}",
+                f"{thread}" if thread else "None",
+            ],
+        )
+    else:
+        os.execvp(
+            "python3",
+            [
+                "python3",
+                "main.py",
+                f"{chat_id}",
+                f"{message_id}",
+                f"{text}",
+                f"{thread}" if thread else "None",
+            ],
+        )
+
+
 async def restart(message: Message, restart_type):
     if restart_type == "update":
         text = "1"
     else:
         text = "2"
     thread_id = message.message_thread_id if message.message_thread_id else None
-
-    if os.name == "nt":
-        await os.execvp(
-            "python",
-            [
-                "python",
-                "main.py",
-                f"{message.chat.id}",
-                f"{message.id}",
-                f"{text}",
-                f"{thread_id}" if thread_id else "None",
-            ],
-        )
-    else:
-        await os.execvp(
-            "python3",
-            [
-                "python3",
-                "main.py",
-                f"{message.chat.id}",
-                f"{message.id}",
-                f"{text}",
-                f"{thread_id}" if thread_id else "None",
-            ],
-        )
+    restart_executor(message.chat.id, message.id, text, thread_id)
 
 
 # Restart
