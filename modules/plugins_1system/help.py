@@ -76,7 +76,7 @@ async def helps(client, message):
             try:
                 da = await client.send_photo(
                     message.chat.id, 
-                    photo="photos/foxuserbot_.jpg", 
+                    photo="photos/foxuserbot_info.jpg", 
                     caption="Loading the help menu...", 
                     message_thread_id=message.message_thread_id
                 )
