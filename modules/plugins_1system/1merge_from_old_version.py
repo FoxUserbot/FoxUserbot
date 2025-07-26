@@ -63,6 +63,8 @@ if os.path.exists("first_launch.bat"):
     os.remove("first_launch.bat")
 if os.path.exists("check.py"):
     os.remove("check.py")
+if os.path.exists("help_first_launch.py"):
+    os.remove("help_first_launch.py")
 
 # 2.3.3 > 2.3.4
 if os.path.exists("config.ini"):
