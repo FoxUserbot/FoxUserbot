@@ -29,8 +29,105 @@ async def theme_command(client, message):
 
         await message.edit(text)
         return
-    
-    if message.command[1] == "vars":
+
+    if message.command[1] == "help":
+        if message.command[2] == "set":
+            if message.command[3] == "image":
+                if len(message.command) < 5:
+                    await message.edit(f"**Usage:** `{my_prefix()}theme help set image [image_url]`")
+                    return
+                value = message.command[4]
+            elif message.command[3] == "text":
+                if len(message.command) < 5:
+                    await message.edit(f"**Usage:** `{my_prefix()}theme help set text [text]`")
+                    return
+                
+                full_text = message.text.html
+                text_pos = full_text.find("text")
+                if text_pos == -1:
+                    await message.edit(f"**Usage:** `{my_prefix()}theme help set text [text]`")
+                    return
+                value = '\n'.join(full_text[text_pos + 5:].strip().split("\n"))
+            else:
+                await message.edit(f"**Usage:** `{my_prefix()}theme help set [image/text] [value]`")
+                return
+                
+            os.makedirs(os.path.dirname(THEME_PATH), exist_ok=True)
+            config = configparser.ConfigParser()
+            
+            if Path(THEME_PATH).exists():
+                config.read(THEME_PATH)
+            
+            if not config.has_section("help"):
+                config.add_section("help")
+                
+            # Используем "text" вместо "custom_text" для совместимости
+            config.set("help", "text" if message.command[3] == "text" else "image", value)
+            
+            with open(THEME_PATH, 'w') as f:
+                config.write(f)
+                
+            await message.edit("✅ Help settings updated")
+        
+        elif message.command[2] == "reset":
+            if Path(THEME_PATH).exists():
+                config = configparser.ConfigParser()
+                config.read(THEME_PATH)
+                if config.has_section("help"):
+                    config.remove_section("help")
+                with open(THEME_PATH, 'w') as f:
+                    config.write(f)
+            await message.edit("✅ Help theme reset to default")
+
+    elif message.command[1] == "info":
+        if message.command[2] == "set":
+            if message.command[3] == "image":
+                if len(message.command) < 5:
+                    await message.edit(f"**Usage:** `{my_prefix()}theme info set image [image_url]`")
+                    return
+                value = message.command[4]
+            elif message.command[3] == "text":
+                if len(message.command) < 5:
+                    await message.edit("**Usage:** `.theme info set text [text]`")
+                    return
+                
+                full_text = message.text.html
+                text_pos = full_text.find("text")
+                if text_pos == -1:
+                    await message.edit("**Usage:** `.theme info set text [text]`")
+                    return
+                value = '\n'.join(full_text[text_pos + 5:].strip().split("\n"))
+            else:
+                await message.edit("**Usage:** `.theme info set [image/text] [value]`")
+                return
+                
+            os.makedirs(os.path.dirname(THEME_PATH), exist_ok=True)
+            config = configparser.ConfigParser()
+            
+            if Path(THEME_PATH).exists():
+                config.read(THEME_PATH)
+            
+            if not config.has_section("info"):
+                config.add_section("info")
+                
+            # Используем "text" вместо "custom_text" для совместимости
+            config.set("info", "text" if message.command[3] == "text" else "image", value)
+            
+            with open(THEME_PATH, 'w') as f:
+                config.write(f)
+                
+            await message.edit("✅ Info settings updated")
+        
+        elif message.command[2] == "reset":
+            if Path(THEME_PATH).exists():
+                config = configparser.ConfigParser()
+                config.read(THEME_PATH)
+                if config.has_section("info"):
+                    config.remove_section("info")
+                with open(THEME_PATH, 'w') as f:
+                    config.write(f)
+            await message.edit("✅ Info theme reset to default")
+    else:
         help_text = """
 <blockquote expandable><b>🎨 <u>How to create your own theme:</u></b>
 
@@ -83,101 +180,4 @@ Kurigram: {version}
         await message.edit(help_text)
         return
         
-    if message.command[1] == "help":
-        if message.command[2] == "set":
-            if message.command[3] == "image":
-                if len(message.command) < 5:
-                    await message.edit(f"**Usage:** `{my_prefix()}theme help set image [image_url]`")
-                    return
-                value = message.command[4]
-            elif message.command[3] == "text":
-                if len(message.command) < 5:
-                    await message.edit(f"**Usage:** `{my_prefix()}theme help set text [text]`")
-                    return
-                
-                full_text = message.text.html
-                text_pos = full_text.find("text")
-                if text_pos == -1:
-                    await message.edit(f"**Usage:** `{my_prefix()}theme help set text [text]`")
-                    return
-                value = '\n'.join(full_text[text_pos + 5:].strip().split("\n"))
-            else:
-                await message.edit(f"**Usage:** `{my_prefix()}theme help set [image/text] [value]`")
-                return
-                
-            os.makedirs(os.path.dirname(THEME_PATH), exist_ok=True)
-            config = configparser.ConfigParser()
-            
-            if Path(THEME_PATH).exists():
-                config.read(THEME_PATH)
-            
-            if not config.has_section("help"):
-                config.add_section("help")
-                
-            # Используем "text" вместо "custom_text" для совместимости
-            config.set("help", "text" if message.command[3] == "text" else "image", value)
-            
-            with open(THEME_PATH, 'w') as f:
-                config.write(f)
-                
-            await message.edit("✅ Help settings updated")
-        
-        elif message.command[2] == "reset":
-            if Path(THEME_PATH).exists():
-                config = configparser.ConfigParser()
-                config.read(THEME_PATH)
-                if config.has_section("help"):
-                    config.remove_section("help")
-                with open(THEME_PATH, 'w') as f:
-                    config.write(f)
-            await message.edit("✅ Help theme reset to default")
-    elif message.command[1] == "info":
-        if message.command[2] == "set":
-            if message.command[3] == "image":
-                if len(message.command) < 5:
-                    await message.edit(f"**Usage:** `{my_prefix()}theme info set image [image_url]`")
-                    return
-                value = message.command[4]
-            elif message.command[3] == "text":
-                if len(message.command) < 5:
-                    await message.edit("**Usage:** `.theme info set text [text]`")
-                    return
-                
-                full_text = message.text.html
-                text_pos = full_text.find("text")
-                if text_pos == -1:
-                    await message.edit("**Usage:** `.theme info set text [text]`")
-                    return
-                value = '\n'.join(full_text[text_pos + 5:].strip().split("\n"))
-            else:
-                await message.edit("**Usage:** `.theme info set [image/text] [value]`")
-                return
-                
-            os.makedirs(os.path.dirname(THEME_PATH), exist_ok=True)
-            config = configparser.ConfigParser()
-            
-            if Path(THEME_PATH).exists():
-                config.read(THEME_PATH)
-            
-            if not config.has_section("info"):
-                config.add_section("info")
-                
-            # Используем "text" вместо "custom_text" для совместимости
-            config.set("info", "text" if message.command[3] == "text" else "image", value)
-            
-            with open(THEME_PATH, 'w') as f:
-                config.write(f)
-                
-            await message.edit("✅ Info settings updated")
-        
-        elif message.command[2] == "reset":
-            if Path(THEME_PATH).exists():
-                config = configparser.ConfigParser()
-                config.read(THEME_PATH)
-                if config.has_section("info"):
-                    config.remove_section("info")
-                with open(THEME_PATH, 'w') as f:
-                    config.write(f)
-            await message.edit("✅ Info theme reset to default")
-    
 module_list['Theme'] = f'{my_prefix()}theme [help/info/vars] [set/reset] [image/text] [value]'

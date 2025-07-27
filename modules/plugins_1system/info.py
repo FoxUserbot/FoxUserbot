@@ -47,7 +47,6 @@ def format_uptime():
 
 
 def replace_aliases(text, message):
-
     uptime_text = format_uptime()
     platform_text = get_platform_info()
     
@@ -61,36 +60,19 @@ def replace_aliases(text, message):
 
     for alias, value in aliases.items():
         text = text.replace(alias, str(value))
-    
-    if message.from_user.is_premium:
-        footer = f"""<blockquote expandable>
-<emoji id="5330237710655306682">📱</emoji><a href="https://t.me/foxteam0"><b> | Official FoxTeam Channel.</b></a>
-<emoji id="5346181118884331907">📱</emoji><a href="https://github.com/FoxUserbot/FoxUserbot"><b> | Github Repository.</b></a>
-<emoji id="5379999674193172777">🔭</emoji><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install"><b> | Installation Guide.</b></a>
-    
-<emoji id=5350554349074391003>💻</emoji> | <b>Developers:</b>
-<emoji id="5330237710655306682">📱</emoji> | <a href="https://t.me/a9_fm">A9FM</a>
-<emoji id="5330237710655306682">📱</emoji> | <a href="https://t.me/ArThirtyFour">ArThirtyFour</a>
 
-<emoji id="5359480394922082925">📱</emoji> | <b>Designer:</b>
-<emoji id="5330237710655306682">📱</emoji> | <a href="https://t.me/nw_off">Nw_Off</a>
-</blockquote>
+    if message.from_user.is_premium:
+        footer = f"""\n 
+<blockquote expandable><emoji id="5330237710655306682">📱</emoji><a href="https://t.me/foxteam0"><b> | Official FoxTeam Channel.</b></a>
+<emoji id="5346181118884331907">📱</emoji><a href="https://github.com/FoxUserbot/FoxUserbot"><b> | Github Repository.</b></a>
+<emoji id="5379999674193172777">🔭</emoji><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install"><b> | Installation Guide.</b></a></blockquote>
     """
     else:
-        footer = f"""<blockquote expandable>
-<b><a href="https://t.me/foxteam0">💻 | Official FoxTeam Channel.</a></b>
+        footer = f"""\n
+<blockquote expandable><b><a href="https://t.me/foxteam0">💻 | Official FoxTeam Channel.</a></b>
 <b><a href="https://github.com/FoxUserbot/FoxUserbot">🐈‍⬛ | Github Repository.</a></b>
-<b><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install">🤔 | Installation Guide.</a></b>
-
-💻 | <b>Developers:</b>
-📞 | <a href="https://t.me/a9_fm">A9FM</a>
-📞 | <a href="https://t.me/ArThirtyFour">ArThirtyFour</a>
-
-<b>🖼 | <b>Designer:</b>
-📞 | <a href="https://t.me/nw_off">Nw_Off</a>
-</blockquote>
-    """
-    
+<b><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install">🤔 | Installation Guide.</a></b></blockquote>
+"""
     return text + footer
 
 
