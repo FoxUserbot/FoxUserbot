@@ -1,7 +1,8 @@
 import subprocess
 from pyrogram import Client, filters , __version__
 from pyrogram.errors import WebpageMediaEmpty , ChatSendPhotosForbidden
-from modules.plugins_1system.settings.main_settings import module_list, file_list, bot_start_time
+from modules.plugins_1system.settings.main_settings import module_list, file_list
+from modules.plugins_1system.uptime import bot_start_time
 from prefix import my_prefix
 from platform import python_version, system, release, machine
 import configparser
@@ -28,7 +29,7 @@ def get_platform_info():
 
 
 def format_uptime():
-    uptime = datetime.now() - bot_start_time
+    uptime = datetime.now() - bot_start_time()
     days = uptime.days
     hours, remainder = divmod(uptime.seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
