@@ -17,11 +17,12 @@ def get_help_image():
     try:
         config = configparser.ConfigParser()
         config.read(THEME_PATH)
-        return config.get("help", "image_url", fallback=DEFAULT_HELP_IMAGE)
+        return config.get("help", "image", fallback=DEFAULT_HELP_IMAGE)
     except:
         return DEFAULT_HELP_IMAGE
 
 def get_help_text(message):
+    # Генерируем ссылку на команды заранее
     lists = []
     for k, v in module_list.items():
         lists.append(f'➣ Module [{k}] - Command: {v}<br><br>')
@@ -30,6 +31,25 @@ def get_help_text(message):
     telegraph = Telegraph()
     telegraph.create_account(short_name='FoxServices')
     link = f"https://telegra.ph/{telegraph.create_page(f'FoxUserbot Help {random.randint(10000, 99999)}', html_content=f'{a}')['path']}"
+    
+    custom_text = None
+    if Path(THEME_PATH).exists():
+        try:
+            config = configparser.ConfigParser()
+            config.read(THEME_PATH)
+            custom_text = config.get("help", "text", fallback=None)
+            if custom_text and custom_text.strip() and custom_text != "Not set":
+                aliases = {
+                    '{version}': version,
+                    '{modules_count}': str(len(module_list)),
+                    '{prefix}': my_prefix(),
+                    '{commands_link}': link,
+                }
+                for alias, value in aliases.items():
+                    custom_text = custom_text.replace(alias, str(value))
+                return custom_text
+        except Exception as e:
+            pass
     
     if message.from_user.is_premium:
         return f"""

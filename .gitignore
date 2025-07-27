@@ -9,4 +9,4 @@ firstlaunch.temp
 temp/
 nohup.out
 triggers/
-userdata/
+userdata/*
