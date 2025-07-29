@@ -1,12 +1,10 @@
 from pyrogram import Client, filters
-from modules.plugins_1system.settings.main_settings import module_list, file_list
-from prefix import my_prefix
-
+from command import fox_command
+import os
 import sys
 from io import StringIO
 
-
-@Client.on_message(filters.command("eval", prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1="eval", Module_Name="Eval", names=os.path.basename(__file__) , arg="[code/reply]") & filters.me)
 def user_exec(client, message):
     reply = message.reply_to_message
     code = ""
@@ -35,7 +33,3 @@ def user_exec(client, message):
             f"<b>Result</b>:\n"
             f"<code>{sys.exc_info()[0].__name__}: {sys.exc_info()[1]}</code>"
         )
-
-
-module_list['Eval'] = f'{my_prefix()}eval'
-file_list['Eval'] = 'eval.py'

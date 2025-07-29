@@ -1,0 +1,6 @@
+wheel 
+telegraph
+wget 
+pystyle 
+flask 
+kurigram==2.2.6

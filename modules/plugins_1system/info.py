@@ -1,10 +1,8 @@
-import subprocess
 from pyrogram import Client, filters , __version__
-from pyrogram.errors import WebpageMediaEmpty , ChatSendPhotosForbidden
-from modules.plugins_1system.settings.main_settings import module_list, file_list
 from modules.plugins_1system.uptime import bot_start_time
-from prefix import my_prefix
-from platform import python_version, system, release, machine
+from command import fox_command
+import os
+from platform import python_version, system, release
 import configparser
 from pathlib import Path
 from datetime import datetime
@@ -63,13 +61,13 @@ def replace_aliases(text, message):
         text = text.replace(alias, str(value))
 
     if message.from_user.is_premium:
-        footer = f"""\n 
+        footer = f"""
 <blockquote expandable><emoji id="5330237710655306682">📱</emoji><a href="https://t.me/foxteam0"><b> | Official FoxTeam Channel.</b></a>
 <emoji id="5346181118884331907">📱</emoji><a href="https://github.com/FoxUserbot/FoxUserbot"><b> | Github Repository.</b></a>
 <emoji id="5379999674193172777">🔭</emoji><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install"><b> | Installation Guide.</b></a></blockquote>
     """
     else:
-        footer = f"""\n
+        footer = f"""
 <blockquote expandable><b><a href="https://t.me/foxteam0">💻 | Official FoxTeam Channel.</a></b>
 <b><a href="https://github.com/FoxUserbot/FoxUserbot">🐈‍⬛ | Github Repository.</a></b>
 <b><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install">🤔 | Installation Guide.</a></b></blockquote>
@@ -144,7 +142,7 @@ def get_info_text(message):
     """
 
 
-@Client.on_message(filters.command('info', prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1="info", Module_Name="Info", names=os.path.basename(__file__)) & filters.me)
 async def info(client, message):
     try:
         image_url = get_info_image()
@@ -182,6 +180,3 @@ async def info(client, message):
             except:
                 await message.edit("Loading the info...")
                 await message.edit(get_info_text(message))
-
-
-module_list['Info'] = f'{my_prefix()}info'

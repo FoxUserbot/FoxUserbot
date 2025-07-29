@@ -2,7 +2,7 @@
     <img src="photos/logo.png" width="500" alt="FoxUserbot">
     </a>
     <br>
-    <b>FoxUserbot 2.3.5</b>
+    <b>FoxUserbot 2.4</b>
     <br>
     <b>Telegram userbot with the easiest installation</b>
     <br>
@@ -40,8 +40,8 @@
 
 ```python3
 from pyrogram import Client, filters
-from modules.plugins_1system.settings.main_settings import module_list, file_list
-from prefix import my_prefix
+from command import fox_command
+import os
 
 # If you need to install an external module via pip
 # import the following line of code and install the library with the required parameter
@@ -63,15 +63,19 @@ from prefix import my_prefix
 # if you need to call any command after restarting
 # with open("triggers/example_autostart", "w", encoding="utf-8") as f:
 #        f.write("example_edit")
-# ================ ^^^ enter the command that should be run after the userbot is restarted
+#        ^^^ enter the command that should be run after the userbot is restarted
+#
+# if you need write data config
+# with open("userdata/example_config", "w", encoding="utf-8") as f:
+#        f.write("example_data")
+#        ^^^ enter the need data
 
-@Client.on_message(filters.command("example_edit", prefixes=my_prefix()) & filters.me)
+
+@Client.on_message(fox_command("example", Module_Name="Example", names=os.path.basename(__file__) args="[Arguments]") & filters.me)
 async def example_edit(client, message):
     await message.edit("<code>This is an example module</code>")
 
-   
-module_list['Example'] = f'{my_prefix()}example_edit'
-file_list['Example'] = 'example.py'
+
 ```
 
 <h2>How to add Hikka/Heroku modules?</h2>

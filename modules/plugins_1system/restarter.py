@@ -1,13 +1,10 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from modules.plugins_1system.settings.main_settings import module_list, file_list
-from prefix import my_prefix
-
+from command import fox_command
 import os
 import zipfile
 import wget
 import shutil
-
 
 def restart_executor(chat_id=None, message_id=None, text=None, thread=None):
     if os.name == "nt":
@@ -46,7 +43,7 @@ async def restart(message: Message, restart_type):
 
 
 # Restart
-@Client.on_message(filters.command("restart", prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1="restart", Module_Name="Restarter", names=os.path.basename(__file__)) & filters.me)
 async def restart_get(client, message):
     try:
         await message.edit("**Restarting userbot...**")
@@ -56,7 +53,7 @@ async def restart_get(client, message):
 
 
 # Update
-@Client.on_message(filters.command('update', prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1="update", Module_Name="Restarter", names=os.path.basename(__file__)) & filters.me)
 async def update(client, message):
     try:
         await message.edit('**Updating...**')
@@ -78,8 +75,3 @@ async def update(client, message):
         await restart(message, restart_type="update")
     except:
         await message.edit(f"**An error occured...**")
-
-
-
-module_list['Restarter'] = f'{my_prefix()}update | {my_prefix()}restart'
-file_list['Restarter'] = 'restarter.py'

@@ -1,11 +1,12 @@
 from pyrogram import Client, filters
-from modules.plugins_1system.settings.main_settings import module_list, file_list
-from prefix import my_prefix
+from modules.plugins_1system.settings.main_settings import file_list
+from command import fox_command
+import os
 
-
-@Client.on_message(filters.command('uploadmod', prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1="uploadmod", Module_Name="Uploadmod", names=os.path.basename(__file__), arg="[module name]") & filters.me)
 async def uploadmod(client, message):
     try:
+        from prefix import my_prefix
         module_name = message.text.replace(f'{my_prefix()}uploadmod', '')
         params = module_name.split()
         module_name = params[0]
@@ -19,6 +20,3 @@ async def uploadmod(client, message):
         await message.delete()
     except Exception as error:
         await message.edit(f"**An error has occurred.**\nLog: {error}")
-
-
-module_list['Uploadmod'] = f'{my_prefix()}uploadmod [module name]'

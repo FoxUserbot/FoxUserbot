@@ -54,8 +54,7 @@ def autoupdater():
             f.write("1")
     
     # install requirements for userbot
-    install_library('wheel telegraph wget pystyle flask -U')
-    install_library('kurigram==2.2.6')
+    install_library('-r requirements.txt -U')
     setup_logging()
     logger.info("Logging restored after installing dependencies")
 

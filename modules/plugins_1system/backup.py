@@ -5,9 +5,9 @@ import shutil
 import tarfile
 import tempfile
 from pathlib import Path
-from modules.plugins_1system.settings.main_settings import module_list, file_list, version
+from modules.plugins_1system.settings.main_settings import version
 from modules.plugins_1system.restarter import restart
-from prefix import my_prefix
+from command import fox_command
 
 # backup_dirs
 BACKUP_PATHS = [
@@ -49,7 +49,7 @@ async def restore_backup(client, message):
         if 'download_path' in locals() and os.path.exists(download_path):
             os.remove(download_path)
 
-@Client.on_message(filters.command("backup", prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1="backup", Module_Name="Backup", names=os.path.basename(__file__)) & filters.me)
 async def backup_command(client, message):
     try:
         msg = await message.edit("<b>🔄 Creating a backup copy...</b>")
@@ -58,7 +58,8 @@ async def backup_command(client, message):
         await client.send_document(
             chat_id=message.chat.id,
             document=backup_file,
-            caption=f"🔐 | Backup {Path(backup_file).name}\n🦊 | Only for FoxUserbot\n🔒 | Version: {version}"
+            caption=f"🔐 | Backup {Path(backup_file).name}\n🦊 | Only for FoxUserbot\n🔒 | Version: {version}\n🔗 | https://t.me/FoxUserbot",
+            message_thread_id=message.message_thread_id
         )
         await msg.delete()
     except Exception as e:
@@ -67,12 +68,9 @@ async def backup_command(client, message):
         if 'backup_file' in locals() and os.path.exists(backup_file):
             os.remove(backup_file)
 
-@Client.on_message(filters.command("restore", prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1="restore", Module_Name="Backup", names=os.path.basename(__file__) , arg="[reply]") & filters.me)
 async def restore_command(client, message):
     await message.edit("<b>🔄 Ready for restoration...</b>")
     await restore_backup(client, message)
     await restart(message, restart_type="restart")
 
-
-module_list['Backup'] = f"{my_prefix()}backup | {my_prefix()}restore [reply]"
-file_list['Backup'] = 'backup.py'

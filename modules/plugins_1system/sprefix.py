@@ -1,19 +1,16 @@
 from pyrogram import Client, filters
-from modules.plugins_1system.settings.main_settings import module_list, file_list
 from modules.plugins_1system.restarter import restart
-from prefix import my_prefix
-
-import configparser
+from command import fox_command
 import os
-import sys
+import configparser
+
 
 PATH_FILE = "userdata/config.ini"
 
 config = configparser.ConfigParser()
 config.read(PATH_FILE)
 
-
-@Client.on_message(filters.command("sp", prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1="sp", Module_Name="SetPrefix", names=os.path.basename(__file__), arg="[new prefix]") & filters.me)
 async def sprefix(client, message):
     if len(message.command) > 1:
         prefixgett = message.command[1]
@@ -27,6 +24,3 @@ async def sprefix(client, message):
     else:
         await message.edit("<b>prefix don't be None</b>")
 
-
-module_list['SetPrefix'] = f'{my_prefix()}sp'
-file_list['SetPrefix'] = 'sprefix.py'

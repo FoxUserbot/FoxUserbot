@@ -1,14 +1,11 @@
 from pyrogram import Client, filters
-from modules.plugins_1system.settings.main_settings import module_list, file_list
-from prefix import my_prefix
-
+from command import fox_command
+import os
 from subprocess import Popen, PIPE, TimeoutExpired
 from time import perf_counter
 import random
-import os
 
-
-@Client.on_message(filters.command(["shell", "sh"], prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1=["shell", "sh"], Module_Name="Sh", names=os.path.basename(__file__) , arg="[command/reply]") & filters.me)
 async def example_edit(client, message):
     if not message.reply_to_message and (len(message.command) == 1):
         return await message.edit(
@@ -66,6 +63,3 @@ async def example_edit(client, message):
         os.remove(f"result{i}.txt")
     cmd_obj.kill()
 
-
-module_list['Sh'] = f'{my_prefix()}sh'
-file_list['Sh'] = 'sh.py'

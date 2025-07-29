@@ -1,14 +1,8 @@
 from pyrogram import Client, filters
-from modules.plugins_1system.settings.main_settings import module_list, file_list
-
-from prefix import my_prefix
-
+from command import fox_command
+import os
 
 
-@Client.on_message(filters.command("example_edit", prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command("example_edit", Module_Name='Example', names=os.path.basename(__file__), arg="[Example Arg]") & filters.me)
 async def example_edit(client, message):
     await message.edit("<code>This is an example module</code>")
-
-
-module_list['Example'] = f'{my_prefix()}example_edit'
-file_list['Example'] = 'example.py'

@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
 from modules.plugins_1system.settings.main_settings import module_list, version
-from prefix import my_prefix
+from command import fox_command
+import os
 from telegraph import Telegraph
 import random
 import configparser
@@ -23,6 +24,7 @@ def get_help_image():
 
 
 def get_help_text(message):
+    from prefix import my_prefix
     lists = []
     for module_name, commands in module_list.items():
         text = ""
@@ -83,7 +85,7 @@ def get_help_text(message):
 <b><a href={link}>❓ | List of all commands. </a></b>
 """
 
-@Client.on_message(filters.command('help', prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1="help", Module_Name="Help", names=os.path.basename(__file__)) & filters.me)
 async def helps(client, message):
     try:
         image_url = get_help_image()
@@ -121,6 +123,3 @@ async def helps(client, message):
             except:
                 await message.edit("Loading the help menu...")
                 await message.edit(get_help_text(message))
-
-
-module_list['Help'] = f'{my_prefix()}help'

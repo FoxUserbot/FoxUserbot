@@ -1,11 +1,10 @@
 from pyrogram import Client, filters
-from modules.plugins_1system.settings.main_settings import module_list, file_list
-from prefix import my_prefix
-
+from command import fox_command
+import os
 from time import perf_counter
 
 
-@Client.on_message(filters.command('ping', prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1="ping", Module_Name="Ping", names=os.path.basename(__file__)) & filters.me)
 async def ping(client, message):
     start = perf_counter()
     await message.edit("🏓| ⚾=== |🏓")
@@ -26,7 +25,3 @@ async def ping(client, message):
     if 600 <= ping:
         connect = "⚠ Check you network connection"
     await message.edit(f"<b>🏓 Pong\n📶</b> {round(ping)} ms\n{connect}")
-
-
-module_list['Ping'] = f'{my_prefix()}ping'
-file_list['Ping'] = 'ping.py'

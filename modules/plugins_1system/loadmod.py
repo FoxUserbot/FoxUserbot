@@ -1,12 +1,10 @@
 from pyrogram import Client, filters
 from modules.plugins_1system.restarter import restart
-from modules.plugins_1system.settings.main_settings import module_list
-from prefix import my_prefix
-
+from command import fox_command
+import os
 import wget
 
-
-@Client.on_message(filters.command('loadmod', prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command(command1="loadmod", Module_Name="Loadmod", names=os.path.basename(__file__), arg="[link to the module/reply]") & filters.me)
 async def loadmod(client, message):
     if not message.reply_to_message:
         await message.edit("<b>Load module...</b>")
@@ -23,5 +21,3 @@ async def loadmod(client, message):
         )
         await restart(message, restart_type="restart")
 
-
-module_list['Loadmod'] = f'{my_prefix()}loadmod [link to the module]'
