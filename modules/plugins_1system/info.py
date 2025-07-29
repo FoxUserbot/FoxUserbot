@@ -142,7 +142,7 @@ def get_info_text(message):
     """
 
 
-@Client.on_message(fox_command(command1="info", Module_Name="Info", names=os.path.basename(__file__)) & filters.me)
+@Client.on_message(fox_command("info", "Info", os.path.basename(__file__)) & filters.me)
 async def info(client, message):
     try:
         image_url = get_info_image()

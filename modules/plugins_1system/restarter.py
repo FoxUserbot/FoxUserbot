@@ -43,7 +43,7 @@ async def restart(message: Message, restart_type):
 
 
 # Restart
-@Client.on_message(fox_command(command1="restart", Module_Name="Restarter", names=os.path.basename(__file__)) & filters.me)
+@Client.on_message(fox_command("restart", "Restarter", os.path.basename(__file__)) & filters.me)
 async def restart_get(client, message):
     try:
         await message.edit("**Restarting userbot...**")
@@ -53,7 +53,7 @@ async def restart_get(client, message):
 
 
 # Update
-@Client.on_message(fox_command(command1="update", Module_Name="Restarter", names=os.path.basename(__file__)) & filters.me)
+@Client.on_message(fox_command("update", "Restarter", os.path.basename(__file__)) & filters.me)
 async def update(client, message):
     try:
         await message.edit('**Updating...**')

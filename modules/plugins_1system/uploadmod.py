@@ -3,7 +3,8 @@ from modules.plugins_1system.settings.main_settings import file_list
 from command import fox_command
 import os
 
-@Client.on_message(fox_command(command1="uploadmod", Module_Name="Uploadmod", names=os.path.basename(__file__), arg="[module name]") & filters.me)
+
+@Client.on_message(fox_command("uploadmod", "Uploadmod", os.path.basename(__file__), "[module name]") & filters.me)
 async def uploadmod(client, message):
     try:
         from prefix import my_prefix

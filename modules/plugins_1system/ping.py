@@ -4,7 +4,7 @@ import os
 from time import perf_counter
 
 
-@Client.on_message(fox_command(command1="ping", Module_Name="Ping", names=os.path.basename(__file__)) & filters.me)
+@Client.on_message(fox_command("ping", "Ping", os.path.basename(__file__)) & filters.me)
 async def ping(client, message):
     start = perf_counter()
     await message.edit("🏓| ⚾=== |🏓")

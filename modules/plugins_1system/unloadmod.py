@@ -4,7 +4,8 @@ from modules.plugins_1system.restarter import restart
 from command import fox_command
 import os
 
-@Client.on_message(fox_command(command1="unloadmod", Module_Name="Unloadmod", names=os.path.basename(__file__), arg="[module name]") & filters.me)
+
+@Client.on_message(fox_command("unloadmod", "Unloadmod", os.path.basename(__file__), "[module name]") & filters.me)
 async def unloadmod(client, message):
     try:
         from prefix import my_prefix

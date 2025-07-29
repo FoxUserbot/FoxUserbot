@@ -49,7 +49,7 @@ async def restore_backup(client, message):
         if 'download_path' in locals() and os.path.exists(download_path):
             os.remove(download_path)
 
-@Client.on_message(fox_command(command1="backup", Module_Name="Backup", names=os.path.basename(__file__)) & filters.me)
+@Client.on_message(fox_command("backup", "Backup", os.path.basename(__file__)) & filters.me)
 async def backup_command(client, message):
     try:
         msg = await message.edit("<b>🔄 Creating a backup copy...</b>")
@@ -68,7 +68,8 @@ async def backup_command(client, message):
         if 'backup_file' in locals() and os.path.exists(backup_file):
             os.remove(backup_file)
 
-@Client.on_message(fox_command(command1="restore", Module_Name="Backup", names=os.path.basename(__file__) , arg="[reply]") & filters.me)
+
+@Client.on_message(fox_command("restore", "Backup", os.path.basename(__file__), "[reply]") & filters.me)
 async def restore_command(client, message):
     await message.edit("<b>🔄 Ready for restoration...</b>")
     await restore_backup(client, message)

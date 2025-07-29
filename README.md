@@ -71,7 +71,8 @@ import os
 #        ^^^ enter the need data
 
 
-@Client.on_message(fox_command("example", Module_Name="Example", names=os.path.basename(__file__) args="[Arguments]") & filters.me)
+# fox_command(command, module_name, filename=os.path.basename(__file__), "[Arguments]"
+@Client.on_message(fox_command("example", "Example", os.path.basename(__file__), "[Arguments]") & filters.me)
 async def example_edit(client, message):
     await message.edit("<code>This is an example module</code>")
 

@@ -5,7 +5,8 @@ from subprocess import Popen, PIPE, TimeoutExpired
 from time import perf_counter
 import random
 
-@Client.on_message(fox_command(command1=["shell", "sh"], Module_Name="Sh", names=os.path.basename(__file__) , arg="[command/reply]") & filters.me)
+
+@Client.on_message(fox_command(["shell", "sh"], "Sh", os.path.basename(__file__), "[command/reply]") & filters.me)
 async def example_edit(client, message):
     if not message.reply_to_message and (len(message.command) == 1):
         return await message.edit(

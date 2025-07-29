@@ -4,7 +4,7 @@ import os
 import sys
 from io import StringIO
 
-@Client.on_message(fox_command(command1="eval", Module_Name="Eval", names=os.path.basename(__file__) , arg="[code/reply]") & filters.me)
+@Client.on_message(fox_command("eval", "Eval", os.path.basename(__file__), "[code/reply]") & filters.me)
 def user_exec(client, message):
     reply = message.reply_to_message
     code = ""

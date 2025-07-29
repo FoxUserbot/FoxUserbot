@@ -85,7 +85,7 @@ def get_help_text(message):
 <b><a href={link}>❓ | List of all commands. </a></b>
 """
 
-@Client.on_message(fox_command(command1="help", Module_Name="Help", names=os.path.basename(__file__)) & filters.me)
+@Client.on_message(fox_command("help", "Help", os.path.basename(__file__)) & filters.me)
 async def helps(client, message):
     try:
         image_url = get_help_image()

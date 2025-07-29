@@ -10,7 +10,7 @@ PATH_FILE = "userdata/config.ini"
 config = configparser.ConfigParser()
 config.read(PATH_FILE)
 
-@Client.on_message(fox_command(command1="sp", Module_Name="SetPrefix", names=os.path.basename(__file__), arg="[new prefix]") & filters.me)
+@Client.on_message(fox_command("sp", "SetPrefix", os.path.basename(__file__), "[new prefix]") & filters.me)
 async def sprefix(client, message):
     if len(message.command) > 1:
         prefixgett = message.command[1]
