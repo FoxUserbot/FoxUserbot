@@ -21,12 +21,21 @@ def get_help_image():
     except:
         return DEFAULT_HELP_IMAGE
 
+
 def get_help_text(message):
-    # Генерируем ссылку на команды заранее
     lists = []
-    for k, v in module_list.items():
-        lists.append(f'➣ Module [{k}] - Command: {v}<br><br>')
-    a = " ".join(lists)
+    for module_name, commands in module_list.items():
+        command_list = [cmd.strip() for cmd in commands.split("|")]
+
+        module_block = [
+            f"➣ Module <b>[{module_name}]</b>",
+            *[f"Command: <code>{cmd}</code>" for cmd in command_list],
+            "" 
+        ]
+        lists.extend(module_block)
+
+    a = "<br>".join(lists)
+    
     
     telegraph = Telegraph()
     telegraph.create_account(short_name='FoxServices')
