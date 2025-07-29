@@ -51,4 +51,7 @@ def process_modules_directory(directory):
                 file_path = os.path.join(root, file)
                 convert_module(file_path)
 
-process_modules_directory("modules/plugins_2custom")
+def convert_modules():
+    process_modules_directory("modules/plugins_2custom")
+
+convert_modules()

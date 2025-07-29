@@ -7,7 +7,7 @@ import sys
 import re
 
 from requirements_installer import install_library
-from migrate import process_modules_directory
+from migrate import convert_modules
 
 def check_structure():
     if os.path.exists("localhost_run_output.txt"):
@@ -173,7 +173,7 @@ def userbot():
 
 if __name__ == "__main__":
     check_structure()
-    process_modules_directory("modules/plugins_2custom")
+    convert_modules()
     logger = setup_logging()
     logger.info("Starting FoxUserbot...")
     autoupdater()
