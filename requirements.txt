@@ -1,0 +1,8 @@
+pyrogram==2.0.106
+tgcrypto
+kurigram==2.2.6
+wheel
+telegraph
+wget
+pystyle
+flask
