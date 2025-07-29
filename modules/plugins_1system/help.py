@@ -25,6 +25,12 @@ def get_help_image():
 def get_help_text(message):
     lists = []
     for module_name, commands in module_list.items():
+        text = ""
+        if isinstance(commands, list):
+            for i in commands:
+                text += f"{i} | "
+            text = text[:-2]
+            commands = text
         command_list = [cmd.strip() for cmd in commands.split("|")]
 
         module_block = [
