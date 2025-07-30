@@ -2,10 +2,11 @@ from pyrogram import Client, filters , __version__
 from modules.plugins_1system.uptime import bot_start_time
 from command import fox_command
 import os
-from platform import python_version, system, release
+from platform import python_version, system, release , uname
 import configparser
 from pathlib import Path
 from datetime import datetime
+
 
 
 # Default
@@ -13,17 +14,34 @@ DEFAULT_INFO_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/re
 THEME_PATH = "userdata/theme.ini"
 
 
+
 def get_platform_info():
     os_name = system()
     os_release = release()
+    termux_vars = [
+        'TERMUX_VERSION',
+        'TERMUX_APK_RELEASE',
+        'PREFIX',
+    ]
+    if any(var in os.environ for var in termux_vars):
+        return '<emoji id="5409357944619802453">📱</emoji> Termux'
     
+    if "microsoft-standard" in uname().release:
+        return '<emoji id="6298333093044422573">😥</emoji> WSL'
+    if "SHARKHOST" in os.environ:
+        return '<emoji id="5361632650278744629">🦈</emoji> SharkHost'
+    if "DOCKER" in os.environ:
+        return '<emoji id="5301137237050663843">👩‍💻</emoji> Docker'
     os_names = {
-        'Linux': '<emoji id="5300957668762987048">👩‍💻</emoji> <b>Linux</b>',
-        'Windows': '<emoji id="5366318141771096216">👩‍💻</emoji> <b>Windows</b>', 
-        'Darwin': '<emoji id="5301155675345265040">👩‍💻</emoji> <b>macOS</b>',
+        'Linux': '<emoji id="5300957668762987048">👩‍💻</emoji> Linux',
+        'Windows': '<emoji id="5366318141771096216">👩‍💻</emoji> Windows', 
+        'Darwin': '<emoji id="5301155675345265040">👩‍💻</emoji> macOS',
     }
-    os_display = os_names.get(os_name, f'💻 {os_name}')
-    return f"{os_display} ({os_release})"
+    try:
+        os_display = os_names.get(os_name, f'💻 {os_name}')
+        return f"{os_display} ({os_release})"
+    except:
+        return f"💻 {os_name} ({os_release})"
 
 
 def format_uptime():
