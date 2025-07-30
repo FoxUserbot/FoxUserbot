@@ -9,6 +9,15 @@ import re
 from requirements_installer import install_library
 from migrate import convert_modules
 
+
+def is_running_in_termux():
+    termux_vars = [
+        'TERMUX_VERSION',
+        'TERMUX_APK_RELEASE',
+        'PREFIX',
+    ]
+    return any(var in os.environ for var in termux_vars)
+
 def check_structure():
     if os.path.exists("localhost_run_output.txt"):
         os.remove("localhost_run_output.txt")
@@ -41,9 +50,13 @@ def autoupdater():
         pip.main(["uninstall", "pyrogram", "kurigram", "-y"])
 
         try:
-            install_library('uv -U')
+            if not is_running_in_termux():
+                install_library('uv -U')
+            else:
+                os.system("termux-wake-lock")
         except Exception as f:
             logger.warning(f)
+
 
         try:
             install_library('tgcrypto -U')
