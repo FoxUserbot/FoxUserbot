@@ -1,20 +1,32 @@
-def fox_command(command, module_name, filename, arguments=""):
-    from prefix import my_prefix
-    from pyrogram import filters
-    from modules.plugins_1system.settings.main_settings import module_list, file_list, add_command_help
-    import os
+from prefix import my_prefix
+from pyrogram import filters
+from modules.plugins_1system.settings.main_settings import module_list, file_list, add_command_help
+from typing import Union, List
 
-    command1 = command
-    text = ""
-    if isinstance(command1, list):
-        command = []
-        for i in command1:
-            command.append(i)
-            text += f"{my_prefix()}{i} {arguments} | "
-    elif isinstance(command1, str):
-        command = [command1]
-        text += f"{my_prefix()}{command1} {arguments}"
+def fox_command(
+    command: Union[str, List[str]], 
+    module_name: str, 
+    filename: str, 
+    arguments: str = ""
+) -> filters.Filter:
+    """
+    Args:
+        command: Command or List Commands
+        module_name: Name module
+        filename: filename
+        arguments: Arguments after command
+        
+    Returns:
+        filter command Pyrogram
+    """
+    commands = [command] if isinstance(command, str) else command.copy()
 
-    add_command_help(module_name, text)
+    help_text = " | ".join(
+        f"{my_prefix()}{cmd} {arguments}".strip() 
+        for cmd in commands
+    )
+
+    add_command_help(module_name, help_text)
     file_list[module_name] = filename
-    return filters.command(command, prefixes=my_prefix())
+    
+    return filters.command(commands, prefixes=my_prefix())
