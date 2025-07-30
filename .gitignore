@@ -1,12 +1,11 @@
 venv/
 __pycache__/
 my_account.session
-config.ini
+my_account.session-journal
 .vscode/
 modules/plugins_2custom
-my_account.session-journal
 firstlaunch.temp
 temp/
 nohup.out
 triggers/
-userdata/*
+userdata/

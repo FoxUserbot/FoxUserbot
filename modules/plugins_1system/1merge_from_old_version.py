@@ -1,4 +1,4 @@
-from pystyle import  Write, Colors
+from pystyle import Write, Colors
 import random
 import os
 import shutil
@@ -70,3 +70,12 @@ if os.path.exists("help_first_launch.py"):
 if os.path.exists("config.ini"):
     os.replace("config.ini", "userdata/config.ini")
     restart_executor()
+
+# 2.3.5 > 2.4
+if os.path.isdir("modules/plugins_3finished"):
+    shutil.rmtree("modules/plugins_3finished")
+    os.remove("firstlaunch.temp")
+    restart_executor()
+
+if os.path.exists("logo.png"):
+    os.remove("logo.png")
