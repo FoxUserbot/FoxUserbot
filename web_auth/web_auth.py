@@ -123,7 +123,14 @@ def get_public_url(port: int) -> Optional[str]:
         os.remove(localhost_run_output_file)
 
     try:
-        subprocess.Popen(
+        if os.name == 'nt':
+            subprocess.Popen(
+                f'ssh -o StrictHostKeyChecking=no -R 80:localhost:{port} nokey@localhost.run > {localhost_run_output_file} 2>&1 &',
+                shell=True,
+                creationflags=subprocess.CREATE_NEW_PROCESS_GROUP
+            )
+        else:
+            subprocess.Popen(
             f'ssh -o StrictHostKeyChecking=no -R 80:localhost:{port} nokey@localhost.run > {localhost_run_output_file} 2>&1 &',
             shell=True,
             preexec_fn=os.setsid

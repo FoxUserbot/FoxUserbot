@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
 from modules.plugins_1system.settings.main_settings import module_list, version
-from prefix import my_prefix
+from command import fox_command
+import os
 from telegraph import Telegraph
 import random
 import configparser
@@ -21,12 +22,28 @@ def get_help_image():
     except:
         return DEFAULT_HELP_IMAGE
 
+
 def get_help_text(message):
-    # Генерируем ссылку на команды заранее
+    from prefix import my_prefix
     lists = []
-    for k, v in module_list.items():
-        lists.append(f'➣ Module [{k}] - Command: {v}<br><br>')
-    a = " ".join(lists)
+    for module_name, commands in module_list.items():
+        text = ""
+        if isinstance(commands, list):
+            for i in commands:
+                text += f"{i} | "
+            text = text[:-2]
+            commands = text
+        command_list = [cmd.strip() for cmd in commands.split("|")]
+
+        module_block = [
+            f"➣ Module <b>[{module_name}]</b>",
+            *[f"Command: <code>{cmd}</code>" for cmd in command_list],
+            "" 
+        ]
+        lists.extend(module_block)
+
+    a = "<br>".join(lists)
+    
     
     telegraph = Telegraph()
     telegraph.create_account(short_name='FoxServices')
@@ -68,7 +85,7 @@ def get_help_text(message):
 <b><a href={link}>❓ | List of all commands. </a></b>
 """
 
-@Client.on_message(filters.command('help', prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command("help", "Help", os.path.basename(__file__)) & filters.me)
 async def helps(client, message):
     try:
         image_url = get_help_image()
@@ -106,6 +123,3 @@ async def helps(client, message):
             except:
                 await message.edit("Loading the help menu...")
                 await message.edit(get_help_text(message))
-
-
-module_list['Help'] = f'{my_prefix()}help'

@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-
+ENV DOCKER=True
 WORKDIR /Foxuserbot
 COPY . /Foxuserbot
 

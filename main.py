@@ -7,18 +7,22 @@ import sys
 import re
 
 from requirements_installer import install_library
+from migrate import convert_modules
 
+
+def is_running_in_termux():
+    termux_vars = [
+        'TERMUX_VERSION',
+        'TERMUX_APK_RELEASE',
+        'PREFIX',
+    ]
+    return any(var in os.environ for var in termux_vars)
 
 def check_structure():
     if os.path.exists("localhost_run_output.txt"):
         os.remove("localhost_run_output.txt")
     if not os.path.exists("temp"):
         os.mkdir("temp")
-    try:
-        if os.path.exists("temp/fox_userbot.log"):
-            os.remove("temp/fox_userbot.log")
-    except:
-        pass
     if not os.path.exists("userdata"):
         os.mkdir("userdata")
     if not os.path.exists("triggers"):
@@ -44,16 +48,26 @@ def autoupdater():
 
     if not first_launched:
         pip.main(["uninstall", "pyrogram", "kurigram", "-y"])
+
+        try:
+            if not is_running_in_termux():
+                install_library('uv -U')
+            else:
+                os.system("termux-wake-lock")
+        except Exception as f:
+            logger.warning(f)
+
+
         try:
             install_library('tgcrypto -U')
         except Exception as f:
             logger.warning(f)
+
         with open("firstlaunch.temp", "w", encoding="utf-8") as f:
             f.write("1")
     
     # install requirements for userbot
-    install_library('wheel telegraph wget pystyle flask -U')
-    install_library('kurigram==2.2.6')
+    install_library('-r requirements.txt -U')
     setup_logging()
     logger.info("Logging restored after installing dependencies")
 
@@ -73,7 +87,20 @@ async def start_userbot(app):
 
 
 def setup_logging():
-    log_file = 'temp/fox_userbot.log'
+    if "--safe" in sys.argv:
+        log_file = 'temp/fox_userbot_safe.log'
+        try:
+            if os.path.exists("temp/fox_userbot_safe.log"):
+                os.remove("temp/fox_userbot_safe.log")
+        except:
+            pass
+    else:
+        log_file = 'temp/fox_userbot.log'
+        try:
+            if os.path.exists("temp/fox_userbot.log"):
+                os.remove("temp/fox_userbot.log")
+        except:
+            pass
 
     root_logger = logging.getLogger()
     for handler in root_logger.handlers[:]:
@@ -106,6 +133,7 @@ def userbot():
     if "--safe" in sys.argv:
         safe_mode = True
         logger.warning("[Userbot] Starting in safe mode (only system plugins)...")
+        
     
     api_id, api_hash, device_mod = my_api()
 
@@ -157,6 +185,7 @@ def userbot():
 
 if __name__ == "__main__":
     check_structure()
+    convert_modules()
     logger = setup_logging()
     logger.info("Starting FoxUserbot...")
     autoupdater()

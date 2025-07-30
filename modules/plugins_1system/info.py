@@ -1,13 +1,12 @@
-import subprocess
 from pyrogram import Client, filters , __version__
-from pyrogram.errors import WebpageMediaEmpty , ChatSendPhotosForbidden
-from modules.plugins_1system.settings.main_settings import module_list, file_list
 from modules.plugins_1system.uptime import bot_start_time
-from prefix import my_prefix
-from platform import python_version, system, release, machine
+from command import fox_command
+import os
+from platform import python_version, system, release , uname
 import configparser
 from pathlib import Path
 from datetime import datetime
+
 
 
 # Default
@@ -15,17 +14,34 @@ DEFAULT_INFO_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/re
 THEME_PATH = "userdata/theme.ini"
 
 
+
 def get_platform_info():
     os_name = system()
     os_release = release()
+    termux_vars = [
+        'TERMUX_VERSION',
+        'TERMUX_APK_RELEASE',
+        'PREFIX',
+    ]
+    if any(var in os.environ for var in termux_vars):
+        return '<emoji id="5409357944619802453">📱</emoji> Termux'
     
+    if "microsoft-standard" in uname().release:
+        return '<emoji id="6298333093044422573">😥</emoji> WSL'
+    if "SHARKHOST" in os.environ:
+        return '<emoji id="5361632650278744629">🦈</emoji> SharkHost'
+    if "DOCKER" in os.environ:
+        return '<emoji id="5301137237050663843">👩‍💻</emoji> Docker'
     os_names = {
-        'Linux': '<emoji id="5300957668762987048">👩‍💻</emoji> <b>Linux</b>',
-        'Windows': '<emoji id="5366318141771096216">👩‍💻</emoji> <b>Windows</b>', 
-        'Darwin': '<emoji id="5301155675345265040">👩‍💻</emoji> <b>macOS</b>',
+        'Linux': '<emoji id="5300957668762987048">👩‍💻</emoji> Linux',
+        'Windows': '<emoji id="5366318141771096216">👩‍💻</emoji> Windows', 
+        'Darwin': '<emoji id="5301155675345265040">👩‍💻</emoji> macOS',
     }
-    os_display = os_names.get(os_name, f'💻 {os_name}')
-    return f"{os_display} ({os_release})"
+    try:
+        os_display = os_names.get(os_name, f'💻 {os_name}')
+        return f"{os_display} ({os_release})"
+    except:
+        return f"💻 {os_name} ({os_release})"
 
 
 def format_uptime():
@@ -63,13 +79,13 @@ def replace_aliases(text, message):
         text = text.replace(alias, str(value))
 
     if message.from_user.is_premium:
-        footer = f"""\n 
+        footer = f"""
 <blockquote expandable><emoji id="5330237710655306682">📱</emoji><a href="https://t.me/foxteam0"><b> | Official FoxTeam Channel.</b></a>
 <emoji id="5346181118884331907">📱</emoji><a href="https://github.com/FoxUserbot/FoxUserbot"><b> | Github Repository.</b></a>
 <emoji id="5379999674193172777">🔭</emoji><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install"><b> | Installation Guide.</b></a></blockquote>
     """
     else:
-        footer = f"""\n
+        footer = f"""
 <blockquote expandable><b><a href="https://t.me/foxteam0">💻 | Official FoxTeam Channel.</a></b>
 <b><a href="https://github.com/FoxUserbot/FoxUserbot">🐈‍⬛ | Github Repository.</a></b>
 <b><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install">🤔 | Installation Guide.</a></b></blockquote>
@@ -144,7 +160,7 @@ def get_info_text(message):
     """
 
 
-@Client.on_message(filters.command('info', prefixes=my_prefix()) & filters.me)
+@Client.on_message(fox_command("info", "Info", os.path.basename(__file__)) & filters.me)
 async def info(client, message):
     try:
         image_url = get_info_image()
@@ -182,6 +198,3 @@ async def info(client, message):
             except:
                 await message.edit("Loading the info...")
                 await message.edit(get_info_text(message))
-
-
-module_list['Info'] = f'{my_prefix()}info'
