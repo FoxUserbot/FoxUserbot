@@ -125,7 +125,7 @@ def get_public_url(port: int) -> Optional[str]:
     if os.path.exists(localhost_run_output_file):
         os.remove(localhost_run_output_file)
 
-    try:
+    try:      
         if os.name == 'nt':
             subprocess.Popen(
                 f'ssh -o StrictHostKeyChecking=no -R 80:localhost:{port} nokey@localhost.run > {localhost_run_output_file} 2>&1 &',
@@ -161,8 +161,11 @@ def run_web_server(port: int):
     public_url = get_public_url(port)
     if public_url:
         print(f"🌐 Public URL: {public_url}")
-   
-    app.run(host='127.0.0.1', port=port, debug=False, use_reloader=False) 
+    if "SHARKHOST" in os.environ or "DOCKER" in os.environ:
+        host = '0.0.0.0'
+    else:
+        host = '127.0.0.1'
+    app.run(host=host, port=port, debug=False, use_reloader=False) 
     
 
 async def web_auth(api_id: int, api_hash: str, device_model: str) -> Tuple[bool, Optional[User]]:
