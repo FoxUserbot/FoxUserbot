@@ -2,6 +2,7 @@ from pyrogram import Client, filters , __version__
 from modules.plugins_1system.uptime import bot_start_time
 from command import fox_command
 import os
+import subprocess
 from platform import python_version, system, release , uname
 import configparser
 from pathlib import Path
@@ -28,7 +29,7 @@ def get_platform_info():
     
     if "microsoft-standard" in uname().release:
         return '<emoji id="6298333093044422573">😥</emoji> WSL'
-    if "SHARKHOST" in os.environ:
+    if "SHARKHOST" in os.environ or "sharkhost" in subprocess.check_output("cat /etc/hostname", shell=True, text=True).strip():
         return '<emoji id="5361632650278744629">🦈</emoji> SharkHost'
     if "DOCKER" in os.environ:
         return '<emoji id="5301137237050663843">👩‍💻</emoji> Docker'
