@@ -158,7 +158,7 @@ def get_info_text(message):
 📞 | <a href="https://t.me/a9_fm">A9FM</a>
 📞 | <a href="https://t.me/ArThirtyFour">ArThirtyFour</a>
 
-<b>🖼 | <b>Designer:</b>
+🖼 | <b>Designer:</b>
 📞 | <a href="https://t.me/nw_off">Nw_Off</a>
     """
 
