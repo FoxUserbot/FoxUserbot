@@ -18,7 +18,7 @@ async def sprefix(client, message):
         with open(PATH_FILE, "w") as config_file:
             config.write(config_file)
         await message.edit(
-            f"<b>prefix [ <code>{prefixgett}</code> ] set!</b>\nRestarting userbot..."
+            f"<emoji id='5237699328843200968'>✅</emoji> <b>prefix [ <code>{prefixgett}</code> ] set!</b>\n<emoji id='5264727218734524899'>🔄</emoji> Restarting userbot..."
         )
         await restart(message, restart_type="restart")
     else:

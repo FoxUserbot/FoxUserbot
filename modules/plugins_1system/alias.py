@@ -65,36 +65,36 @@ async def handle_aliases(client, message):
 
 async def show_help(message):
     help_text = (
-        "<b>Manager:</b>\n"
+        "<emoji id='5283051451889756068'>🦊</emoji> <b>Manager:</b>\n"
         f"<code>{my_prefix()}alias add h help</code> - add alias\n"
-        f"<code>{my_prefix()}del h</code> - delete alias\n"
-        f"<code>{my_prefix()}list</code> - list aliases"
+        f"<code>{my_prefix()}alias del h</code> - delete alias\n"
+        f"<code>{my_prefix()}alias list</code> - list aliases"
     )
     await message.edit(help_text)
 
 async def add_alias(message, alias: str, command: str):
     if alias in alias_manager.aliases:
-        await message.edit(f"❌ | Alias <code>{alias}</code> already exists")
+        await message.edit(f"<emoji id='5210952531676504517'>❌</emoji> | Alias <code>{alias}</code> already exists")
     else:
         alias_manager.add_alias(alias, command)
-        await message.edit(f"✅ | Alias <code>{alias}</code> for command <code>{command}</code> added \n🔄 | Rebooting...")
+        await message.edit(f"<emoji id='5237699328843200968'>✅</emoji> | Alias <code>{alias}</code> for command <code>{command}</code> added \n<emoji id='5264727218734524899'>🔄</emoji> | Rebooting...")
         await restart(message, restart_type="restart")
 
 async def remove_alias(message, alias: str):
     if alias_manager.remove_alias(alias):
-        await message.edit(f"✅ | Alias <code>{alias}</code> deleted \n🔄 | Rebooting...")
+        await message.edit(f"<emoji id='5237699328843200968'>✅</emoji> | Alias <code>{alias}</code> deleted \n<emoji id='5264727218734524899'>🔄</emoji> | Rebooting...")
         await restart(message, restart_type="restart")
 
     else:
-        await message.edit("❌ | Alias not found")
+        await message.edit("<emoji id='5210952531676504517'>❌</emoji> | Alias not found")
 
 async def list_aliases(message):
     if not alias_manager.aliases:
-        await message.edit("ℹ️ | Aliases not specified")
+        await message.edit("<emoji id='5278753302023004775'>ℹ️</emoji> | Aliases not specified")
         return
     
     aliases_list = "\n".join(
         f"<code>{alias}</code> → <code>{cmd}</code>" 
         for alias, cmd in alias_manager.aliases.items()
     )
-    await message.edit(f"<b>List aliases:</b>\n{aliases_list}")
+    await message.edit(f"<emoji id='5283051451889756068'>🦊</emoji> <b>List aliases:</b>\n{aliases_list}")

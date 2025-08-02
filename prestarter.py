@@ -37,15 +37,13 @@ def prestart(api_id, api_hash, device_mod):
                     thread_id = None
                     
             if restart_type == "1":
-                text = "<code>Update process completed!</code>"
+                text = "<emoji id='5237699328843200968'>✅</emoji> <code>Update process completed!</code>"
             else:
-                text = "**Userbot succesfully Restarted**"
+                text = "<emoji id='5237699328843200968'>✅</emoji> <code>Userbot succesfully Restarted</code>"
             try:
                 app.send_message(int(sys.argv[1]), text, message_thread_id=thread_id)
             except Exception as f:
-                app.send_message("me", f"Got error: {f}\n\n" + text)
-                
-        # check triggers
+                app.send_message("me", f"<emoji id='5210952531676504517'>❌</emoji> Got error: {f}\n\n" + text)
         for i in os.listdir("triggers"):
             with open(f"triggers/{i}", 'r') as f:
                 text = f.read().strip()

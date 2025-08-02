@@ -15,7 +15,7 @@ async def unloadmod(client, message):
         del module_list[module_name]
         file = file_list[module_name]
         os.remove(f'modules/plugins_2custom/{file}')
-        await message.edit("**The module has been successfully unloaded.**\nRestart...")
+        await message.edit("<emoji id='5237699328843200968'>✅</emoji> **The module has been successfully unloaded.**\n<emoji id='5264727218734524899'>🔄</emoji> Restart...")
         await restart(message, restart_type="restart")
     except Exception as error:
-        await message.edit(f"**An error has occurred.**\nLog: not found {error}")
+        await message.edit(f"<emoji id='5210952531676504517'>❌</emoji> **An error has occurred.**\nLog: not found {error}")

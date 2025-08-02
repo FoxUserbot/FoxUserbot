@@ -15,9 +15,9 @@ async def uploadmod(client, message):
         await client.send_document(
             message.chat.id,
             f"modules/plugins_2custom/{file}",
-            caption=f"Module `{module_name}`\nfor FoxUserbot 🦊\n<b>You can install the module by replying [prefix]loadmod</b>",
+            caption=f"<emoji id='5283051451889756068'>🦊</emoji> Module `{module_name}`\nfor FoxUserbot <emoji id='5283051451889756068'>🦊</emoji>\n<b>You can install the module by replying [prefix]loadmod</b>",
             message_thread_id=message.message_thread_id
         )
         await message.delete()
     except Exception as error:
-        await message.edit(f"**An error has occurred.**\nLog: {error}")
+        await message.edit(f"<emoji id='5210952531676504517'>❌</emoji> **An error has occurred.**\nLog: {error}")

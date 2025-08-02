@@ -106,6 +106,8 @@ def get_info_image():
         return DEFAULT_INFO_IMAGE
 
 
+
+
 def get_info_text(message):
     uptime_text = format_uptime()
     platform_text = get_platform_info()
@@ -164,38 +166,47 @@ def get_info_text(message):
 @Client.on_message(fox_command("info", "Info", os.path.basename(__file__)) & filters.me)
 async def info(client, message):
     try:
-        image_url = get_info_image()
-        da = await client.send_photo(
-            message.chat.id, 
-            photo=image_url, 
-            caption="Loading the info...", 
-            message_thread_id=message.message_thread_id
-        )
-        await message.delete()
-        caption = get_info_text(message)
-        await client.edit_message_caption(message.chat.id, da.id, caption)
-    except:
-        try:
-            da = await client.send_photo(
+        media_url = get_info_image()
+        info_text = get_info_text(message)
+        file_extension = media_url.split(".")[-1]
+        if file_extension in ["mp4", "mov", "avi", "mkv", "webm"]:
+            await client.send_video(
                 message.chat.id, 
-                photo=DEFAULT_INFO_IMAGE, 
-                caption="Loading the info...", 
+                video=media_url, 
+                caption=info_text,
                 message_thread_id=message.message_thread_id
             )
-            await message.delete()
-            caption = get_info_text(message)
-            await client.edit_message_caption(message.chat.id, da.id, caption)
+        elif file_extension == "gif":
+            await client.send_animation(
+                message.chat.id, 
+                animation=media_url, 
+                caption=info_text,
+                message_thread_id=message.message_thread_id
+            )
+        else:           
+            await client.send_photo(
+                message.chat.id, 
+                photo=media_url, 
+                caption=info_text,
+                message_thread_id=message.message_thread_id
+            )
+        await message.delete()
+    except Exception as e:
+        print(f"Error: {e}")
+        try:
+            await client.send_photo(
+                message.chat.id, 
+                photo=DEFAULT_INFO_IMAGE, 
+                caption=get_info_text(message), 
+                message_thread_id=message.message_thread_id
+            )
         except:
             try:
-                da = await client.send_photo(
+                await client.send_photo(
                     message.chat.id, 
                     photo="photos/system_info.jpg", 
-                    caption="Loading the info...", 
+                    caption=get_info_text(message), 
                     message_thread_id=message.message_thread_id
                 )
-                await message.delete()
-                caption = get_info_text(message)
-                await client.edit_message_caption(message.chat.id, da.id, caption)
             except:
-                await message.edit("Loading the info...")
                 await message.edit(get_info_text(message))
