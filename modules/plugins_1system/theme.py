@@ -16,15 +16,15 @@ async def theme_command(client, message):
             config = configparser.ConfigParser()
             config.read(THEME_PATH)
             url = config.get("help", "image", fallback="Not set")
-            text += f"<b>🦊 Current help image:</b> `{url}`\n"
+            text += f"<b><emoji id='5283051451889756068'>🦊</emoji> Current help image:</b> `{url}`\n"
             url = config.get("info", "image", fallback="Not set")
-            text += f"<b>🦊 Current info image:</b> `{url}`\n"
+            text += f"<b><emoji id='5283051451889756068'>🦊</emoji> Current info image:</b> `{url}`\n"
             custom_text = config.get("help", "text", fallback="Not set")
-            text += f"<b>🦊 Current help text:</b> \n<blockquote expandable>{custom_text}</blockquote>\n"
+            text += f"<b><emoji id='5283051451889756068'>🦊</emoji> Current help text:</b> \n<blockquote expandable>{custom_text}</blockquote>\n"
             custom_text = config.get("info", "text", fallback="Not set")
-            text += f"<b>🦊 Current info text:</b> \n<blockquote expandable>{custom_text}</blockquote>\n"
+            text += f"<b><emoji id='5283051451889756068'>🦊</emoji> Current info text:</b> \n<blockquote expandable>{custom_text}</blockquote>\n"
         else:
-            text += "🦊 Using default image\n"
+            text += "<b><emoji id='5283051451889756068'>🦊</emoji> Using default image</b>\n"
 
         await message.edit(text)
         return
@@ -59,14 +59,12 @@ async def theme_command(client, message):
             
             if not config.has_section("help"):
                 config.add_section("help")
-                
-            # Используем "text" вместо "custom_text" для совместимости
             config.set("help", "text" if message.command[3] == "text" else "image", value)
             
             with open(THEME_PATH, 'w') as f:
                 config.write(f)
                 
-            await message.edit("✅ Help settings updated")
+            await message.edit("<emoji id='5237699328843200968'>✅</emoji> Help settings updated")
         
         elif message.command[2] == "reset":
             if Path(THEME_PATH).exists():
@@ -76,7 +74,7 @@ async def theme_command(client, message):
                     config.remove_section("help")
                 with open(THEME_PATH, 'w') as f:
                     config.write(f)
-            await message.edit("✅ Help theme reset to default")
+            await message.edit("<emoji id='5237699328843200968'>✅</emoji> Help theme reset to default")
 
     elif message.command[1] == "info":
         if message.command[2] == "set":
@@ -109,13 +107,12 @@ async def theme_command(client, message):
             if not config.has_section("info"):
                 config.add_section("info")
                 
-            # Используем "text" вместо "custom_text" для совместимости
             config.set("info", "text" if message.command[3] == "text" else "image", value)
             
             with open(THEME_PATH, 'w') as f:
                 config.write(f)
                 
-            await message.edit("✅ Info settings updated")
+            await message.edit("<emoji id='5237699328843200968'>✅</emoji> Info settings updated")
         
         elif message.command[2] == "reset":
             if Path(THEME_PATH).exists():
@@ -125,10 +122,10 @@ async def theme_command(client, message):
                     config.remove_section("info")
                 with open(THEME_PATH, 'w') as f:
                     config.write(f)
-            await message.edit("✅ Info theme reset to default")
+            await message.edit("<emoji id='5237699328843200968'>✅</emoji> <b>Info theme reset to default</b>")
     else:
         help_text = """
-<blockquote expandable><b>🎨 <u>How to create your own theme:</u></b>
+<blockquote expandable><b><emoji id='5283051451889756068'>🎨</emoji> <u>How to create your own theme:</u></b>
 
 <b>1. Set image for info:</b>
 <code>[your prefix]theme info set image [image_URL]</code>
@@ -146,21 +143,21 @@ async def theme_command(client, message):
 <code>{[your prefix]}theme info reset</code>
 <code>{[your prefix]}theme help reset</code>
 
-<b>📝 <u>Available aliases for info:</u></b>
+<b><emoji id='5444856076954520455'>📝</emoji> <u>Available aliases for info:</u></b>
 
 • <code>{version}</code> - Kurigram version
 • <code>{python_version}</code> - Python version
 • <code>{uptime}</code> - bot uptime
 • <code>{platform}</code> - platform information
 
-<b>📝 <u>Available aliases for help:</u></b>
+<b><emoji id='5444856076954520455'>📝</emoji> <u>Available aliases for help:</u></b>
 
 • <code>{version}</code> - FoxUserbot version
 • <code>{modules_count}</code> - number of modules
 • <code>{prefix}</code> - command prefix
 • <code>{commands_link}</code> - link to all commands list
 
-<b>💡 <u>Example custom text for info:</u></b>
+<b><emoji id='5422439311196834318'>💡</emoji> <u>Example custom text for info:</u></b>
 
 <code>{[your prefix]}theme info set text 🦊 FoxUserbot  {version}
 Kurigram: {version}
@@ -168,7 +165,7 @@ Kurigram: {version}
 ⏰ Uptime: {uptime}
 💻 Platform: {platform}</code>
 
-<b>💡 <u>Example custom text for help:</u></b>
+<b><emoji id='5422439311196834318'>💡</emoji> <u>Example custom text for help:</u></b>
 
 <code>{[your prefix]}theme help set text 🦊 FoxUserbot {version}
 📦 Modules: {modules_count}

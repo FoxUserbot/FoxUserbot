@@ -26,7 +26,7 @@ async def create_backup() -> str:
 
 async def restore_backup(client, message):
     if not message.reply_to_message or not message.reply_to_message.document:
-        await message.edit("<b>❌ Need to reply to a message with a backup archive!</b>")
+        await message.edit("<b><emoji id='5210952531676504517'>❌</emoji> Need to reply to a message with a backup archive!</b>")
         return
 
     try:
@@ -42,9 +42,9 @@ async def restore_backup(client, message):
         with tarfile.open(download_path, 'r:gz') as tar:
             tar.extractall()
         
-        await message.edit("<b>✅ Data restored successfully!</b>")
+        await message.edit("<b><emoji id='5237699328843200968'>✅</emoji> Data restored successfully!</b>")
     except Exception as e:
-        await message.edit(f"<b>❌ Restore Error:</b>\n<code>{str(e)}</code>")
+        await message.edit(f"<b><emoji id='5210952531676504517'>❌</emoji> Restore Error:</b>\n<code>{str(e)}</code>")
     finally:
         if 'download_path' in locals() and os.path.exists(download_path):
             os.remove(download_path)
@@ -52,18 +52,18 @@ async def restore_backup(client, message):
 @Client.on_message(fox_command("backup", "Backup", os.path.basename(__file__)) & filters.me)
 async def backup_command(client, message):
     try:
-        msg = await message.edit("<b>🔄 Creating a backup copy...</b>")
+        msg = await message.edit("<b><emoji id='5264727218734524899'>🔄</emoji> Creating a backup copy...</b>")
         backup_file = await create_backup()
         
         await client.send_document(
             chat_id=message.chat.id,
             document=backup_file,
-            caption=f"🔐 | Backup {Path(backup_file).name}\n🦊 | Only for FoxUserbot\n🔒 | Version: {version}\n🔗 | https://t.me/FoxUserbot",
+            caption=f"<emoji id='5472308992514464048'>🔐</emoji> | Backup {Path(backup_file).name}\n<emoji id='5283051451889756068'>🦊</emoji> | Only for FoxUserbot\n<emoji id='5296369303661067030'>🔒</emoji> | Version: {version}\n<emoji id='5271604874419647061'>🔗</emoji> | https://github.com/FoxUserbot/FoxUserbot",
             message_thread_id=message.message_thread_id
         )
         await msg.delete()
     except Exception as e:
-        await message.edit(f"<b>❌ Error creating backup:</b>\n<code>{str(e)}</code>")
+        await message.edit(f"<b><emoji id='5210952531676504517'>❌</emoji> Error creating backup:</b>\n<code>{str(e)}</code>")
     finally:
         if 'backup_file' in locals() and os.path.exists(backup_file):
             os.remove(backup_file)
@@ -71,7 +71,8 @@ async def backup_command(client, message):
 
 @Client.on_message(fox_command("restore", "Backup", os.path.basename(__file__), "[reply]") & filters.me)
 async def restore_command(client, message):
-    await message.edit("<b>🔄 Ready for restoration...</b>")
+    await message.edit("<b><emoji id='5264727218734524899'>🔄</emoji> Ready for restoration...</b>")
     await restore_backup(client, message)
     await restart(message, restart_type="restart")
+
 

@@ -46,17 +46,17 @@ async def restart(message: Message, restart_type):
 @Client.on_message(fox_command("restart", "Restarter", os.path.basename(__file__)) & filters.me)
 async def restart_get(client, message):
     try:
-        await message.edit("**Restarting userbot...**")
+        await message.edit("<emoji id='5264727218734524899'>🔄</emoji> **Restarting userbot...**")
         await restart(message, restart_type="restart")
     except:
-        await message.edit("**An error occured...**")
+        await message.edit("<emoji id='5210952531676504517'>❌</emoji> **An error occured...**")
 
 
 # Update
 @Client.on_message(fox_command("update", "Restarter", os.path.basename(__file__)) & filters.me)
 async def update(client, message):
     try:
-        await message.edit('**Updating...**')
+        await message.edit('<emoji id="5264727218734524899">🔄</emoji> **Updating...**')
         link = "https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip"
         wget.download(link, 'temp/archive.zip')
 
@@ -71,7 +71,7 @@ async def update(client, message):
         os.remove("temp/archive.zip")
         shutil.rmtree("temp/FoxUserbot-main")
 
-        await message.edit('**Userbot succesfully updated\nRestarting...**')
+        await message.edit('<emoji id="5237699328843200968">✅</emoji> **Userbot succesfully updated\nRestarting...**')
         await restart(message, restart_type="update")
     except:
-        await message.edit(f"**An error occured...**")
+        await message.edit(f"<emoji id='5210952531676504517'>❌</emoji> **An error occured...**")

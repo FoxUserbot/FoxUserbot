@@ -21,15 +21,15 @@ def user_exec(client, message):
         exec(code)
 
         message.edit(
-            f"<b>Code:</b>\n"
+            f"<emoji id='5300928913956938544'>👩‍💻</emoji> <b>Code:</b>\n"
             f"<code>{code}</code>\n\n"
-            f"<b>Result</b>:\n"
+            f"<emoji id='5447410659077661506'>🌐</emoji> <b>Result</b>:\n"
             f"<code>{result.getvalue()}</code>"
         )
     except:
         message.edit(
-            f"<b>Code:</b>\n"
+            f"<emoji id='5300928913956938544'>👩‍💻</emoji> <b>Code:</b>\n"
             f"<code>{code}</code>\n\n"
-            f"<b>Result</b>:\n"
+            f"<emoji id='5447410659077661506'>🌐</emoji> <b>Result</b>:\n"
             f"<code>{sys.exc_info()[0].__name__}: {sys.exc_info()[1]}</code>"
         )

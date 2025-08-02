@@ -89,16 +89,32 @@ def get_help_text(message):
 async def helps(client, message):
     try:
         image_url = get_help_image()
-        da = await client.send_photo(
+        if image_url.split(".")[-1].lower() in ["mp4", "mov", "avi", "mkv", "webm"]:
+            da = await client.send_video(
+                message.chat.id, 
+                video=image_url, 
+                caption="Loading the help menu...", 
+                message_thread_id=message.message_thread_id
+            )
+
+        elif image_url.split(".")[-1].lower() == "gif":
+            da = await client.send_animation(
+                message.chat.id, 
+                animation=image_url, 
+                caption="Loading the help menu...", 
+                message_thread_id=message.message_thread_id
+            )
+        else:
+            da = await client.send_photo(
             message.chat.id, 
             photo=image_url, 
             caption="Loading the help menu...", 
-            message_thread_id=message.message_thread_id
+            message_thread_id=message.message_thread_id 
         )
         await message.delete()
         caption = get_help_text(message)
         await client.edit_message_caption(message.chat.id, da.id, caption)
-    except:
+    except Exception as e:
         try:
             da = await client.send_photo(
                 message.chat.id, 

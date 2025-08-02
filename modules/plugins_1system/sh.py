@@ -10,7 +10,7 @@ import random
 async def example_edit(client, message):
     if not message.reply_to_message and (len(message.command) == 1):
         return await message.edit(
-            "<b>Specify the command in message text or in reply</b>"
+            "<emoji id='5210952531676504517'>❌</emoji> <b>Specify the command in message text or in reply</b>"
         )
     cmd_text = (
         " ".join(message.text.split()[1:])
@@ -19,29 +19,33 @@ async def example_edit(client, message):
     )
     if cmd_text is None: cmd_text = " ".join(message.text.split()[1:])
     cmd_obj = Popen(cmd_text, shell=True, stdout=PIPE, stderr=PIPE, text=True)
-    await message.edit("<b>Running...</b>")
+    await message.edit("<emoji id='5264727218734524899'>🔄</emoji> <b>Running...</b>")
     text = f"$ <code>{cmd_text}</code>\n\n"
     try:
         start_time = perf_counter()
         stdout, stderr = cmd_obj.communicate(timeout=60)
     except TimeoutExpired:
-        text += "<b>Timeout expired (60 seconds)</b>"
+        text += "<emoji id='5210952531676504517'>❌</emoji> <b>Timeout expired (60 seconds)</b>"
     else:
         stop_time = perf_counter()
         if stdout:
             stdout_output = f"{stdout}"
-            text += "<b>Output:</b>\n" f"<code>{stdout}</code>\n"
+            text += "<emoji id='5447410659077661506'>🌐</emoji> <b>Output:</b>\n" f"""```
+{stdout}
+```\n"""
         else:
             stdout_output = ""
 
         if stderr:
             stderr_output = f"{stderr}"
-            text += "<b>Error:</b>\n" f"<code>{stderr}</code>\n"
+            text += "<emoji id='5210952531676504517'>❌</emoji> <b>Error:</b>\n" f"""```
+{stderr}
+```\n"""
         else:
             stderr_output = ""
 
         time = round(stop_time - start_time, 3) * 1000
-        text += f"<b>Completed in {time} miliseconds with code {cmd_obj.returncode}</b> "
+        text += f"<emoji id='5237699328843200968'>✅</emoji> <b>Completed in {time} miliseconds with code {cmd_obj.returncode}</b> "
 
     try:
         await message.edit(text)
@@ -49,7 +53,7 @@ async def example_edit(client, message):
         output = f"{stdout_output}\n\n{stderr_output}"
         command = f"{cmd_text}"
 
-        await message.edit("Result too much, send with document...")
+        await message.edit("<emoji id='5411225014148014586'>🔴</emoji> <b>Result too much, send with document...</b>")
 
         i = random.randint(1, 9999)
         with open(f"temp/result{i}.txt", "w") as file:
