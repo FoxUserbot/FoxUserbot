@@ -2,9 +2,9 @@ from prefix import my_prefix
 from pyrogram import filters
 from modules.plugins_1system.settings.main_settings import module_list, file_list, add_command_help
 from typing import Union, List
+from pathlib import Path
 import json
 import os
-
 
 def load_aliases() -> dict:
     try:
@@ -14,6 +14,46 @@ def load_aliases() -> dict:
     except Exception:
         pass
     return {}
+
+
+async def who_message(client, message):
+    me = await client.get_me()
+    if message.from_user.id == me.id:
+        return message
+    else:
+        i = await client.send_message(message.chat.id, message.text, message_thread_id=message.message_thread_id)
+        return i
+
+
+def get_sudo_users() -> list[str]:
+    """
+    Читает список sudo-пользователей из файла userdata/sudo_users.json
+    
+    Returns:
+        list[str]: Список ID пользователей в виде строк
+        
+    Пример использования:
+        sudo_users = get_sudo_users()
+        if str(message.from_user.id) in sudo_users:
+            print("Это sudo-пользователь!")
+    """
+    
+
+
+def fox_sudo():
+    sudo_file = Path("userdata/sudo_users.json")
+    
+    sudo_users_list = []
+    
+    # Если файл не существует, возвращаем пустой список
+    try:
+        with open(sudo_file, 'r', encoding='utf-8') as f:
+            sudo_users_list = json.load(f)
+    except:
+        return sudo_users_list
+    
+    i = filters.user(sudo_users_list)
+    return i
 
 
 def fox_command(
