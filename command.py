@@ -25,27 +25,9 @@ async def who_message(client, message):
         return i
 
 
-def get_sudo_users() -> list[str]:
-    """
-    Читает список sudo-пользователей из файла userdata/sudo_users.json
-    
-    Returns:
-        list[str]: Список ID пользователей в виде строк
-        
-    Пример использования:
-        sudo_users = get_sudo_users()
-        if str(message.from_user.id) in sudo_users:
-            print("Это sudo-пользователь!")
-    """
-    
-
-
 def fox_sudo():
     sudo_file = Path("userdata/sudo_users.json")
-    
     sudo_users_list = []
-    
-    # Если файл не существует, возвращаем пустой список
     try:
         with open(sudo_file, 'r', encoding='utf-8') as f:
             sudo_users_list = json.load(f)
