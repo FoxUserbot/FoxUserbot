@@ -1,8 +1,9 @@
 from pyrogram import Client, filters
-from command import fox_command
+from command import fox_command, fox_sudo, who_message
 import os
 
 
-@Client.on_message(fox_command("example_edit", 'Example', os.path.basename(__file__), "[Example Arg]") & filters.me)
+@Client.on_message(fox_command("example_edit", 'Example', os.path.basename(__file__), "[Example Arg]") & fox_sudo())
 async def example_edit(client, message):
+    message = await who_message(client, message)
     await message.edit("<code>This is an example module</code>")

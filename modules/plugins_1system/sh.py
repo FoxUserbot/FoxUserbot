@@ -1,13 +1,14 @@
-from pyrogram import Client, filters
-from command import fox_command
+from pyrogram import Client
+from command import fox_command, fox_sudo, who_message
 import os
 from subprocess import Popen, PIPE, TimeoutExpired
 from time import perf_counter
 import random
 
 
-@Client.on_message(fox_command(["shell", "sh"], "Sh", os.path.basename(__file__), "[command/reply]") & filters.me)
-async def example_edit(client, message):
+@Client.on_message(fox_command(["shell", "sh"], "Sh", os.path.basename(__file__), "[command/reply]") & fox_sudo())
+async def shell(client, message):
+    message = await who_message(client, message)
     if not message.reply_to_message and (len(message.command) == 1):
         return await message.edit(
             "<emoji id='5210952531676504517'>❌</emoji> <b>Specify the command in message text or in reply</b>"
@@ -67,4 +68,5 @@ async def example_edit(client, message):
             await message.edit(f"<code>{command}</code>")
         os.remove(f"result{i}.txt")
     cmd_obj.kill()
+
 

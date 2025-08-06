@@ -1,14 +1,15 @@
-from pyrogram import Client, filters
+from pyrogram import Client
 import configparser
 import os
 from pathlib import Path
-from command import fox_command
+from command import fox_command, fox_sudo, who_message
 
 THEME_PATH = "userdata/theme.ini"
 
 
-@Client.on_message(fox_command("theme", "Theme", os.path.basename(__file__), "[help/info/vars] [set/reset] [image/text] [value]") & filters.me)
+@Client.on_message(fox_command("theme", "Theme", os.path.basename(__file__), "[help/info/vars] [set/reset] [image/text] [value]") & fox_sudo())
 async def theme_command(client, message):
+    message = await who_message(client, message)
     from prefix import my_prefix
     if len(message.command) < 2:
         text = ""
