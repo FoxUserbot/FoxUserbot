@@ -101,11 +101,11 @@ def convert_module_filters_me(file_path):
                 )
             return decorator + func_block
         
-    content = re.sub(
-        r'(@Client\.on_message\(.*?\)\n)(async def \w+\(client, message\):[\s\S]*?(?=\n\n|\Z))',
-        add_who_message,
-        content
-    )
+        content = re.sub(
+            r'(@Client\.on_message\(.*?\)\n)(async def \w+\(client, message\):[\s\S]*?(?=\n\n|\Z))',
+            add_who_message,
+            content
+        )
     
     content = content.replace("message.command[", "message.text.split()[")
 
