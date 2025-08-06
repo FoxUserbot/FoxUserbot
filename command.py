@@ -18,10 +18,14 @@ def load_aliases() -> dict:
 
 async def who_message(client, message):
     me = await client.get_me()
+    print(message)
     if message.from_user.id == me.id:
         return message
     else:
-        i = await client.send_message(message.chat.id, message.text, message_thread_id=message.message_thread_id)
+        try:
+            i = await client.send_message(message.chat.id, message.text, message_thread_id=message.message_thread_id)
+        except:
+            i = await client.send_message(message.chat.id, message.text)
         return i
 
 
@@ -31,11 +35,11 @@ def fox_sudo():
     try:
         with open(sudo_file, 'r', encoding='utf-8') as f:
             sudo_users_list = json.load(f)
+            i = (filters.user(sudo_users_list) or filters.chat(sudo_users_list))
+            print(i)
+            return i
     except:
-        return sudo_users_list
-    
-    i = filters.user(sudo_users_list)
-    return i
+        return filters.me
 
 
 def fox_command(
