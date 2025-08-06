@@ -18,7 +18,6 @@ def load_aliases() -> dict:
 
 async def who_message(client, message):
     me = await client.get_me()
-    print(message)
     if message.from_user.id == me.id:
         return message
     else:
@@ -36,7 +35,6 @@ def fox_sudo():
         with open(sudo_file, 'r', encoding='utf-8') as f:
             sudo_users_list = json.load(f)
             i = (filters.user(sudo_users_list) or filters.chat(sudo_users_list))
-            print(i)
             return i
     except:
         return filters.me
