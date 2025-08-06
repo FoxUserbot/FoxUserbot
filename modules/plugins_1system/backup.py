@@ -7,7 +7,7 @@ import tempfile
 from pathlib import Path
 from modules.plugins_1system.settings.main_settings import version
 from modules.plugins_1system.restarter import restart
-from command import fox_command
+from command import fox_command, fox_sudo, who_message
 
 # backup_dirs
 BACKUP_PATHS = [
@@ -17,12 +17,18 @@ BACKUP_PATHS = [
 ]
 
 async def create_backup() -> str:
+    def exclude_sudo_users(tarinfo):
+        if tarinfo.name == "userdata/sudo_users.json":
+            return None
+        return tarinfo
+
     with tempfile.NamedTemporaryFile(suffix='_FoxUB_Backup.tar.gz', delete=False) as tmp:
         with tarfile.open(tmp.name, mode='w:gz') as tar:
             for path in BACKUP_PATHS:
                 if os.path.exists(path):
-                    tar.add(path)
+                    tar.add(path, filter=exclude_sudo_users)
         return tmp.name
+
 
 async def restore_backup(client, message):
     if not message.reply_to_message or not message.reply_to_message.document:
@@ -49,8 +55,10 @@ async def restore_backup(client, message):
         if 'download_path' in locals() and os.path.exists(download_path):
             os.remove(download_path)
 
-@Client.on_message(fox_command("backup", "Backup", os.path.basename(__file__)) & filters.me)
+
+@Client.on_message(fox_command("backup", "Backup", os.path.basename(__file__)) & fox_sudo())
 async def backup_command(client, message):
+    message = await who_message(client, message)
     try:
         msg = await message.edit("<b><emoji id='5264727218734524899'>🔄</emoji> Creating a backup copy...</b>")
         backup_file = await create_backup()

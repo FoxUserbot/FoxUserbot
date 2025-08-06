@@ -19,12 +19,13 @@ def save_sudo_users(users):
         json.dump(users, f)
 
 
-@Client.on_message(fox_command("sudo", "SudoManager", os.path.basename(__file__), "add/del/list [@username|id]") & filters.me)
+@Client.on_message(fox_command("sudo", "SudoManager", os.path.basename(__file__), "[add/del/list] [@username/id]") & filters.me)
 async def sudo_manager(client, message):
     args = message.text.split(maxsplit=2)
     
     if len(args) < 2:
-        return await message.edit("<b>Использование:</b>\n<code>/sudo add @username</code>\n<code>/sudo del @username</code>\n<code>/sudo list</code>")
+        from prefix import my_prefix
+        return await message.edit(f"<b>Использование:</b>\n<code>{my_prefix()}sudo add @username</code>\n<code>{my_prefix()}sudo del @username</code>\n<code>{my_prefix()}sudo list</code>")
 
     action = args[1].lower()
     sudo_users = load_sudo_users()
