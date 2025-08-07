@@ -6,10 +6,10 @@ from time import perf_counter
 import random
 
 
-@Client.on_message(fox_command(["shell", "sh"], "Sh", os.path.basename(__file__), "[command/reply]") & fox_sudo())
+@Client.on_message(fox_command(["shell", "sh"], "Shell", os.path.basename(__file__), "[command/reply]") & fox_sudo())
 async def shell(client, message):
     message = await who_message(client, message)
-    if not message.reply_to_message and (len(message.command) == 1):
+    if not message.reply_to_message and (len(message.text.split()) == 1):
         return await message.edit(
             "<emoji id='5210952531676504517'>❌</emoji> <b>Specify the command in message text or in reply</b>"
         )
