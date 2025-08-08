@@ -1,16 +1,17 @@
-from pyrogram import Client, filters
+from pyrogram import Client
 import configparser
 import os
 from pathlib import Path
-from command import fox_command
+from command import fox_command, fox_sudo, who_message
 
 THEME_PATH = "userdata/theme.ini"
 
 
-@Client.on_message(fox_command("theme", "Theme", os.path.basename(__file__), "[help/info/vars] [set/reset] [image/text] [value]") & filters.me)
+@Client.on_message(fox_command("theme", "Theme", os.path.basename(__file__), "[help/info/vars] [set/reset] [image/text] [value]") & fox_sudo())
 async def theme_command(client, message):
+    message = await who_message(client, message)
     from prefix import my_prefix
-    if len(message.command) < 2:
+    if len(message.text.split()) < 2:
         text = ""
         if Path(THEME_PATH).exists():
             config = configparser.ConfigParser()
@@ -29,15 +30,15 @@ async def theme_command(client, message):
         await message.edit(text)
         return
 
-    if message.command[1] == "help":
-        if message.command[2] == "set":
-            if message.command[3] == "image":
-                if len(message.command) < 5:
+    if message.text.split()[1] == "help":
+        if message.text.split()[2] == "set":
+            if message.text.split()[3] == "image":
+                if len(message.text.split()) < 5:
                     await message.edit(f"**Usage:** `{my_prefix()}theme help set image [image_url]`")
                     return
-                value = message.command[4]
-            elif message.command[3] == "text":
-                if len(message.command) < 5:
+                value = message.text.split()[4]
+            elif message.text.split()[3] == "text":
+                if len(message.text.split()) < 5:
                     await message.edit(f"**Usage:** `{my_prefix()}theme help set text [text]`")
                     return
                 
@@ -59,14 +60,14 @@ async def theme_command(client, message):
             
             if not config.has_section("help"):
                 config.add_section("help")
-            config.set("help", "text" if message.command[3] == "text" else "image", value)
+            config.set("help", "text" if message.text.split()[3] == "text" else "image", value)
             
             with open(THEME_PATH, 'w') as f:
                 config.write(f)
                 
             await message.edit("<emoji id='5237699328843200968'>✅</emoji> Help settings updated")
         
-        elif message.command[2] == "reset":
+        elif message.text.split()[2] == "reset":
             if Path(THEME_PATH).exists():
                 config = configparser.ConfigParser()
                 config.read(THEME_PATH)
@@ -76,15 +77,15 @@ async def theme_command(client, message):
                     config.write(f)
             await message.edit("<emoji id='5237699328843200968'>✅</emoji> Help theme reset to default")
 
-    elif message.command[1] == "info":
-        if message.command[2] == "set":
-            if message.command[3] == "image":
-                if len(message.command) < 5:
+    elif message.text.split()[1] == "info":
+        if message.text.split()[2] == "set":
+            if message.text.split()[3] == "image":
+                if len(message.text.split()) < 5:
                     await message.edit(f"**Usage:** `{my_prefix()}theme info set image [image_url]`")
                     return
-                value = message.command[4]
-            elif message.command[3] == "text":
-                if len(message.command) < 5:
+                value = message.text.split()[4]
+            elif message.text.split()[3] == "text":
+                if len(message.text.split()) < 5:
                     await message.edit("**Usage:** `.theme info set text [text]`")
                     return
                 
@@ -107,14 +108,14 @@ async def theme_command(client, message):
             if not config.has_section("info"):
                 config.add_section("info")
                 
-            config.set("info", "text" if message.command[3] == "text" else "image", value)
+            config.set("info", "text" if message.text.split()[3] == "text" else "image", value)
             
             with open(THEME_PATH, 'w') as f:
                 config.write(f)
                 
             await message.edit("<emoji id='5237699328843200968'>✅</emoji> Info settings updated")
         
-        elif message.command[2] == "reset":
+        elif message.text.split()[2] == "reset":
             if Path(THEME_PATH).exists():
                 config = configparser.ConfigParser()
                 config.read(THEME_PATH)

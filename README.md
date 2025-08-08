@@ -2,7 +2,7 @@
     <img src="photos/logo.png" width="500" alt="FoxUserbot">
     </a>
     <br>
-    <b>FoxUserbot 2.4</b>
+    <b>FoxUserbot 2.4.2</b>
     <br>
     <b>Telegram userbot with the easiest installation</b>
     <br>
@@ -40,8 +40,9 @@
 
 ```python3
 from pyrogram import Client, filters
-from command import fox_command
+from command import fox_command, fox_sudo, who_message
 import os
+
 
 # If you need to install an external module via pip
 # import the following line of code and install the library with the required parameter
@@ -72,8 +73,9 @@ import os
 
 
 # fox_command(command, module_name, filename=os.path.basename(__file__), "[Arguments]"
-@Client.on_message(fox_command("example", "Example", os.path.basename(__file__), "[Arguments]") & filters.me)
+@Client.on_message(fox_command("example_edit", 'Example', os.path.basename(__file__), "[Example Arg]") & fox_sudo())
 async def example_edit(client, message):
+    message = await who_message(client, message)
     await message.edit("<code>This is an example module</code>")
 
 

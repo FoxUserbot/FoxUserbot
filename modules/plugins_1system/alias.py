@@ -2,7 +2,7 @@ import os
 import json
 from pathlib import Path
 from pyrogram import Client, filters
-from command import fox_command
+from command import fox_command, fox_sudo, who_message
 from typing import Dict, List
 from prefix import my_prefix
 from modules.plugins_1system.restarter import restart
@@ -45,8 +45,9 @@ class AliasManager:
 
 alias_manager = AliasManager()
 
-@Client.on_message(fox_command("alias", "AliasManager", os.path.basename(__file__), "[add/del/list] [alias] [command]") & filters.me)
+@Client.on_message(fox_command("alias", "AliasManager", os.path.basename(__file__), "[add/del/list] [alias] [command]") & fox_sudo())
 async def handle_aliases(client, message):
+    message = await who_message(client, message)
     args = message.text.split(maxsplit=3)
     
     if len(args) < 2:
@@ -97,4 +98,5 @@ async def list_aliases(message):
         f"<code>{alias}</code> → <code>{cmd}</code>" 
         for alias, cmd in alias_manager.aliases.items()
     )
+
     await message.edit(f"<emoji id='5283051451889756068'>🦊</emoji> <b>List aliases:</b>\n{aliases_list}")

@@ -1,6 +1,6 @@
-from pyrogram import Client, filters
+from pyrogram import Client
 from pyrogram.types import Message
-from command import fox_command
+from command import fox_command, fox_sudo, who_message
 import os
 import zipfile
 import wget
@@ -43,8 +43,9 @@ async def restart(message: Message, restart_type):
 
 
 # Restart
-@Client.on_message(fox_command("restart", "Restarter", os.path.basename(__file__)) & filters.me)
+@Client.on_message(fox_command("restart", "Restarter", os.path.basename(__file__)) & fox_sudo())
 async def restart_get(client, message):
+    message = await who_message(client, message)
     try:
         await message.edit("<emoji id='5264727218734524899'>🔄</emoji> **Restarting userbot...**")
         await restart(message, restart_type="restart")
@@ -53,8 +54,9 @@ async def restart_get(client, message):
 
 
 # Update
-@Client.on_message(fox_command("update", "Restarter", os.path.basename(__file__)) & filters.me)
+@Client.on_message(fox_command("update", "Restarter", os.path.basename(__file__)) & fox_sudo())
 async def update(client, message):
+    message = await who_message(client, message)
     try:
         await message.edit('<emoji id="5264727218734524899">🔄</emoji> **Updating...**')
         link = "https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip"
@@ -74,4 +76,5 @@ async def update(client, message):
         await message.edit('<emoji id="5237699328843200968">✅</emoji> **Userbot succesfully updated\nRestarting...**')
         await restart(message, restart_type="update")
     except:
+
         await message.edit(f"<emoji id='5210952531676504517'>❌</emoji> **An error occured...**")

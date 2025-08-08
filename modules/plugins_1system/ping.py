@@ -1,11 +1,12 @@
-from pyrogram import Client, filters
-from command import fox_command
+from pyrogram import Client
+from command import fox_command, fox_sudo, who_message
 import os
 from time import perf_counter
 
 
-@Client.on_message(fox_command("ping", "Ping", os.path.basename(__file__)) & filters.me)
+@Client.on_message(fox_command("ping", "Ping", os.path.basename(__file__)) & fox_sudo())
 async def ping(client, message):
+    message = await who_message(client, message)
     start = perf_counter()
     await message.edit("🏓| ⚾=== |🏓")
     await message.edit("🏓| =⚾== |🏓")
