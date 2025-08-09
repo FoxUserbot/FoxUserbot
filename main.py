@@ -34,13 +34,13 @@ def autoupdater():
         from pyrogram.client import Client
     except ImportError:
         try:
-            os.remove("firstlaunch.temp")
+            os.remove("temp/firstlaunch.temp")
         except OSError:
             pass
 
     first_launched = False
     try:
-        with open("firstlaunch.temp", "r", encoding="utf-8") as f:
+        with open("temp/firstlaunch.temp", "r", encoding="utf-8") as f:
             if (f.readline().strip() == "1"):
                 first_launched = True
     except FileNotFoundError:
@@ -54,6 +54,7 @@ def autoupdater():
                 install_library('uv -U')
             else:
                 os.system("termux-wake-lock")
+                os.system("pkg update -y ; pkg install uv -y")
         except Exception as f:
             logger.warning(f)
 
@@ -63,7 +64,7 @@ def autoupdater():
         except Exception as f:
             logger.warning(f)
 
-        with open("firstlaunch.temp", "w", encoding="utf-8") as f:
+        with open("temp/firstlaunch.temp", "w", encoding="utf-8") as f:
             f.write("1")
     
     # install requirements for userbot
