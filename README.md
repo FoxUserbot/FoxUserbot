@@ -9,7 +9,7 @@
     <br>
     <a href='https://github.com/FoxUserbot/CustomModules'>Custom modules</a>
     <br><br>
-    <div align="center">
+    <div align="left">
     <a href="https://github.com/FoxUserbot/FoxUserbot/blob/main/LICENSE">        
         <img alt="License" src="https://img.shields.io/github/license/FoxUserbot/FoxUserbot?style=for-the-badge">
     </a>
@@ -180,5 +180,6 @@ termux-wake-lock ; cd FoxUserbot-main && python3 main.py
 ---
 
 <p>We will steal your sessions and publish them on our Telegram channel :)</p>
+
 
 
