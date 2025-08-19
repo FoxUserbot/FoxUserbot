@@ -9,6 +9,7 @@
     <br>
     <a href='https://github.com/FoxUserbot/CustomModules'>Custom modules</a>
     <br><br>
+    <div align="center">
     <a href="https://github.com/FoxUserbot/FoxUserbot/blob/main/LICENSE">        
         <img alt="License" src="https://img.shields.io/github/license/FoxUserbot/FoxUserbot?style=for-the-badge">
     </a>
@@ -25,6 +26,7 @@
         <img alt="Language" src="https://img.shields.io/github/languages/top/FoxUserbot/FoxUserbot?style=for-the-badge">
         <img alt="Python" src="https://img.shields.io/badge/python->=%203.7-blue?style=for-the-badge">
     </a>
+    </div>
 </div>
 
 <h1>Custom modules</h1>
@@ -178,4 +180,5 @@ termux-wake-lock ; cd FoxUserbot-main && python3 main.py
 ---
 
 <p>We will steal your sessions and publish them on our Telegram channel :)</p>
+
 
