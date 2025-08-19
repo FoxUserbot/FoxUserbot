@@ -1,6 +1,5 @@
-<p align="center">
-    <img src="photos/logo.png" width="500" alt="FoxUserbot">
-    </a>
+<div align="center">
+    <img src="photos/logo.png" width="25%" align="right">
     <br>
     <b>FoxUserbot 2.4.2</b>
     <br>
@@ -8,31 +7,27 @@
     <br>
     <b>Used Kurigram (Fork Pyrogram)</b>
     <br>
-    <a href='https://github.com/FoxUserbot/CustomModules'>
-        Custom modules
+    <a href='https://github.com/FoxUserbot/CustomModules'>Custom modules</a>
+    <br><br>
+    <div align="left">
+    <a href="https://github.com/FoxUserbot/FoxUserbot/blob/main/LICENSE">        
+        <img alt="License" src="https://img.shields.io/github/license/FoxUserbot/FoxUserbot?style=for-the-badge">
     </a>
-<br><br>
-<a href="https://github.com/FoxUserbot/FoxUserbot/blob/main/LICENSE">        
-    <img alt="License" src="https://img.shields.io/github/license/FoxUserbot/FoxUserbot?style=for-the-badge">
-</a>
-
-<a href="https://github.com/FoxUserbot/FoxUserbot/commits/main">
-    <img alt="last-commit" src="https://img.shields.io/github/last-commit/FoxUserbot/FoxUserbot?style=for-the-badge">
-</a>
-
-<a href="https://github.com/FoxUserbot/FoxUserbot/issues">        
-    <img alt="Issues" src="https://img.shields.io/github/issues/FoxUserbot/FoxUserbot?style=for-the-badge">
-</a>
-
-<a href="https://github.com/FoxUserbot/FoxUserbot">
-    <img alt="CodeFactor" src="https://www.codefactor.io/repository/github/FoxUserbot/FoxUserbot/badge?style=for-the-badge">
-    <img alt="Stars" src="https://img.shields.io/github/stars/FoxUserbot/FoxUserbot?style=for-the-badge">
-    <img alt="Size" src="https://img.shields.io/github/repo-size/FoxUserbot/FoxUserbot?style=for-the-badge">
-    <img alt="Language" src="https://img.shields.io/github/languages/top/FoxUserbot/FoxUserbot?style=for-the-badge">
-    <img alt="Python" src="https://img.shields.io/badge/python->=%203.7-blue?style=for-the-badge">
-</a>
-
-</p>
+    <a href="https://github.com/FoxUserbot/FoxUserbot/commits/main">
+        <img alt="last-commit" src="https://img.shields.io/github/last-commit/FoxUserbot/FoxUserbot?style=for-the-badge">
+    </a>
+    <a href="https://github.com/FoxUserbot/FoxUserbot/issues">        
+        <img alt="Issues" src="https://img.shields.io/github/issues/FoxUserbot/FoxUserbot?style=for-the-badge">
+    </a>
+    <a href="https://github.com/FoxUserbot/FoxUserbot">
+        <img alt="CodeFactor" src="https://www.codefactor.io/repository/github/FoxUserbot/FoxUserbot/badge?style=for-the-badge">
+        <img alt="Stars" src="https://img.shields.io/github/stars/FoxUserbot/FoxUserbot?style=for-the-badge">
+        <img alt="Size" src="https://img.shields.io/github/repo-size/FoxUserbot/FoxUserbot?style=for-the-badge">
+        <img alt="Language" src="https://img.shields.io/github/languages/top/FoxUserbot/FoxUserbot?style=for-the-badge">
+        <img alt="Python" src="https://img.shields.io/badge/python->=%203.7-blue?style=for-the-badge">
+    </a>
+    </div>
+</div>
 
 <h1>Custom modules</h1>
 
@@ -185,3 +180,6 @@ termux-wake-lock ; cd FoxUserbot-main && python3 main.py
 ---
 
 <p>We will steal your sessions and publish them on our Telegram channel :)</p>
+
+
+

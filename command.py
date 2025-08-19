@@ -46,6 +46,7 @@ def fox_command(
     filename: str, 
     arguments: str = ""
 ) -> filters.Filter:
+    module_name = module_name.replace(" ", "_")
     commands = [command] if isinstance(command, str) else command.copy()
     aliases = load_aliases()
 
