@@ -16,16 +16,18 @@ def load_aliases() -> dict:
     return {}
 
 
-async def who_message(client, message):
+async def who_message(client, message, reply_to_message=None):
     me = await client.get_me()
     if message.from_user.id == me.id:
         return message
     else:
-        try:
-            i = await client.send_message(message.chat.id, message.text, message_thread_id=message.message_thread_id)
-        except:
-            i = await client.send_message(message.chat.id, message.text)
-        return i
+        reply_to_id = reply_to_message.id if reply_to_message else None
+        return await client.send_message(
+            message.chat.id, 
+            message.text, 
+            message_thread_id=message.message_thread_id,
+            reply_to_message_id=reply_to_id,
+        )
 
 
 def fox_sudo():
