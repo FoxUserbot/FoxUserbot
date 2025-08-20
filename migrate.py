@@ -110,6 +110,8 @@ def convert_module_filters_me(file_path):
         )
     
     content = content.replace("message.command[", "message.text.split()[")
+    content = content.replace("message = await who_message(client, message)", "message = await who_message(client, message, message.reply_to_message)")
+                
     content = re.sub(
         r'async def (\w+)\(client: Client, message: Message\)',
         r'async def \1(client, message)',
