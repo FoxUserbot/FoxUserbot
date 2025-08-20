@@ -74,14 +74,16 @@ if os.path.exists("config.ini"):
 # 2.3.5 > 2.4
 if os.path.isdir("modules/plugins_3finished"):
     shutil.rmtree("modules/plugins_3finished")
-    os.remove("firstlaunch.temp")
     restart_executor()
 
 if os.path.exists("logo.png"):
     os.remove("logo.png")
+
 
 # 2.4.3
 if os.path.exists("photo/foxuserbot_info.jpg"):
     os.remove("photo/foxuserbot_info.jpg")
 if os.path.exists("photo/system_info.jpg"):
     os.remove("photo/system_info.jpg")
+if os.path.exists("firstlaunch.temp"):
+    os.remove("firstlaunch.temp")
