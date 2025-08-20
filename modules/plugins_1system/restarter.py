@@ -93,7 +93,7 @@ async def update(client, message):
             zip_ref.extractall("temp/")
         os.remove("temp/archive.zip")
 
-        shutil.make_archive("temp/archive", "zip", "temp/FoxUserbot-main/")
+        shutil.make_archive("temp/archive", "zip", "temp/FoxUserbot-dev-main/")
 
         with zipfile.ZipFile("temp/archive.zip", "r") as zip_ref:
             zip_ref.extractall(".")
