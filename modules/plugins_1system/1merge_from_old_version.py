@@ -79,3 +79,9 @@ if os.path.isdir("modules/plugins_3finished"):
 
 if os.path.exists("logo.png"):
     os.remove("logo.png")
+
+# 2.4.3
+if os.path.exists("photo/foxuserbot_info.jpg"):
+    os.remove("photo/foxuserbot_info.jpg")
+if os.path.exists("photo/system_info.jpg"):
+    os.remove("photo/system_info.jpg")

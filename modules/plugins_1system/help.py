@@ -8,7 +8,7 @@ import configparser
 from pathlib import Path
 
 # Default
-DEFAULT_HELP_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/main/photos/foxuserbot_info.jpg"
+DEFAULT_HELP_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/main/photos/FoxUB_help.jpg"
 THEME_PATH = "userdata/theme.ini"
 
 def get_help_image():
@@ -122,7 +122,7 @@ async def helps(client, message):
             try:
                 da = await client.send_photo(
                     message.chat.id, 
-                    photo="photos/foxuserbot_info.jpg", 
+                    photo="photos/FoxUB_help.jpg", 
                     caption="Loading the help menu...", 
                     message_thread_id=message.message_thread_id
                 )
