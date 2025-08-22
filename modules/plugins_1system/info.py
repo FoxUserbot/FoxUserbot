@@ -3,6 +3,7 @@ from modules.plugins_1system.uptime import bot_start_time
 from command import fox_command, fox_sudo, who_message
 import os
 import subprocess
+import sys
 from platform import python_version, system, release, uname
 import configparser
 from pathlib import Path
@@ -10,7 +11,7 @@ from datetime import datetime
 
 
 
-DEFAULT_INFO_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/photos/system_info.jpg"
+DEFAULT_INFO_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/photos/FoxUB_info.jpg"
 THEME_PATH = "userdata/theme.ini"
 
 
@@ -62,16 +63,20 @@ def format_uptime():
     
     return ' '.join(result)
 
+def get_safe_mode_status():
+    return "--safe" in sys.argv
 
 def replace_aliases(text, message):
     uptime_text = format_uptime()
     platform_text = get_platform_info()
+    safe_mode = get_safe_mode_status()
     
     aliases = {
         '{version}': __version__,
         '{python_version}': python_version(),
         '{uptime}': uptime_text,
         '{platform}': platform_text,
+        '{safe_mode}': 'Enabled' if safe_mode else 'Disabled',
     }
 
     for alias, value in aliases.items():
@@ -102,6 +107,7 @@ def get_info_image():
 def get_info_text(message):
     uptime_text = format_uptime()
     platform_text = get_platform_info()
+    safe_mode = get_safe_mode_status()
     
     custom_text = None
     if Path(THEME_PATH).exists():
@@ -120,6 +126,7 @@ def get_info_text(message):
 <emoji id="5190637731503415052">🥧</emoji><b> | Kurigram: {__version__}</b>
 <emoji id="5282843764451195532">⏰</emoji><b> | Uptime: {uptime_text}</b>
 <emoji id="5350554349074391003">💻</emoji><b> | Platform: {platform_text}</b>
+<emoji id="5420323339723881652">🛡️</emoji><b> | Safe Mode: {safe_mode}</b>
     
 <emoji id="5330237710655306682">💻</emoji><a href="https://t.me/foxteam0"><b> | Official FoxTeam Channel.</b></a>
 <emoji id="5346181118884331907">🐈‍⬛</emoji><a href="https://github.com/FoxUserbot/FoxUserbot"><b> | Github Repository.</b></a>
@@ -172,13 +179,15 @@ async def info(client, message):
                 caption=get_info_text(message), 
                 message_thread_id=message.message_thread_id
             )
+            await message.delete()
         except:
             try:
                 await client.send_photo(
                     message.chat.id, 
-                    photo="photos/system_info.jpg", 
+                    photo="photos/FoxUB_info.jpg", 
                     caption=get_info_text(message), 
                     message_thread_id=message.message_thread_id
                 )
+                await message.delete()
             except:
                 await message.edit(get_info_text(message))

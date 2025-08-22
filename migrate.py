@@ -93,12 +93,14 @@ def convert_module_filters_me(file_path):
             needs_who_message = "fox_command" in decorator
             
             if needs_who_message and 'message = await who_message(client, message)' not in func_block:
-                func_block = re.sub(
-                    r'(async def \w+\(client, message\):\n)',
-                    r'\1    message = await who_message(client, message)\n',
-                    func_block,
-                    count=1
-                )
+                func_block = func_block.replace("message = await who_message(client, message)", "message = await who_message(client, message, message.reply_to_message)")
+                if needs_who_message and 'message = await who_message(client, message, message.reply_to_message)' not in func_block:
+                    func_block = re.sub(
+                        r'(async def \w+\(client, message\):\n)',
+                        r'\1    message = await who_message(client, message, message.reply_to_message)\n',
+                        func_block,
+                        count=1
+                    )
             return decorator + func_block
         
         content = re.sub(
@@ -108,7 +110,8 @@ def convert_module_filters_me(file_path):
         )
     
     content = content.replace("message.command[", "message.text.split()[")
-
+    content = content.replace("message = await who_message(client, message)", "message = await who_message(client, message, message.reply_to_message)")
+                
     content = re.sub(
         r'async def (\w+)\(client: Client, message: Message\)',
         r'async def \1(client, message)',
