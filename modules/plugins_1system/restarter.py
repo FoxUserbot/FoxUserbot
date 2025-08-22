@@ -82,7 +82,7 @@ async def update(client, message):
 
 # Update
 @Client.on_message(fox_command("beta", "Restarter", os.path.basename(__file__)) & fox_sudo())
-async def update(client, message):
+async def update_beta(client, message):
     message = await who_message(client, message)
     try:
         await message.edit('<emoji id="5264727218734524899">🔄</emoji> **Updating beta...**')
@@ -105,3 +105,4 @@ async def update(client, message):
     except:
 
         await message.edit(f"<emoji id='5210952531676504517'>❌</emoji> **An error occured...**")
+
