@@ -12,7 +12,7 @@ config.read(PATH_FILE)
 
 @Client.on_message(fox_command("sp", "SetPrefix", os.path.basename(__file__), "[new prefix]") & fox_sudo())
 async def sprefix(client, message):
-    message = await who_message(client, message)
+    message = await who_message(client, message, message.reply_to_message)
     if len(message.text.split()) > 1:
         prefixgett = message.text.split()[1]
         config.set("prefix", "prefix", prefixgett)

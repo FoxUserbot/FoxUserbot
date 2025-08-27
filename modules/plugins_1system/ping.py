@@ -6,7 +6,7 @@ from time import perf_counter
 
 @Client.on_message(fox_command("ping", "Ping", os.path.basename(__file__)) & fox_sudo())
 async def ping(client, message):
-    message = await who_message(client, message)
+    message = await who_message(client, message, message.reply_to_message)
     start = perf_counter()
     await message.edit("🏓| ⚾=== |🏓")
     await message.edit("🏓| =⚾== |🏓")

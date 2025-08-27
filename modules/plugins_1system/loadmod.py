@@ -7,7 +7,7 @@ import wget
 
 @Client.on_message(fox_command("loadmod", "Loadmod", os.path.basename(__file__), "[link to the module/reply]") & fox_sudo())
 async def loadmod(client, message):
-    message = await who_message(client, message)
+    message = await who_message(client, message, message.reply_to_message)
     if not message.reply_to_message:
         await message.edit("<b>Load module...</b>")
         link = message.text.split()[1]

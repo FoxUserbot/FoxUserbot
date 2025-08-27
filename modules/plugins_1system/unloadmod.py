@@ -7,7 +7,7 @@ import os
 
 @Client.on_message(fox_command("unloadmod", "Unloadmod", os.path.basename(__file__), "[module name]") & fox_sudo())
 async def unloadmod(client, message):
-    message = await who_message(client, message)
+    message = await who_message(client, message, message.reply_to_message)
     try:
         from prefix import my_prefix
         module_name = message.text.replace(f'{my_prefix()}unloadmod', '')

@@ -143,7 +143,7 @@ def get_info_text(message):
 
 @Client.on_message(fox_command("info", "Info", os.path.basename(__file__)) & fox_sudo())
 async def info(client, message):
-    message = await who_message(client, message)
+    message = await who_message(client, message, message.reply_to_message)
     try:
         media_url = get_info_image()
         info_text = get_info_text(message)
