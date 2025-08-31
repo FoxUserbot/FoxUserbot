@@ -122,6 +122,24 @@ def convert_module_filters_me(file_path):
         f.write(content)
 
 
+def check_duplicate(folder_path):
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, filename)
+        
+        # Пропускаем папки и не .py файлы
+        if not os.path.isfile(file_path) or not filename.endswith('.py'):
+            continue
+        
+        # Заменяем пробелы на _ и удаляем все скобки
+        new_name = re.sub(r'[()]', '', filename.replace(' ', '_'))
+        
+        # Переименовываем только если имя изменилось
+        if new_name != filename:
+            new_path = os.path.join(folder_path, new_name)
+            os.rename(file_path, new_path)
+            print(f'Renamed: {filename} -> {new_name}')
+
+
 def process_modules_directory(directory):
     for root, _, files in os.walk(directory):
         for file in files:
@@ -129,6 +147,7 @@ def process_modules_directory(directory):
                 file_path = os.path.join(root, file)
                 convert_module_new_format(file_path)
                 convert_module_filters_me(file_path)
+    check_duplicate(directory)
 
 def convert_modules():
     process_modules_directory("modules/plugins_2custom")
