@@ -47,7 +47,7 @@ alias_manager = AliasManager()
 
 @Client.on_message(fox_command("alias", "AliasManager", os.path.basename(__file__), "[add/del/list] [alias] [command]") & fox_sudo())
 async def handle_aliases(client, message):
-    message = await who_message(client, message, message.reply_to_message)
+    message = await who_message(client, message)
     args = message.text.split(maxsplit=3)
     
     if len(args) < 2:

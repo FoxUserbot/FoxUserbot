@@ -90,7 +90,7 @@ async def update_repository(client, message, repo_url, repo_type):
 # Restart
 @Client.on_message(fox_command("restart", "Restarter", os.path.basename(__file__)) & fox_sudo())
 async def restart_get(client, message):
-    message = await who_message(client, message, message.reply_to_message)
+    message = await who_message(client, message)
     try:
         await message.edit("<emoji id='5264727218734524899'>🔄</emoji> **Restarting userbot...**")
         await restart(message, restart_type="restart")
@@ -101,12 +101,12 @@ async def restart_get(client, message):
 # Update main
 @Client.on_message(fox_command("update", "Restarter", os.path.basename(__file__)) & fox_sudo())
 async def update(client, message):
-    message = await who_message(client, message, message.reply_to_message)
+    message = await who_message(client, message)
     await update_repository(client, message, "https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip", "main")
 
 
 # Update beta
 @Client.on_message(fox_command("beta", "Restarter", os.path.basename(__file__)) & fox_sudo())
 async def update_beta(client, message):
-    message = await who_message(client, message, message.reply_to_message)
+    message = await who_message(client, message)
     await update_repository(client, message, "https://github.com/FoxUserbot/FoxUserbot-dev/archive/refs/heads/main.zip", "beta")

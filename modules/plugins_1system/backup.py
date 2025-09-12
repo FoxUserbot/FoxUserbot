@@ -57,7 +57,7 @@ async def restore_backup(client, message):
 
 @Client.on_message(fox_command("backup", "Backup", os.path.basename(__file__)) & fox_sudo())
 async def backup_command(client, message):
-    message = await who_message(client, message, message.reply_to_message)
+    message = await who_message(client, message)
     try:
         msg = await message.edit("<b><emoji id='5264727218734524899'>🔄</emoji> Creating a backup copy...</b>")
         backup_file = await create_backup()
@@ -78,7 +78,7 @@ async def backup_command(client, message):
 
 @Client.on_message(fox_command("restore", "Backup", os.path.basename(__file__), "[reply]") & fox_sudo())
 async def restore_command(client, message):
-    message = await who_message(client, message, message.reply_to_message)
+    message = await who_message(client, message)
     await message.edit("<b><emoji id='5264727218734524899'>🔄</emoji> Ready for restoration...</b>")
     await restore_backup(client, message)
     await restart(message, restart_type="restart")

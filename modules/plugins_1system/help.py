@@ -82,7 +82,7 @@ def get_help_text(message):
 
 @Client.on_message(fox_command("help", "Help", os.path.basename(__file__)) & fox_sudo())
 async def helps(client, message):
-    message = await who_message(client, message, message.reply_to_message)
+    message = await who_message(client, message)
     try:
         image_url = get_help_image()
         if image_url.split(".")[-1].lower() in ["mp4", "mov", "avi", "mkv", "webm"]:

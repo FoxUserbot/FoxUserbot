@@ -6,7 +6,7 @@ from io import StringIO
 
 @Client.on_message(fox_command("eval", "Eval", os.path.basename(__file__), "[code/reply]") & fox_sudo())
 async def user_exec(client, message):
-    message = await who_message(client, message, message.reply_to_message)
+    message = await who_message(client, message)
     reply = message.reply_to_message
     code = ""
     try:
