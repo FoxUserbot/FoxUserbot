@@ -1,5 +1,6 @@
 from prefix import my_prefix
 from pyrogram import filters
+from pyrogram.types import ReplyParameters
 from modules.plugins_1system.settings.main_settings import file_list, add_command_help
 from typing import Union, List
 from pathlib import Path
@@ -16,19 +17,21 @@ def load_aliases() -> dict:
     return {}
 
 
-async def who_message(client, message, reply_to_message=None):
+async def who_message(client, message):
     me = await client.get_me()
     if message.from_user.id == me.id:
         return message
     else:
-        reply_to_id = reply_to_message.id if reply_to_message else None
+        try:
+            reply_id = message.reply_to_message.id
+        except:
+            reply_id = message.id
         return await client.send_message(
             message.chat.id, 
             message.text, 
             message_thread_id=message.message_thread_id,
-            reply_to_message_id=reply_to_id,
+            reply_parameters=ReplyParameters(message_id=reply_id)
         )
-
 
 def fox_sudo():
     sudo_file = Path("userdata/sudo_users.json")
