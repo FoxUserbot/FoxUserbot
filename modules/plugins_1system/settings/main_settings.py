@@ -1,6 +1,6 @@
 """Please, ignore this file."""
 
-version = "2.4.3"
+version = "2.5 [DEV]"
 module_list = {}
 file_list = {}
 
@@ -10,3 +10,4 @@ def add_command_help(module_name, text):
         module_list[module_name] = []
     module_list[module_name].append(text)
     
+
