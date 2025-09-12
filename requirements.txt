@@ -3,4 +3,4 @@ telegraph
 wget 
 pystyle 
 flask 
-kurigram==2.2.9
+kurigram==2.2.10
