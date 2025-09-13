@@ -87,3 +87,13 @@ if os.path.exists("photo/system_info.jpg"):
     os.remove("photo/system_info.jpg")
 if os.path.exists("firstlaunch.temp"):
     os.remove("firstlaunch.temp")
+
+# 2.5
+if os.path.exists("__pycache__"):
+    shutil.rmtree("__pycache__")
+    
+if os.path.exists("modules/plugins_1system/__pycache__"):
+    shutil.rmtree("modules/plugins_1system/__pycache__")
+    
+if os.path.exists("modules/plugins_2custom/__pycache__"):
+    shutil.rmtree("modules/plugins_2custom/__pycache__")

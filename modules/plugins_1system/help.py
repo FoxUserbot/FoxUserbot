@@ -6,6 +6,7 @@ from telegraph import Telegraph
 import random
 import configparser
 from pathlib import Path
+import html
 
 # Default
 DEFAULT_HELP_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/main/photos/FoxUB_help.jpg"
@@ -35,9 +36,11 @@ def get_help_text(message):
             commands = text
         command_list = [cmd.strip() for cmd in commands.split("|")]
 
+        escaped_module_name = html.escape(str(module_name), quote=True)
+        escaped_commands = [html.escape(str(cmd), quote=True) for cmd in command_list]
         module_block = [
-            f"➣ Module <b>[{module_name}]</b>",
-            *[f"Command: <code>{cmd}</code>" for cmd in command_list],
+            f"➣ Module <b>[{escaped_module_name}]</b>",
+            *[f"Command: <code>{cmd}</code>" for cmd in escaped_commands],
             "" 
         ]
         lists.extend(module_block)

@@ -157,6 +157,7 @@ async def theme_command(client, message):
 • <code>{modules_count}</code> - number of modules
 • <code>{prefix}</code> - command prefix
 • <code>{commands_link}</code> - link to all commands list
+• <code>{safe_mode}</code> - safe mode status
 
 <b><emoji id='5422439311196834318'>💡</emoji> <u>Example custom text for info:</u></b>
 
@@ -165,6 +166,7 @@ Kurigram: {version}
 🐍 Python {python_version}
 ⏰ Uptime: {uptime}
 💻 Platform: {platform}</code>
+❓ Safe Mod: {safe_mod}
 
 <b><emoji id='5422439311196834318'>💡</emoji> <u>Example custom text for help:</u></b>
 
