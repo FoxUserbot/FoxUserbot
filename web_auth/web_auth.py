@@ -98,7 +98,7 @@ def submit_password():
     return jsonify({'message': 'Password received'})
 
 def find_free_port() -> int:
-    if "SHARKHOST" in os.environ:
+    if "SHARKHOST" or "HIKKAHOST" in os.environ:
         return 8080
     
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
