@@ -29,7 +29,7 @@ async def create_backup() -> str:
             for path in BACKUP_PATHS:
                 if os.path.exists(path):
                     tar.add(path, filter=exclude_sudo_users)
-        return tmp.name  # Возвращаем абсолютный путь
+        return tmp.name
 
 
 async def restore_backup(client, message):
