@@ -40,7 +40,8 @@ async def restart(message: Message, restart_type):
     else:
         text = "2"
     thread_id = message.message_thread_id if message.message_thread_id else None
-    restart_executor(message.chat.id, message.id, text, thread_id)
+    chat_id = message.chat.username if message.chat.username else message.chat.id
+    restart_executor(chat_id, message.id, text, thread_id)
 
 
 async def update_repository(client, message, repo_url, repo_type):
