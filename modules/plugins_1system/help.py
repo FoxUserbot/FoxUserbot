@@ -11,6 +11,9 @@ import html
 # Default
 DEFAULT_HELP_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/main/photos/FoxUB_help.jpg"
 THEME_PATH = "userdata/theme.ini"
+CACHE_DIR = "temp"
+CACHE_CONTENT_FILE = os.path.join(CACHE_DIR, "help_content.txt")
+CACHE_LINK_FILE = os.path.join(CACHE_DIR, "help_link.txt")
 
 def get_help_image():
     if not Path(THEME_PATH).exists():
@@ -23,9 +26,49 @@ def get_help_image():
     except:
         return DEFAULT_HELP_IMAGE
 
+def get_modules_content():
+    """Получает текстовое представление всех модулей и команд"""
+    content = []
+    for module_name, commands in module_list.items():
+        if isinstance(commands, list):
+            commands = " | ".join(commands)
+        content.append(f"{module_name}:{commands}")
+    return "\n".join(content)
 
-def get_help_text(message):
+def get_cached_telegraph_link():
+    """Получает закешированную ссылку если содержимое не изменилось"""
+    if os.path.exists(CACHE_LINK_FILE) and os.path.exists(CACHE_CONTENT_FILE):
+        try:
+            with open(CACHE_CONTENT_FILE, 'r', encoding='utf-8') as f:
+                cached_content = f.read().strip()
+            
+            current_content = get_modules_content()
+            
+            if cached_content == current_content:
+                with open(CACHE_LINK_FILE, 'r', encoding='utf-8') as f:
+                    return f.read().strip()
+        except:
+            pass
+    return None
+
+def cache_telegraph_link(link):
+    """Сохраняет ссылку и содержимое модулей в кеш"""
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    
+    try:
+        current_content = get_modules_content()
+        with open(CACHE_CONTENT_FILE, 'w', encoding='utf-8') as f:
+            f.write(current_content)
+        with open(CACHE_LINK_FILE, 'w', encoding='utf-8') as f:
+            f.write(link)
+    except Exception as e:
+        print(f"Error caching telegraph link: {e}")
+
+def get_help_text():
     from prefix import my_prefix
+    
+    cached_link = get_cached_telegraph_link()
+    
     lists = []
     for module_name, commands in module_list.items():
         text = ""
@@ -47,10 +90,17 @@ def get_help_text(message):
 
     a = "<br>".join(lists)
     
-    
-    telegraph = Telegraph()
-    telegraph.create_account(short_name='FoxServices')
-    link = f"https://telegra.ph/{telegraph.create_page(f'FoxUserbot Help {random.randint(10000, 99999)}', html_content=f'{a}')['path']}"
+    if cached_link:
+        link = cached_link
+    else:
+        telegraph = Telegraph()
+        telegraph.create_account(short_name='FoxServices')
+        page = telegraph.create_page(
+            f'FoxUserbot Help {random.randint(10000, 99999)}', 
+            html_content=a
+        )
+        link = f"https://telegra.ph/{page['path']}"
+        cache_telegraph_link(link)
     
     custom_text = None
     if Path(THEME_PATH).exists():
@@ -78,7 +128,6 @@ def get_help_text(message):
 <emoji id="5444856076954520455">🔒</emoji><b> | Prefix: {my_prefix()}</b>
 <emoji id="5436113877181941026">❓</emoji><a href="{link}"><b> | List of all commands. </b></a>
 """
-
 
 @Client.on_message(fox_command("help", "Help", os.path.basename(__file__)) & fox_sudo())
 async def helps(client, message):
@@ -108,7 +157,7 @@ async def helps(client, message):
             message_thread_id=message.message_thread_id 
         )
         await message.delete()
-        caption = get_help_text(message)
+        caption = get_help_text()
         await client.edit_message_caption(message.chat.id, da.id, caption)
     except Exception as e:
         try:
@@ -119,7 +168,7 @@ async def helps(client, message):
                 message_thread_id=message.message_thread_id
             )
             await message.delete()
-            caption = get_help_text(message)
+            caption = get_help_text()
             await client.edit_message_caption(message.chat.id, da.id, caption)
         except:
             try:
@@ -130,8 +179,8 @@ async def helps(client, message):
                     message_thread_id=message.message_thread_id
                 )
                 await message.delete()
-                caption = get_help_text(message)
+                caption = get_help_text()
                 await client.edit_message_caption(message.chat.id, da.id, caption)
             except:
                 await message.edit("Loading the help menu...")
-                await message.edit(get_help_text(message))
+                await message.edit(get_help_text())
