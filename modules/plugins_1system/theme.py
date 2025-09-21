@@ -12,7 +12,7 @@ THEME_PATH = "userdata/theme.ini"
 @Client.on_message(fox_command("theme", "Theme", os.path.basename(__file__), "[help/info/vars] [set/reset] [image/text] [value]") & fox_sudo())
 async def theme_command(client, message):
     message = await who_message(client, message)
-    from prefix import my_prefix
+    from command import my_prefix
     if len(message.text.split()) < 2:
         text = ""
         if Path(THEME_PATH).exists():

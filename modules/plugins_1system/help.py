@@ -67,7 +67,7 @@ def cache_telegraph_link(link):
         print(f"Error caching telegraph link: {e}")
 
 def get_help_text():
-    from prefix import my_prefix
+    from command import my_prefix
     
     cached_link = get_cached_telegraph_link()
     

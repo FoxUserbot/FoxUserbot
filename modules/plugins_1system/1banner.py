@@ -4,7 +4,7 @@ import os
 from pystyle import Colors, Write
 
 from modules.plugins_1system.settings.main_settings import version
-from prefix import my_prefix
+from command import my_prefix, fox_sudo, who_message
 
 logger = logging.getLogger('FoxUserbot')
 
