@@ -17,8 +17,12 @@ async def shell(client, message):
         )
     cmd_text = (
         " ".join(message.text.split()[1:])
-        if message.reply_to_message.text is None
-        else message.reply_to_message
+        if message.text and len(message.text.split()) > 1
+        else (
+            message.reply_to_message.text
+            if message.reply_to_message and message.reply_to_message.text
+            else None
+        )
     )
     if cmd_text is None: cmd_text = " ".join(message.text.split()[1:])
     cmd_obj = Popen(cmd_text, shell=True, stdout=PIPE, stderr=PIPE, text=True)
