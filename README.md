@@ -73,7 +73,6 @@ async def example_edit(client, message):
     message = await who_message(client, message)
     await message.edit("<code>This is an example module</code>")
 
-
 ```
 
 <h2>How to add Hikka/Heroku modules?</h2>
@@ -88,32 +87,28 @@ AI will automatically convert the module from Telethon to Pyrogram for this User
 <h2>How to install?</h2>
 
 - Termux
-
 ```
 pkg update -y && pkg install python3 wget unzip -y && termux-wake-lock && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
 ```
+
 > [!IMPORTANT]
 > Further installation (except for macOS and Docker) must be done as root or use sudo
 - APT (Debian based)
-
 ```
 apt update -y && apt install python3 python3-pip python3-venv wget unzip -y && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
 ```
 
-- Astra Linux (if python < 3.7, else go to "Debian based")
-
+- APT (if python < 3.7, else go to "Debian based")
 ```
 apt update -y && apt install python3-venv curl wget unzip -y && sh <(curl -sSL https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/main/HowToGetPython3_8.sh) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
 ```
 
 - YUM (RHEL based)
-
 ```
 yum -y update && yum install wget python3 python3-pip curl unzip -y && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
 ```
 
 - PACMAN (Arch based)
-
 ```
 pacman -Sy python3 python-pip wget curl unzip && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
 ```
@@ -122,18 +117,18 @@ pacman -Sy python3 python-pip wget curl unzip && wget -O foxub.$$ https://github
 ```
 emerge python dev-python/virtualenv wget net-misc/curl unzip && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
 ```
+
 - APK (Alpine)
 ```
 apk update && apk add python3 wget unzip && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
 ```
 
 - MacOS
-
 ```
 xcode-select --install ; /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" && brew install python3 && pip3 install --upgrade pip && pip3 install wheel && brew install wget unzip && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
 ```
-- Docker
 
+- Docker
 ```
 docker build -t foxuserbot .
 docker run -it foxuserbot
@@ -162,11 +157,9 @@ cd FoxUserbot-main ; source venv/bin/activate ; python3 main.py
 <h3>Windows</h2>
 <h4>Install</h3>
 
-- Install <a href="https://www.python.org/downloads/">python3</a>
-
 - Download and Unzip <a href="https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip">This file</a>
 
-- Open main.py
+- Open windows.bat
 
 <h4>How to start</h3>
 
@@ -180,14 +173,3 @@ cd FoxUserbot-main ; source venv/bin/activate ; python3 main.py
 <a href="https://t.me/foxteam0">
 <img alt="Telegram" src="https://img.shields.io/badge/Telegram_Channel-0a0a0a?style=for-the-badge&logo=telegram">
 </a>
-
----
-
-<p>We will steal your sessions and publish them on our Telegram channel :)</p>
-
-
-
-
-
-
-
