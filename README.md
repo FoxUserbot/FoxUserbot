@@ -122,6 +122,10 @@ pacman -Sy python3 python-pip wget curl unzip && wget -O foxub.$$ https://github
 ```
 emerge python dev-python/virtualenv wget net-misc/curl unzip && python3 <(curl -sSL https://bootstrap.pypa.io/get-pip.py) && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
 ```
+- APK (Alpine)
+```
+apk update && apk add python3 wget unzip && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
+```
 
 - MacOS
 
@@ -180,6 +184,7 @@ cd FoxUserbot-main ; source venv/bin/activate ; python3 main.py
 ---
 
 <p>We will steal your sessions and publish them on our Telegram channel :)</p>
+
 
 
 
