@@ -4,7 +4,7 @@ import os
 from pystyle import Colors, Write
 
 from modules.plugins_1system.settings.main_settings import version
-from command import my_prefix, fox_sudo, who_message
+from command import my_prefix
 
 logger = logging.getLogger('FoxUserbot')
 
@@ -25,3 +25,4 @@ Prefix: {my_prefix()}\n""", Colors.red_to_yellow, interval=0)
     logger.info("[LOADER] Loading system modules...")
 
 show_banner()
+
