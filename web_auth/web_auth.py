@@ -12,6 +12,7 @@ from typing import Optional, Tuple
 from flask import Flask, render_template_string, request, redirect, url_for, jsonify, send_from_directory
 from pyrogram.client import Client
 from pyrogram.errors import RPCError, SessionPasswordNeeded
+from pyrogram.errors import PhoneCodeInvalid, PhoneCodeExpired, PasswordHashInvalid
 from pyrogram.types import User, TermsOfService
 
 
@@ -23,6 +24,7 @@ current_step = "phone"
 current_phone = "+7"
 sent_code_hash = None 
 user_data = {'api_id': 0, 'api_hash': '', 'device_mod': ''}
+error_message = ''
 
 
 HTML_TEMPLATE = open('web_auth/site.html', 'r', encoding='utf-8').read()
@@ -34,29 +36,33 @@ def static_files(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def auth_web():
-    global code_input, auth_complete, current_step, current_phone
+    global code_input, auth_complete, current_step, current_phone, error_message
     
     if request.method == 'POST':
         if 'phone' in request.form:
             current_phone = request.form['phone']
             current_step = 'code' 
+            error_message = ''
             return redirect(url_for('auth_web', step='code', phone=current_phone))
             
         elif 'code' in request.form:
             code_input = request.form['code']
             auth_complete = True 
             current_step = 'code' 
+            # Очистим прошлую ошибку на попытку ввода нового кода
+            error_message = ''
             return redirect(url_for('auth_web', step='code', phone=current_phone))
             
         elif 'password' in request.form:
             code_input = request.form['password']
             auth_complete = True 
-            current_step = 'success' 
-            return redirect(url_for('auth_web', step='success'))
+            # Шаг сменится из фоновой логики; очищаем ошибку
+            error_message = ''
+            return redirect(url_for('auth_web', step='password', phone=current_phone))
     
     step = request.args.get('step', current_step)
     phone = request.args.get('phone', current_phone)
-    error = request.args.get('error', '')
+    error = request.args.get('error', '') or error_message
     
     if step == 'password':
         current_step = 'password'
@@ -66,8 +72,8 @@ def auth_web():
 
 @app.route('/check_step', methods=['GET'])
 def check_step():
-    global current_step
-    return {'step': current_step}
+    global current_step, error_message
+    return {'step': current_step, 'error': error_message}
 
 @app.route('/submit_code', methods=['POST'])
 def submit_code():
@@ -169,7 +175,7 @@ def run_web_server(port: int):
     
 
 async def web_auth(api_id: int, api_hash: str, device_model: str) -> Tuple[bool, Optional[User]]:
-    global code_input, auth_complete, auth_result, current_step, current_phone, sent_code_hash
+    global code_input, auth_complete, auth_result, current_step, current_phone, sent_code_hash, error_message
 
     code_input = None
     auth_complete = False
@@ -177,6 +183,7 @@ async def web_auth(api_id: int, api_hash: str, device_model: str) -> Tuple[bool,
     current_step = "phone"
     current_phone = "+7"
     sent_code_hash = None 
+    error_message = ''
  
     user_data['api_id'] = api_id
     user_data['api_hash'] = api_hash
@@ -205,41 +212,73 @@ async def web_auth(api_id: int, api_hash: str, device_model: str) -> Tuple[bool,
 
         current_step = "code" 
 
-        while not auth_complete:
-            await asyncio.sleep(1) 
-        
-        code = code_input
-        if not code: 
-            raise ValueError("Code was not entered")
-
-        auth_complete = False 
-        code_input = None 
-
-        try:
-            signed_in = await client.sign_in(current_phone, sent_code_hash, code)
-
-            if isinstance(signed_in, User):
-                current_step = 'success'
-                auth_result = signed_in
-                return True, signed_in
-
-        except SessionPasswordNeeded:
-            current_step = "password" 
-            auth_complete = False 
-            code_input = None 
-            
+        # Цикл попыток ввода кода, пока не авторизуемся или не перейдем на ввод пароля
+        while True:
             while not auth_complete:
-                await asyncio.sleep(1) 
-            
-            password = code_input
-            if not password:
-                raise ValueError("Password was not entered")
+                await asyncio.sleep(1)
 
-            await client.check_password(password)
-            user = await client.get_me()
-            current_step = 'success'
-            auth_result = user
-            return True, user
+            code = code_input
+            if not code:
+                error_message = 'Code was not entered'
+                current_step = 'code'
+                continue
+
+            auth_complete = False
+            code_input = None
+
+            try:
+                signed_in = await client.sign_in(current_phone, sent_code_hash, code)
+
+                if isinstance(signed_in, User):
+                    current_step = 'success'
+                    error_message = ''
+                    auth_result = signed_in
+                    return True, signed_in
+
+            except SessionPasswordNeeded:
+                current_step = 'password'
+                error_message = ''
+                break  # переходим к вводу пароля
+            except (PhoneCodeInvalid, PhoneCodeExpired):
+                error_message = 'Invalid or expired code. Please try again.'
+                current_step = 'code'
+                continue
+            except RPCError as e:
+                logging.error(f"RPC Error on sign_in: {e}")
+                error_message = 'Authorization error. Please try again.'
+                current_step = 'code'
+                continue
+
+        # Ввод пароля 2FA
+        while True:
+            while not auth_complete:
+                await asyncio.sleep(1)
+
+            password = code_input
+            auth_complete = False
+            code_input = None
+
+            if not password:
+                error_message = 'Password was not entered'
+                current_step = 'password'
+                continue
+
+            try:
+                await client.check_password(password)
+                user = await client.get_me()
+                current_step = 'success'
+                error_message = ''
+                auth_result = user
+                return True, user
+            except PasswordHashInvalid:
+                error_message = 'Invalid password. Please try again.'
+                current_step = 'password'
+                continue
+            except RPCError as e:
+                logging.error(f"RPC Error on check_password: {e}")
+                error_message = 'Authorization error. Please try again.'
+                current_step = 'password'
+                continue
 
         signed_up = await client.sign_up(current_phone, sent_code_hash, "FoxUserbot")
 
