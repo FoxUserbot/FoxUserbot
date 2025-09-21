@@ -42,7 +42,11 @@ def prestart(api_id, api_hash, device_mod):
             else:
                 text = "<emoji id='5237699328843200968'>✅</emoji> <code>Userbot succesfully Restarted</code>"
             try:
-                app.send_message(int(sys.argv[1]), text, message_thread_id=thread_id)
+                try:
+                    chat_id = int(sys.argv[1])
+                except:
+                    chat_id = str(sys.argv[1])
+                app.send_message(chat_id, text, message_thread_id=thread_id)
             except Exception as f:
                 app.send_message("me", f"<emoji id='5210952531676504517'>❌</emoji> Got error: {f}\n\n" + text)
         

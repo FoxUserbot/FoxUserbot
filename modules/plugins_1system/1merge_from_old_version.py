@@ -1,8 +1,10 @@
-from pystyle import Write, Colors
-import random
 import os
+import random
 import shutil
+
 import wget
+from pystyle import Colors, Write
+
 from modules.plugins_1system.restarter import restart_executor
 
 # 1.0 > 2.0

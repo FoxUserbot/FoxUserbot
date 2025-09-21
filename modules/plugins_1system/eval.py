@@ -1,8 +1,11 @@
-from pyrogram import Client, filters
-from command import fox_command, fox_sudo, who_message
 import os
 import sys
 from io import StringIO
+
+from pyrogram import Client
+
+from command import fox_command, fox_sudo, who_message
+
 
 @Client.on_message(fox_command("eval", "Eval", os.path.basename(__file__), "[code/reply]") & fox_sudo())
 async def user_exec(client, message):

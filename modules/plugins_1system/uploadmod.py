@@ -1,14 +1,16 @@
-from pyrogram import Client
-from modules.plugins_1system.settings.main_settings import file_list
-from command import fox_command, fox_sudo, who_message
 import os
+
+from pyrogram import Client
+
+from command import fox_command, fox_sudo, who_message
+from modules.plugins_1system.settings.main_settings import file_list
 
 
 @Client.on_message(fox_command("uploadmod", "Uploadmod", os.path.basename(__file__), "[module name]") & fox_sudo())
 async def uploadmod(client, message):
     message = await who_message(client, message)
     try:
-        from prefix import my_prefix
+        from command import my_prefix
         module_name = message.text.replace(f'{my_prefix()}uploadmod', '')
         params = module_name.split()
         module_name = params[0]

@@ -1,11 +1,31 @@
-from prefix import my_prefix
-from pyrogram import filters
-from pyrogram.types import ReplyParameters
-from modules.plugins_1system.settings.main_settings import file_list, add_command_help
-from typing import Union, List
-from pathlib import Path
+import configparser
 import json
 import os
+from pathlib import Path
+from typing import List, Union
+
+from pyrogram import filters
+from pyrogram.types import ReplyParameters
+
+from modules.plugins_1system.settings.main_settings import (add_command_help,
+                                                            file_list)
+
+
+def my_prefix():
+    PATH_FILE = "userdata/config.ini"
+
+    config = configparser.ConfigParser()
+    config.read(PATH_FILE)
+    try:
+        prefix = config.get("prefix", "prefix")
+    except:
+        config.add_section("prefix")
+        config.set("prefix", "prefix", "!")
+        with open(PATH_FILE, "w") as config_file:
+            config.write(config_file)
+        prefix = "!"
+    return prefix
+
 
 def load_aliases() -> dict:
     try:

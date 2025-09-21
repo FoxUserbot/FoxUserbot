@@ -1,18 +1,103 @@
-from pyrogram import Client, __version__
-from modules.plugins_1system.uptime import bot_start_time
-from command import fox_command, fox_sudo, who_message
-import os
-import subprocess
-import sys
-from platform import python_version, system, release, uname
 import configparser
-from pathlib import Path
+import os
+import sys
 from datetime import datetime
+from pathlib import Path
+from platform import python_version, release, system, uname
 
+from pyrogram import Client, __version__
 
+from command import fox_command, fox_sudo, who_message
+from modules.plugins_1system.uptime import bot_start_time
 
 DEFAULT_INFO_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/photos/FoxUB_info.jpg"
 THEME_PATH = "userdata/theme.ini"
+
+
+def linux_distro():
+    # /etc/os-release 
+    if os.path.exists("/etc/os-release"):
+        with open("/etc/os-release", "r", encoding='utf-8') as f:
+            lines = f.readlines()
+        os_info = {}
+        for line in lines:
+            if "=" in line:
+                key, value = line.strip().split("=", 1)
+                os_info[key] = value.strip('"')
+        
+        name = os_info.get("NAME", "Unknown")
+        version = os_info.get("VERSION_ID", "Unknown")
+
+        if name == "Arch Linux":
+            return ("Arch", version)
+        elif name == "Kali GNU/Linux":
+            return ("Kali Linux", version)
+        elif "Fedora" in name:
+            return ("Fedora", version)
+        elif "CentOS" in name:
+            return ("CentOS", version)
+        elif "openSUSE" in name:
+            return ("openSUSE", version)
+        elif "Alpine" in name:
+            return ("Alpine", version)
+        return (name, version)
+
+    # /etc/lsb-release
+    elif os.path.exists("/etc/lsb-release"):
+        with open("/etc/lsb-release", "r", encoding='utf-8') as f:
+            lines = f.readlines()
+        distro_info = {}
+        for line in lines:
+            if "=" in line:
+                key, value = line.strip().split("=", 1)
+                distro_info[key] = value.strip('"')
+
+        if "DISTRIB_ID" in distro_info:
+            name = distro_info["DISTRIB_ID"]
+            version = distro_info.get("DISTRIB_RELEASE", "Unknown")
+            return (name, version)
+
+    # /etc/redhat-release (RHEL, CentOS, Fedora)
+    elif os.path.exists("/etc/redhat-release"):
+        with open("/etc/redhat-release", "r", encoding='utf-8') as f:
+            content = f.read().strip()
+        
+        if "release" in content:
+            parts = content.split("release")
+            name = parts[0].strip()
+            version = parts[1].strip().split()[0] if len(parts) > 1 else "Unknown"
+            
+            if "CentOS" in name:
+                name = "CentOS"
+            elif "Fedora" in name:
+                name = "Fedora"
+            elif "Red Hat" in name:
+                name = "RHEL"
+            
+            return (name, version)
+        else:
+            return (content, "Unknown")
+    
+    # /etc/debian_version
+    elif os.path.exists("/etc/debian_version"):
+        with open("/etc/debian_version", "r", encoding='utf-8') as f:
+            version = f.read().strip()
+        return ("Debian", version)
+    
+    # Alpine Linux
+    elif os.path.exists("/etc/alpine-release"):
+        with open("/etc/alpine-release", "r", encoding='utf-8') as f:
+            version = f.read().strip()
+        return ("Alpine", version)
+    
+    # Gentoo
+    elif os.path.exists("/etc/gentoo-release"):
+        with open("/etc/gentoo-release", "r", encoding='utf-8') as f:
+            content = f.read().strip()
+        return ("Gentoo", content.split()[-1] if content.split() else "Unknown")
+    
+    else:
+        return ("Unknown", "Unknown")
 
 
 
@@ -25,8 +110,7 @@ def get_platform_info():
         'PREFIX',
     ]
     if any(var in os.environ for var in termux_vars):
-        return '<emoji id="5409357944619802453">📱</emoji> Termux'
-    
+        return '<emoji id="5301286542998774155">📱</emoji> Termux'
     if "microsoft-standard" in uname().release:
         return '<emoji id="6298333093044422573">😥</emoji> WSL'
     if "HIKKAHOST" in os.environ:
@@ -35,16 +119,33 @@ def get_platform_info():
         return '<emoji id="5361632650278744629">🦈</emoji> SharkHost'
     if "DOCKER" in os.environ:
         return '<emoji id="5301137237050663843">👩‍💻</emoji> Docker'
-    os_names = {
-        'Linux': '<emoji id="5300957668762987048">👩‍💻</emoji> Linux',
-        'Windows': '<emoji id="5366318141771096216">👩‍💻</emoji> Windows', 
-        'Darwin': '<emoji id="5301155675345265040">👩‍💻</emoji> macOS',
-    }
-    try:
-        os_display = os_names.get(os_name, f'💻 {os_name}')
-        return f"{os_display} ({os_release})"
-    except:
-        return f"💻 {os_name} ({os_release})"
+    
+    distributive, distro_version = linux_distro()
+    if distributive == "Kali Linux":
+        return f'<emoji id="5300820182564872893">🐧</emoji> Kali Linux {distro_version}'
+    if distributive == "Ubuntu":
+        return f'<emoji id="5300985968302498775">🐧</emoji> Ubuntu {distro_version}'
+    if distributive == "Debian":
+        return f'<emoji id="5300838891442413975">🐧</emoji> Debian {distro_version}'
+    if distributive == "Arch":
+        return f'<emoji id="5301033874367717956">🐧</emoji> Arch Linux {distro_version}'
+    if distributive == "Fedora":
+        return f'<emoji id="5276366700365751434">🐧</emoji> Fedora {distro_version}'
+    if distributive == "Alpine":
+        return f'<emoji id="5386746268951258721">🐧</emoji> Alpine {distro_version}'
+    if distributive == "Unknown":
+        os_names = {
+            'Linux': '<emoji id="5300957668762987048">🐧</emoji> Linux',
+            'Windows': '<emoji id="5366318141771096216">👩‍💻</emoji> Windows', 
+            'Darwin': '<emoji id="5301155675345265040">🍏</emoji> macOS',
+        }
+        try:
+            os_display = os_names.get(os_name, f'💻 {os_name}')
+            return f"{os_display} ({os_release})"
+        except:
+            return f"💻 {os_name} ({os_release})"
+    else:
+        return f'<emoji id="5300957668762987048">🐧</emoji> {distributive} ({distro_version})'
 
 
 def format_uptime():

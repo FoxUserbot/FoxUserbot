@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import logging
-import pip
 import os
-import time
 import sys
-import re
 
-from requirements_installer import install_library
+import pip
+
 from migrate import convert_modules
+from requirements_installer import install_library
 
 
 def is_running_in_termux():
@@ -17,6 +16,7 @@ def is_running_in_termux():
         'PREFIX',
     ]
     return any(var in os.environ for var in termux_vars)
+
 
 def check_structure():
     if os.path.exists("localhost_run_output.txt"):
@@ -121,13 +121,15 @@ def setup_logging():
 
 
 def userbot():
+    import asyncio
+    import os
+    import sys
+
     from pyrogram.client import Client
+
     from configurator import my_api
     from prestarter import prestart
     from web_auth.web_auth import start_web_auth
-    import os
-    import sys
-    import asyncio
     
     
     safe_mode = False

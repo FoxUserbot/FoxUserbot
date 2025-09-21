@@ -44,6 +44,7 @@ def convert_module_new_format(file_path):
         f.write(content)
     print(f"File {file_path} converted!")
 
+
 def convert_module_filters_me(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read()
@@ -54,6 +55,7 @@ def convert_module_filters_me(file_path):
     has_fox_command = "fox_command" in content
 
     content = content.replace("message = await who_message(client, message, message.reply_to_message)", "message = await who_message(client, message)")
+    content = content.replace("from prefix import my_prefix", "from command import my_prefix")
 
     # Умное добавление импортов
     if "from command import" in content and not (has_fox_sudo and has_who_message):

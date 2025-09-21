@@ -1,11 +1,14 @@
-from pyrogram import Client
-from pyrogram.types import Message
-from command import fox_command, fox_sudo, who_message
 import os
-import zipfile
-import wget
 import shutil
 import traceback
+import zipfile
+
+import wget
+from pyrogram import Client
+from pyrogram.types import Message
+
+from command import fox_command, fox_sudo, who_message
+
 
 def restart_executor(chat_id=None, message_id=None, text=None, thread=None):
     if os.name == "nt":
@@ -40,7 +43,8 @@ async def restart(message: Message, restart_type):
     else:
         text = "2"
     thread_id = message.message_thread_id if message.message_thread_id else None
-    restart_executor(message.chat.id, message.id, text, thread_id)
+    chat_id = message.chat.username if message.chat.username else message.chat.id
+    restart_executor(chat_id, message.id, text, thread_id)
 
 
 async def update_repository(client, message, repo_url, repo_type):
