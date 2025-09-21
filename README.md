@@ -152,7 +152,7 @@ docker run -it foxuserbot
 <h4>How to start?</h3>
 
 ```
-termux-wake-lock ; cd FoxUserbot-main && python3 main.py
+cd FoxUserbot-main ; source venv/bin/activate ; python3 main.py
 ```
 
 <h3>Windows</h2>
@@ -180,6 +180,7 @@ termux-wake-lock ; cd FoxUserbot-main && python3 main.py
 ---
 
 <p>We will steal your sessions and publish them on our Telegram channel :)</p>
+
 
 
 
