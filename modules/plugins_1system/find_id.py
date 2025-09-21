@@ -1,6 +1,8 @@
-from pyrogram import Client
-from command import fox_command, fox_sudo, who_message
 import os
+
+from pyrogram import Client
+
+from command import fox_command, fox_sudo, who_message
 
 
 @Client.on_message(fox_command("id", "FindIDThisChat", os.path.basename(__file__)) & fox_sudo())

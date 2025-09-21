@@ -1,11 +1,14 @@
-from pyrogram import Client
-from modules.plugins_1system.restarter import restart
-from command import fox_command, fox_sudo, who_message
+import importlib
 import os
 import sys
-import importlib
 from importlib.machinery import SourceFileLoader
+
 import wget
+from pyrogram import Client
+
+from command import fox_command, fox_sudo, who_message
+from modules.plugins_1system.restarter import restart
+
 
 def _iter_plugin_handlers(module):
     for obj in module.__dict__.values():

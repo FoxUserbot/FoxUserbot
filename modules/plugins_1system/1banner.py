@@ -1,8 +1,10 @@
-import os
-from prefix import my_prefix
-from modules.plugins_1system.settings.main_settings import version
-from pystyle import Write, Colors
 import logging
+import os
+
+from pystyle import Colors, Write
+
+from modules.plugins_1system.settings.main_settings import version
+from prefix import my_prefix
 
 logger = logging.getLogger('FoxUserbot')
 

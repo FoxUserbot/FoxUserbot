@@ -1,7 +1,9 @@
-from pyrogram import Client
-from modules.plugins_1system.settings.main_settings import file_list
-from command import fox_command, fox_sudo, who_message
 import os
+
+from pyrogram import Client
+
+from command import fox_command, fox_sudo, who_message
+from modules.plugins_1system.settings.main_settings import file_list
 
 
 @Client.on_message(fox_command("uploadmod", "Uploadmod", os.path.basename(__file__), "[module name]") & fox_sudo())

@@ -1,9 +1,11 @@
-from pyrogram import Client
-from command import fox_command, fox_sudo, who_message
 import os
-from subprocess import Popen, PIPE, TimeoutExpired
-from time import perf_counter
 import random
+from subprocess import PIPE, Popen, TimeoutExpired
+from time import perf_counter
+
+from pyrogram import Client
+
+from command import fox_command, fox_sudo, who_message
 
 
 @Client.on_message(fox_command(["shell", "sh"], "Shell", os.path.basename(__file__), "[command/reply]") & fox_sudo())

@@ -1,15 +1,14 @@
-from pyrogram import Client, __version__
-from modules.plugins_1system.uptime import bot_start_time
-from command import fox_command, fox_sudo, who_message
-import os
-import subprocess
-import sys
-from platform import python_version, system, release, uname
 import configparser
-from pathlib import Path
+import os
+import sys
 from datetime import datetime
+from pathlib import Path
+from platform import python_version, release, system, uname
 
+from pyrogram import Client, __version__
 
+from command import fox_command, fox_sudo, who_message
+from modules.plugins_1system.uptime import bot_start_time
 
 DEFAULT_INFO_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/photos/FoxUB_info.jpg"
 THEME_PATH = "userdata/theme.ini"
