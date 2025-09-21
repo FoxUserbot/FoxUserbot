@@ -31,6 +31,8 @@ def linux_distro():
 
         if name == "Arch Linux":
             return ("Arch", version)
+        elif name == "Kali GNU/Linux":
+            return ("Kali Linux", version)
         elif "Fedora" in name:
             return ("Fedora", version)
         elif "CentOS" in name:
@@ -128,6 +130,10 @@ def get_platform_info():
         return f'<emoji id="5300838891442413975">🐧</emoji> Debian {distro_version}'
     if distributive == "Arch":
         return f'<emoji id="5301033874367717956">🐧</emoji> Arch Linux {distro_version}'
+    if distributive == "Fedora":
+        return f'<emoji id="5276366700365751434">🐧</emoji> Fedora {distro_version}'
+    if distributive == "Alpine":
+        return f'<emoji id="5386746268951258721">🐧</emoji> Alpine {distro_version}'
     if distributive == "Unknown":
         os_names = {
             'Linux': '<emoji id="5300957668762987048">🐧</emoji> Linux',
