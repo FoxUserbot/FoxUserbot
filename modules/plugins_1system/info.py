@@ -113,8 +113,6 @@ def get_platform_info():
         return '<emoji id="5301286542998774155">📱</emoji> Termux'
     if "microsoft-standard" in uname().release:
         return '<emoji id="6298333093044422573">😥</emoji> WSL'
-    if "HIKKAHOST" in os.environ:
-        return '<emoji id="5224219153077914783">❤️</emoji> HikkaHost'
     if "SHARKHOST" in os.environ:
         return '<emoji id="5361632650278744629">🦈</emoji> SharkHost'
     if "DOCKER" in os.environ:
