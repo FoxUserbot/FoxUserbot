@@ -3,7 +3,7 @@ import os
 
 from pystyle import Colors, Write
 
-from modules.plugins_1system.settings.main_settings import version
+from modules.core.settings.main_settings import version
 from command import my_prefix
 
 logger = logging.getLogger('FoxUserbot')

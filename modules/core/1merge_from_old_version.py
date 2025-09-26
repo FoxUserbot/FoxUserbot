@@ -3,9 +3,7 @@ import random
 import shutil
 
 import wget
-from pystyle import Colors, Write
-
-from modules.plugins_1system.restarter import restart_executor
+from modules.core.restarter import restart_executor
 
 # 1.0 > 2.0
 if os.path.isdir("plugins"):
@@ -14,10 +12,6 @@ if os.path.isdir("plugins"):
     print(f"""[WARNING] Old incompatible modules (modules_old_{i}) detected!
 [WARNING] Please rewrite them in a new format and upload them to the
 [WARNING] ==> .modules/plugins_2custom directory\n""")
-
-# 2.1 > 2.2
-if os.path.exists("modules/plugins_1system/support.py"):
-    os.remove("modules/plugins_1system/support.py")
 
 # 2.2 > 2.3
 if os.path.isdir("temp/autoanswer_DB"):
@@ -99,3 +93,17 @@ if os.path.exists("modules/plugins_1system/__pycache__"):
     
 if os.path.exists("modules/plugins_2custom/__pycache__"):
     shutil.rmtree("modules/plugins_2custom/__pycache__")
+
+# 2.6
+if os.path.exists("modules/plugins_1system"):
+    shutil.rmtree("modules/plugins_1system")    
+
+if os.path.exists("modules/plugins_2custom"):          
+    src = "modules/plugins_2custom"
+    dst = "modules/loaded"
+
+    for file in os.listdir(src):
+        shutil.move(os.path.join(src, file), dst)
+    
+    shutil.rmtree("modules/plugins_2custom")
+    restart_executor()

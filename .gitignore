@@ -3,7 +3,7 @@ __pycache__/
 my_account.session
 my_account.session-journal
 .vscode/
-modules/plugins_2custom
+modules/loaded
 firstlaunch.temp
 temp/
 nohup.out

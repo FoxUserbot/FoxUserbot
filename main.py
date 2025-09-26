@@ -174,7 +174,7 @@ def userbot():
             api_id=api_id,
             api_hash=api_hash,
             device_model=device_mod,
-            plugins=dict(root="modules" if not safe_mode else "modules/plugins_1system"),
+            plugins=dict(root="modules" if not safe_mode else "modules/core"),
         ).run()
     except Exception as e: # emergency mode
         if not safe_mode:

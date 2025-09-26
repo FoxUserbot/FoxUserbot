@@ -7,7 +7,7 @@ import wget
 from pyrogram import Client
 
 from command import fox_command, fox_sudo, who_message
-from modules.plugins_1system.restarter import restart
+from modules.core.restarter import restart
 
 
 def _iter_plugin_handlers(module):
@@ -22,7 +22,7 @@ def _remove_module_handlers(client: Client, module_qualname: str):
         mod = importlib.import_module(module_qualname)
     except Exception:
         module_stem = module_qualname.rsplit('.', 1)[-1]
-        module_path = os.path.join('modules', 'plugins_2custom', f'{module_stem}.py')
+        module_path = os.path.join('modules', 'loaded', f'{module_stem}.py')
         if os.path.exists(module_path):
             mod = SourceFileLoader(module_qualname, module_path).load_module()
         else:
@@ -47,7 +47,7 @@ def _load_module_handlers(client: Client, module_qualname: str):
             mod = importlib.import_module(module_qualname)
         except Exception:
             module_stem = module_qualname.rsplit('.', 1)[-1]
-            module_path = os.path.join('modules', 'plugins_2custom', f'{module_stem}.py')
+            module_path = os.path.join('modules', 'loaded', f'{module_stem}.py')
             mod = SourceFileLoader(module_qualname, module_path).load_module()
     for h in _iter_plugin_handlers(mod):
         client.add_handler(*h)
@@ -65,16 +65,16 @@ async def loadmod(client, message):
         filename = None
 
         if arg and (arg.startswith("http://") or arg.startswith("https://")):
-            filename = wget.download(arg, 'modules/plugins_2custom/')
+            filename = wget.download(arg, 'modules/loaded/')
         elif getattr(message, "reply_to_message", None) and getattr(message.reply_to_message, "document", None):
-            filename = await client.download_media(message.reply_to_message.document, file_name='modules/plugins_2custom/')
+            filename = await client.download_media(message.reply_to_message.document, file_name='modules/loaded/')
         elif arg:
             filename = arg if arg.endswith('.py') else f"{arg}.py"
         if not filename:
             await message.edit("<emoji id='5210952531676504517'>❌</emoji> <b>Specify a link, reply with a .py file, or module name</b>")
             return
         module_stem = os.path.splitext(os.path.basename(str(filename)))[0]
-        module_qualname = f"modules.plugins_2custom.{module_stem}"
+        module_qualname = f"modules.loaded.{module_stem}"
         _remove_module_handlers(client, module_qualname)
         _load_module_handlers(client, module_qualname)
 

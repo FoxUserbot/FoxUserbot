@@ -7,7 +7,7 @@ from typing import List, Union
 from pyrogram import filters
 from pyrogram.types import ReplyParameters
 
-from modules.plugins_1system.settings.main_settings import (add_command_help,
+from modules.core.settings.main_settings import (add_command_help,
                                                             file_list)
 
 

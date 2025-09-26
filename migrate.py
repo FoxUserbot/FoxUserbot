@@ -151,6 +151,6 @@ def process_modules_directory(directory):
     check_duplicate(directory)
 
 def convert_modules():
-    process_modules_directory("modules/plugins_2custom")
+    process_modules_directory("modules/loaded")
 
 convert_modules()

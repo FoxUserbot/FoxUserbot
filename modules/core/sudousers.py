@@ -5,7 +5,7 @@ from pathlib import Path
 from pyrogram import Client, filters
 
 from command import fox_command, who_message
-from modules.plugins_1system.restarter import restart
+from modules.core.restarter import restart
 
 SUDO_USERS_FILE = Path("userdata/sudo_users.json")
 
