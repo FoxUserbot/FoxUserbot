@@ -119,8 +119,8 @@ async def backup_modules_command(client, message):
         
         with tempfile.NamedTemporaryFile(suffix='_FoxUB_Modules_Backup.tar.gz', delete=False) as tmp:
             with tarfile.open(tmp.name, mode='w:gz') as tar:
-                if os.path.exists('modules/plugins_2custom'):
-                    tar.add('modules/plugins_2custom')
+                if os.path.exists('modules/loaded'):
+                    tar.add('modules/loaded')
             backup_file = tmp.name
         
         if os.path.getsize(backup_file) == 0:
@@ -141,3 +141,4 @@ async def backup_modules_command(client, message):
     finally:
         if backup_file and os.path.exists(backup_file):
             os.remove(backup_file)
+
