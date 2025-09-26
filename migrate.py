@@ -56,6 +56,8 @@ def convert_module_filters_me(file_path):
 
     content = content.replace("message = await who_message(client, message, message.reply_to_message)", "message = await who_message(client, message)")
     content = content.replace("from prefix import my_prefix", "from command import my_prefix")
+    content = content.replace("from modules.plugins_1system", "from modules.core")
+    
 
     # Умное добавление импортов
     if "from command import" in content and not (has_fox_sudo and has_who_message):
@@ -154,3 +156,4 @@ def convert_modules():
     process_modules_directory("modules/loaded")
 
 convert_modules()
+
