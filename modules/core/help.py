@@ -8,7 +8,7 @@ from pyrogram import Client
 from telegraph import Telegraph
 
 from command import fox_command, fox_sudo, who_message
-from modules.plugins_1system.settings.main_settings import module_list, version
+from modules.core.settings.main_settings import module_list, version
 
 # Default
 DEFAULT_HELP_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/main/photos/FoxUB_help.jpg"

@@ -3,7 +3,7 @@ import os
 from pyrogram import Client
 
 from command import fox_command, fox_sudo, who_message
-from modules.plugins_1system.settings.main_settings import file_list
+from modules.core.settings.main_settings import file_list
 
 
 @Client.on_message(fox_command("uploadmod", "Uploadmod", os.path.basename(__file__), "[module name]") & fox_sudo())
@@ -17,7 +17,7 @@ async def uploadmod(client, message):
         file = file_list[module_name]
         await client.send_document(
             message.chat.id,
-            f"modules/plugins_2custom/{file}",
+            f"modules/loaded/{file}",
             caption=f"<emoji id='5283051451889756068'>🦊</emoji> Module `{module_name}`\nfor FoxUserbot <emoji id='5283051451889756068'>🦊</emoji>\n<b>You can install the module by replying [prefix]loadmod</b>",
             message_thread_id=message.message_thread_id
         )

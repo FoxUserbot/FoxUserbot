@@ -5,7 +5,7 @@ import sys
 from pyrogram import Client
 
 from command import fox_command, fox_sudo, who_message
-from modules.plugins_1system.settings.main_settings import (file_list,
+from modules.core.settings.main_settings import (file_list,
                                                             module_list)
 
 
@@ -19,12 +19,12 @@ async def unloadmod(client, message):
             await message.edit("<emoji id='5210952531676504517'>❌</emoji> <b>Specify module name</b>")
             return
         module_stem = parts[1].strip().replace('.py', '')
-        module_qualname = f"modules.plugins_2custom.{module_stem}"
+        module_qualname = f"modules.loaded.{module_stem}"
         _remove_module_handlers(client, module_qualname)
         try:
             file = file_list.get(module_stem) or file_list.get(f"{module_stem}.py")
             if file:
-                file_path = os.path.join('modules', 'plugins_2custom', file)
+                file_path = os.path.join('modules', 'loaded', file)
                 if os.path.exists(file_path):
                     os.remove(file_path)
             module_list.pop(module_stem, None)

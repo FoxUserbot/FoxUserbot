@@ -6,7 +6,7 @@ from typing import Dict, List
 from pyrogram import Client, filters
 
 from command import fox_command, fox_sudo, who_message
-from modules.plugins_1system.restarter import restart
+from modules.core.restarter import restart
 from command import my_prefix
 
 ALIASES_DB_PATH = "userdata/command_aliases.json"
