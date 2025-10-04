@@ -134,7 +134,7 @@ def hosting_text():
     elif "SHARKHOST" in os.environ:
         return '<emoji id="5361632650278744629">🦈</emoji> SharkHost'
     elif "azure" in os_release.lower():
-        return '<emoji id="5346181118884331907">👩‍💻</emoji> Azure'
+        return '<emoji id="5301233040591169044">👩‍💻</emoji> Azure'
     elif not "Unknown" in raspberry_pi_version:
         return f'<emoji id="5274111069441238993">🍇</emoji> {raspberry_pi_version}'
     elif "DOCKER" in os.environ:
@@ -153,6 +153,8 @@ def get_platform_info():
         return f'<emoji id="5300985968302498775">🐧</emoji> Ubuntu {distro_version}'
     if distributive == "Debian":
         return f'<emoji id="5300838891442413975">🐧</emoji> Debian {distro_version}'
+    if distributive == "CachyOS Linux":
+        return f'<emoji id="5301033874367717956">🐧</emoji> CachyOS {distro_version}'
     if distributive == "Arch":
         return f'<emoji id="5301033874367717956">🐧</emoji> Arch Linux {distro_version}'
     if distributive == "Fedora":
