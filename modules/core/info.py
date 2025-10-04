@@ -1,14 +1,14 @@
 import configparser
 import os
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
 from platform import python_version, release, system, uname
 
-from pyrogram import Client, __version__
-
 from command import fox_command, fox_sudo, who_message
 from modules.core.uptime import bot_start_time
+from pyrogram import Client, __version__
 
 DEFAULT_INFO_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/photos/FoxUB_info.jpg"
 THEME_PATH = "userdata/theme.ini"
@@ -98,11 +98,33 @@ def linux_distro():
     
     else:
         return ("Unknown", "Unknown")
+    
+def raspberry_pi():
+    try:
+        with open('/proc/cpuinfo', 'r') as f:
+            cpuinfo = f.read()
+        if 'BCM' in cpuinfo:
+            model_match = re.search(r'Model\s*:\s*(.+)', cpuinfo)
+            hardware_match = re.search(r'Hardware\s*:\s*(.+)', cpuinfo)
+            if model_match:
+                model_name = model_match.group(1).strip()
+                # return f'<emoji id="5372878077250519677">🍓</emoji> Raspberry Pi ({model_name})'
+                return model_name
+            elif hardware_match:
+                hardware_name = hardware_match.group(1).strip()
+                # return f'<emoji id="5372878077250519677">🍓</emoji> Raspberry Pi ({hardware_name})'
+                return hardware_name
+            else:
+                # return '<emoji id="5372878077250519677">🍓</emoji> Raspberry Pi'
+                return "?"
+    except:
+        return "Unknown"
 
 
 def hosting_text():
     os_name = system()
     os_release = release()
+    raspberry_pi_version = raspberry_pi()
     termux_vars = [
         'TERMUX_VERSION',
         'TERMUX_APK_RELEASE',
@@ -115,7 +137,9 @@ def hosting_text():
     elif "SHARKHOST" in os.environ:
         return '<emoji id="5361632650278744629">🦈</emoji> SharkHost'
     elif "azure" in os_release.lower():
-        return '<emoji id="5301137237050663843">👩‍💻</emoji> Azure'
+        return '<emoji id="5346181118884331907">👩‍💻</emoji> Azure'
+    elif not "Unknown" in raspberry_pi_version:
+        return f'<emoji id="5274111069441238993">🍇</emoji> Raspberry Pi ({raspberry_pi_version})'
     elif "DOCKER" in os.environ:
         return '<emoji id="5301137237050663843">👩‍💻</emoji> Docker'
     else:
