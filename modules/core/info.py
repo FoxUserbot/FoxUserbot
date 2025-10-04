@@ -108,14 +108,11 @@ def raspberry_pi():
             hardware_match = re.search(r'Hardware\s*:\s*(.+)', cpuinfo)
             if model_match:
                 model_name = model_match.group(1).strip()
-                # return f'<emoji id="5372878077250519677">🍓</emoji> Raspberry Pi ({model_name})'
                 return model_name
             elif hardware_match:
                 hardware_name = hardware_match.group(1).strip()
-                # return f'<emoji id="5372878077250519677">🍓</emoji> Raspberry Pi ({hardware_name})'
                 return hardware_name
             else:
-                # return '<emoji id="5372878077250519677">🍓</emoji> Raspberry Pi'
                 return "?"
     except:
         return "Unknown"
@@ -326,3 +323,4 @@ async def info(client, message):
                 await message.delete()
             except:
                 await message.edit(get_info_text(message))
+
