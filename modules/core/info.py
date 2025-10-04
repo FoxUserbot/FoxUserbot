@@ -115,7 +115,7 @@ def raspberry_pi():
             else:
                 return "Raspberry Pi"
     except:
-        return "Unknown"
+        return None
 
 
 def hosting_text():
@@ -135,7 +135,7 @@ def hosting_text():
         return '<emoji id="5361632650278744629">🦈</emoji> SharkHost'
     elif "azure" in os_release.lower():
         return '<emoji id="5301233040591169044">👩‍💻</emoji> Azure'
-    elif not "Unknown" in raspberry_pi_version:
+    elif raspberry_pi_version != None:
         return f'<emoji id="5274111069441238993">🍇</emoji> {raspberry_pi_version}'
     elif "DOCKER" in os.environ:
         return '<emoji id="5301137237050663843">👩‍💻</emoji> Docker'
