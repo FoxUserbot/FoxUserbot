@@ -100,8 +100,7 @@ def linux_distro():
         return ("Unknown", "Unknown")
 
 
-
-def get_platform_info():
+def hosting_text():
     os_name = system()
     os_release = release()
     termux_vars = [
@@ -111,15 +110,21 @@ def get_platform_info():
     ]
     if any(var in os.environ for var in termux_vars):
         return '<emoji id="5301286542998774155">📱</emoji> Termux'
-    if "microsoft-standard" in uname().release:
+    elif "microsoft-standard" in uname().release:
         return '<emoji id="6298333093044422573">😥</emoji> WSL'
-    if "HIKKAHOST" in os.environ:
-        return '<emoji id="5224219153077914783">❤️</emoji> HikkaHost'
-    if "SHARKHOST" in os.environ:
+    elif "SHARKHOST" in os.environ:
         return '<emoji id="5361632650278744629">🦈</emoji> SharkHost'
-    if "DOCKER" in os.environ:
+    elif "azure" in os_release.lower():
+        return '<emoji id="5301137237050663843">👩‍💻</emoji> Azure'
+    elif "DOCKER" in os.environ:
         return '<emoji id="5301137237050663843">👩‍💻</emoji> Docker'
-    
+    else:
+        return '<emoji id="5807465992363710697">💎</emoji> VPS'
+
+
+def get_platform_info():
+    os_name = system()
+    os_release = release()
     distributive, distro_version = linux_distro()
     if distributive == "Kali Linux":
         return f'<emoji id="5300820182564872893">🐧</emoji> Kali Linux {distro_version}'
@@ -173,11 +178,13 @@ def replace_aliases(text, message):
     uptime_text = format_uptime()
     platform_text = get_platform_info()
     safe_mode = get_safe_mode_status()
+    hosting = hosting_text()
     
     aliases = {
         '{version}': __version__,
         '{python_version}': python_version(),
         '{uptime}': uptime_text,
+        '{hosting}': hosting,
         '{platform}': platform_text,
         '{safe_mode}': 'Enabled' if safe_mode else 'Disabled',
     }
@@ -211,6 +218,7 @@ def get_info_text(message):
     uptime_text = format_uptime()
     platform_text = get_platform_info()
     safe_mode = get_safe_mode_status()
+    hosting = hosting_text()
     
     custom_text = None
     if Path(THEME_PATH).exists():
@@ -228,7 +236,7 @@ def get_info_text(message):
 <emoji id="5372878077250519677">🐍</emoji><b> | Python: {python_version()}</b>
 <emoji id="5190637731503415052">🥧</emoji><b> | Kurigram: {__version__}</b>
 <emoji id="5282843764451195532">⏰</emoji><b> | Uptime: {uptime_text}</b>
-<emoji id="5350554349074391003">💻</emoji><b> | Platform: {platform_text}</b>
+<emoji id="5350554349074391003">💻</emoji><b> | Platform: {hosting} | {platform_text}</b>
 <emoji id="5420323339723881652">🛡️</emoji><b> | Safe Mode: {safe_mode}</b>
     
 <emoji id="5330237710655306682">💻</emoji><a href="https://t.me/foxteam0"><b> | Official FoxTeam Channel.</b></a>
@@ -244,7 +252,7 @@ def get_info_text(message):
     """
 
 
-@Client.on_message(fox_command("info", "Info", os.path.basename(__file__)) & fox_sudo())
+@Client.on_message(fox_command("info", "info", os.path.basename(__file__)) & fox_sudo())
 async def info(client, message):
     message = await who_message(client, message)
     try:
