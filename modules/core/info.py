@@ -113,7 +113,7 @@ def raspberry_pi():
                 hardware_name = hardware_match.group(1).strip()
                 return hardware_name
             else:
-                return "?"
+                return "Raspberry Pi"
     except:
         return "Unknown"
 
@@ -136,7 +136,7 @@ def hosting_text():
     elif "azure" in os_release.lower():
         return '<emoji id="5346181118884331907">👩‍💻</emoji> Azure'
     elif not "Unknown" in raspberry_pi_version:
-        return f'<emoji id="5274111069441238993">🍇</emoji> Raspberry Pi ({raspberry_pi_version})'
+        return f'<emoji id="5274111069441238993">🍇</emoji> {raspberry_pi_version}'
     elif "DOCKER" in os.environ:
         return '<emoji id="5301137237050663843">👩‍💻</emoji> Docker'
     else:
@@ -323,4 +323,3 @@ async def info(client, message):
                 await message.delete()
             except:
                 await message.edit(get_info_text(message))
-
