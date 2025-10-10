@@ -88,7 +88,7 @@ AI will automatically convert the module from Telethon to Pyrogram for this User
 
 - Termux
 ```
-pkg update -y && pkg install python3 wget unzip -y && termux-wake-lock && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
+pkg update -y && pkg install python3 wget unzip -y && termux-wake-lock && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main ; python3 -m venv venv ; source venv/bin/activate ; python3 main.py)
 ```
 
 > [!IMPORTANT]
@@ -173,3 +173,4 @@ cd FoxUserbot-main ; source venv/bin/activate ; python3 main.py
 <a href="https://t.me/foxteam0">
 <img alt="Telegram" src="https://img.shields.io/badge/Telegram_Channel-0a0a0a?style=for-the-badge&logo=telegram">
 </a>
+
