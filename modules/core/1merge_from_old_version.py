@@ -98,6 +98,9 @@ if os.path.exists("modules/plugins_2custom/__pycache__"):
 if os.path.exists("modules/plugins_1system"):
     shutil.rmtree("modules/plugins_1system")    
 
+if os.path.exists("modules/plugins_2custom/1banner.py"):
+    os.remove("modules/plugins_2custom/1banner.py")
+
 if os.path.exists("modules/plugins_2custom"):          
     src = "modules/plugins_2custom"
     dst = "modules/loaded"
@@ -107,3 +110,4 @@ if os.path.exists("modules/plugins_2custom"):
     
     shutil.rmtree("modules/plugins_2custom")
     restart_executor()
+

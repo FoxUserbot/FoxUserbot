@@ -1,14 +1,14 @@
 import configparser
 import os
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
 from platform import python_version, release, system, uname
 
-from pyrogram import Client, __version__
-
 from command import fox_command, fox_sudo, who_message
 from modules.core.uptime import bot_start_time
+from pyrogram import Client, __version__
 
 DEFAULT_INFO_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/photos/FoxUB_info.jpg"
 THEME_PATH = "userdata/theme.ini"
@@ -98,12 +98,30 @@ def linux_distro():
     
     else:
         return ("Unknown", "Unknown")
+    
+def raspberry_pi():
+    try:
+        with open('/proc/cpuinfo', 'r') as f:
+            cpuinfo = f.read()
+        if 'BCM' in cpuinfo:
+            model_match = re.search(r'Model\s*:\s*(.+)', cpuinfo)
+            hardware_match = re.search(r'Hardware\s*:\s*(.+)', cpuinfo)
+            if model_match:
+                model_name = model_match.group(1).strip()
+                return model_name
+            elif hardware_match:
+                hardware_name = hardware_match.group(1).strip()
+                return hardware_name
+            else:
+                return "Raspberry Pi"
+    except:
+        return None
 
 
-
-def get_platform_info():
+def hosting_text():
     os_name = system()
     os_release = release()
+    raspberry_pi_version = raspberry_pi()
     termux_vars = [
         'TERMUX_VERSION',
         'TERMUX_APK_RELEASE',
@@ -111,15 +129,23 @@ def get_platform_info():
     ]
     if any(var in os.environ for var in termux_vars):
         return '<emoji id="5301286542998774155">📱</emoji> Termux'
-    if "microsoft-standard" in uname().release:
+    elif "microsoft-standard" in uname().release:
         return '<emoji id="6298333093044422573">😥</emoji> WSL'
-    if "HIKKAHOST" in os.environ:
-        return '<emoji id="5224219153077914783">❤️</emoji> HikkaHost'
-    if "SHARKHOST" in os.environ:
+    elif "SHARKHOST" in os.environ:
         return '<emoji id="5361632650278744629">🦈</emoji> SharkHost'
-    if "DOCKER" in os.environ:
+    elif "azure" in os_release.lower():
+        return '<emoji id="5301233040591169044">👩‍💻</emoji> Azure'
+    elif raspberry_pi_version != None:
+        return f'<emoji id="5274111069441238993">🍇</emoji> {raspberry_pi_version}'
+    elif "DOCKER" in os.environ:
         return '<emoji id="5301137237050663843">👩‍💻</emoji> Docker'
-    
+    else:
+        return '<emoji id="5807465992363710697">💎</emoji> VPS'
+
+
+def get_platform_info():
+    os_name = system()
+    os_release = release()
     distributive, distro_version = linux_distro()
     if distributive == "Kali Linux":
         return f'<emoji id="5300820182564872893">🐧</emoji> Kali Linux {distro_version}'
@@ -127,6 +153,8 @@ def get_platform_info():
         return f'<emoji id="5300985968302498775">🐧</emoji> Ubuntu {distro_version}'
     if distributive == "Debian":
         return f'<emoji id="5300838891442413975">🐧</emoji> Debian {distro_version}'
+    if distributive == "CachyOS Linux":
+        return f'<emoji id="5301033874367717956">🐧</emoji> CachyOS {distro_version}'
     if distributive == "Arch":
         return f'<emoji id="5301033874367717956">🐧</emoji> Arch Linux {distro_version}'
     if distributive == "Fedora":
@@ -173,11 +201,13 @@ def replace_aliases(text, message):
     uptime_text = format_uptime()
     platform_text = get_platform_info()
     safe_mode = get_safe_mode_status()
+    hosting = hosting_text()
     
     aliases = {
         '{version}': __version__,
         '{python_version}': python_version(),
         '{uptime}': uptime_text,
+        '{hosting}': hosting,
         '{platform}': platform_text,
         '{safe_mode}': 'Enabled' if safe_mode else 'Disabled',
     }
@@ -211,6 +241,7 @@ def get_info_text(message):
     uptime_text = format_uptime()
     platform_text = get_platform_info()
     safe_mode = get_safe_mode_status()
+    hosting = hosting_text()
     
     custom_text = None
     if Path(THEME_PATH).exists():
@@ -228,7 +259,7 @@ def get_info_text(message):
 <emoji id="5372878077250519677">🐍</emoji><b> | Python: {python_version()}</b>
 <emoji id="5190637731503415052">🥧</emoji><b> | Kurigram: {__version__}</b>
 <emoji id="5282843764451195532">⏰</emoji><b> | Uptime: {uptime_text}</b>
-<emoji id="5350554349074391003">💻</emoji><b> | Platform: {platform_text}</b>
+<emoji id="5350554349074391003">💻</emoji><b> | Platform: {hosting} | {platform_text}</b>
 <emoji id="5420323339723881652">🛡️</emoji><b> | Safe Mode: {safe_mode}</b>
     
 <emoji id="5330237710655306682">💻</emoji><a href="https://t.me/foxteam0"><b> | Official FoxTeam Channel.</b></a>
@@ -244,7 +275,7 @@ def get_info_text(message):
     """
 
 
-@Client.on_message(fox_command("info", "Info", os.path.basename(__file__)) & fox_sudo())
+@Client.on_message(fox_command("info", "info", os.path.basename(__file__)) & fox_sudo())
 async def info(client, message):
     message = await who_message(client, message)
     try:

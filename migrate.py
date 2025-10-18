@@ -136,11 +136,15 @@ def check_duplicate(folder_path):
         # Заменяем пробелы на _ и удаляем все скобки
         new_name = re.sub(r'[()]', '', filename.replace(' ', '_'))
         
+        
         # Переименовываем только если имя изменилось
         if new_name != filename:
             new_path = os.path.join(folder_path, new_name)
-            os.rename(file_path, new_path)
-            print(f'Renamed: {filename} -> {new_name}')
+            try:
+                os.rename(file_path, new_path)
+                print(f'Renamed: {filename} -> {new_name}')
+            except Exception as f:
+                print(f)
 
 
 def process_modules_directory(directory):
@@ -156,4 +160,5 @@ def convert_modules():
     process_modules_directory("modules/loaded")
 
 convert_modules()
+
 

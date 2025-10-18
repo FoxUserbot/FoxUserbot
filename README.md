@@ -95,7 +95,7 @@ pkg update -y && pkg install python3 wget unzip -y && termux-wake-lock && wget -
 > Further installation (except for macOS and Docker) must be done as root or use sudo
 - APT (Debian based)
 ```
-apt update -y && apt install python3 python3-pip python3-venv wget unzip -y && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
+apt update -y && apt install python3 python3-pip python3-venv wget unzip -y && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main ; python3 -m venv venv ; source venv/bin/activate ; python3 main.py)
 ```
 
 - APT (if python < 3.7, else go to "Debian based")
@@ -165,11 +165,16 @@ cd FoxUserbot-main ; source venv/bin/activate ; python3 main.py
 
 - Open windows.bat
 
-<h2>How to start in repl.it?</h2>
-<a href="https://replit.com/@lamaev/FoxUserbot"><img alt="Run on Repl.it" src="https://replit.com/badge/github/FoxUserbot/FoxUserBot" style="border-style: none; box-sizing: initial; max-width: 100%;" /></a></div>
+<h1>Other:</h1>
+<h2>How to start in repl.it or google colab?</h2>
+<a href="https://replit.com/@lamaev/FoxUserbot"><img alt="Run on Repl.it" src="https://replit.com/badge/github/FoxUserbot/FoxUserBot" style="border-style: none; box-sizing: initial; max-width: 100%;" /></a>
 
+<a href="https://colab.research.google.com/github/FoxUserbot/FoxUserbot/blob/main/FoxUserbot_Colab.ipynb"><img alt="Run on colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a>
 
 <h1>Groups and support</h1>
 <a href="https://t.me/foxteam0">
 <img alt="Telegram" src="https://img.shields.io/badge/Telegram_Channel-0a0a0a?style=for-the-badge&logo=telegram">
 </a>
+
+
+
