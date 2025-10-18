@@ -46,7 +46,7 @@ def prestart(api_id, api_hash, device_mod):
                     chat_id = int(sys.argv[1])
                 except:
                     chat_id = str(sys.argv[1])
-                if (chat_id.replace("@", "")) != "None":
+                if (str(chat_id).replace("@", "")) != "None":
                     app.send_message(chat_id, text, message_thread_id=thread_id)
             except Exception as f:
                 app.send_message("me", f"<emoji id='5210952531676504517'>❌</emoji> Got error: {f}\n\n" + text)
