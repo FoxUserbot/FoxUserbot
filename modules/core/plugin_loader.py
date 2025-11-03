@@ -7,6 +7,28 @@ from importlib.machinery import SourceFileLoader
 from pyrogram import Client
 
 
+def _iter_plugin_handlers(module):
+    for obj in module.__dict__.values():
+        if callable(obj) and hasattr(obj, "handlers"):
+            for h in getattr(obj, "handlers", []):
+                yield h
+
+
+def _load_module_handlers(client: Client, module_qualname: str):
+    importlib.invalidate_caches()
+    if module_qualname in sys.modules:
+        mod = importlib.reload(sys.modules[module_qualname])
+    else:
+        try:
+            mod = importlib.import_module(module_qualname)
+        except Exception:
+            module_stem = module_qualname.rsplit('.', 1)[-1]
+            module_path = os.path.join('modules', 'loaded', f'{module_stem}.py')
+            mod = SourceFileLoader(module_qualname, module_path).load_module()
+    for h in _iter_plugin_handlers(mod):
+        client.add_handler(*h)
+
+
 def load_all_external_plugins(client: Client):
     loaded_dir = "modules/loaded"
     if not os.path.exists(loaded_dir):
@@ -24,54 +46,10 @@ def load_all_external_plugins(client: Client):
         try:
             module_stem = os.path.splitext(filename)[0]
             module_qualname = f"modules.loaded.{module_stem}"
-            
-            if module_qualname in sys.modules:
-                mod = importlib.reload(sys.modules[module_qualname])
-            else:
-                module_path = os.path.join(loaded_dir, filename)
-                mod = SourceFileLoader(module_qualname, module_path).load_module()
-                sys.modules[module_qualname] = mod
-            
+            _load_module_handlers(client, module_qualname)
             loaded_count += 1
             logging.info(f"[PluginLoader] Loaded {filename}")
-            
         except Exception as e:
             logging.error(f"[PluginLoader] Failed to load {filename}: {e}")
     
     logging.info(f"[PluginLoader] Successfully loaded {loaded_count} external plugins")
-
-
-def load_single_plugin(plugin_name: str):
-    try:
-        module_qualname = f"modules.loaded.{plugin_name}"
-        module_path = os.path.join("modules/loaded", f"{plugin_name}.py")
-        
-        if not os.path.exists(module_path):
-            return False, f"Plugin {plugin_name} not found"
-        
-        if module_qualname in sys.modules:
-            mod = importlib.reload(sys.modules[module_qualname])
-        else:
-            mod = SourceFileLoader(module_qualname, module_path).load_module()
-            sys.modules[module_qualname] = mod
-        
-        logging.info(f"[PluginLoader] Loaded {plugin_name}")
-        return True, f"Plugin {plugin_name} loaded successfully"
-        
-    except Exception as e:
-        logging.error(f"[PluginLoader] Failed to load {plugin_name}: {e}")
-        return False, f"Failed to load {plugin_name}: {e}"
-
-
-def unload_single_plugin(plugin_name: str):
-    try:
-        module_qualname = f"modules.loaded.{plugin_name}"
-        if module_qualname in sys.modules:
-            del sys.modules[module_qualname]
-            logging.info(f"[PluginLoader] Unloaded {plugin_name}")
-            return True, f"Plugin {plugin_name} unloaded successfully"
-        else:
-            return False, f"Plugin {plugin_name} not loaded"
-    except Exception as e:
-        logging.error(f"[PluginLoader] Failed to unload {plugin_name}: {e}")
-        return False, f"Failed to unload {plugin_name}: {e}"
