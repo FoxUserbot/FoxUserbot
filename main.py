@@ -27,6 +27,9 @@ def check_structure():
         os.mkdir("userdata")
     if not os.path.exists("triggers"):
         os.mkdir("triggers")
+    # Создаем папку для загруженных модулей, если её нет
+    if not os.path.exists("modules/loaded"):
+        os.makedirs("modules/loaded")
 
 
 def autoupdater():
@@ -168,15 +171,34 @@ def userbot():
     
     prestart(api_id, api_hash, device_mod)
 
-    try: # try start with custom modules
+    try:
+        # Создаем клиент только с системными плагинами
         client = Client(
             "my_account",
             api_id=api_id,
             api_hash=api_hash,
             device_model=device_mod,
-            plugins=dict(root="modules" if not safe_mode else "modules/core"),
-        ).run()
-    except Exception as e: # emergency mode
+            plugins=dict(root="modules/core"),  # Только системные плагины
+        )
+        
+        @client.on_start()
+        async def load_external_plugins_on_start(client):
+            if not safe_mode:
+                from modules.core.plugin_loader import \
+                    load_all_external_plugins
+                from modules.core.plugin_validator import PluginValidator
+
+                # Валидируем существующие плагины перед загрузкой
+                validator = PluginValidator()
+                logging.info("[Userbot] Validating existing plugins...")
+                validator.validate_existing_plugins()
+                
+                load_all_external_plugins(client)
+                logger.info("[Userbot] External plugins loaded successfully")
+        
+        client.run()
+
+    except Exception as e:
         if not safe_mode:
             logger.warning(f"[Userbot] Error detected: {e}")
             logger.warning(f"[Userbot] Restarting in safe mode (only system plugins)...")
