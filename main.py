@@ -27,9 +27,10 @@ def check_structure():
         os.mkdir("userdata")
     if not os.path.exists("triggers"):
         os.mkdir("triggers")
-    # Создаем папку для загруженных модулей, если её нет
     if not os.path.exists("modules/loaded"):
         os.makedirs("modules/loaded")
+    if not os.path.exists("broken_modules"):
+        os.makedirs("broken_modules")
 
 
 def autoupdater():
@@ -172,23 +173,20 @@ def userbot():
     prestart(api_id, api_hash, device_mod)
 
     try:
-        # Создаем клиент только с системными плагинами
         client = Client(
             "my_account",
             api_id=api_id,
             api_hash=api_hash,
             device_model=device_mod,
-            plugins=dict(root="modules/core"),  # Только системные плагины
+            plugins=dict(root="modules/core"),
         )
         
         @client.on_start()
         async def load_external_plugins_on_start(client):
             if not safe_mode:
-                from modules.core.plugin_loader import \
-                    load_all_external_plugins
+                from modules.core.plugin_loader import load_all_external_plugins
                 from modules.core.plugin_validator import PluginValidator
 
-                # Валидируем существующие плагины перед загрузкой
                 validator = PluginValidator()
                 logging.info("[Userbot] Validating existing plugins...")
                 validator.validate_existing_plugins()
