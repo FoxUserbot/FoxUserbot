@@ -111,3 +111,6 @@ if os.path.exists("modules/plugins_2custom"):
     shutil.rmtree("modules/plugins_2custom")
     restart_executor()
 
+# 2.7.1
+if os.path.exists("replit-main.py"):
+    os.remove("replit-main.py")
