@@ -123,6 +123,11 @@ emerge python dev-python/virtualenv wget net-misc/curl unzip && python3 <(curl -
 apk update && apk add python3 wget unzip && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm -rf foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
 ```
 
+- FreeBSD
+```
+pkg update && pkg install -y python3 py39-pip wget unzip ; python -m venv venv ; source venv/bin/activate ; pip install -U pip ; wget -O foxub.zip https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip ; unzip foxub.zip ; cd FoxUserbot-main ; python main.py
+```
+
 - MacOS
 ```
 xcode-select --install ; /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" && brew install python3 && pip3 install --upgrade pip && pip3 install wheel && brew install wget unzip && wget -O foxub.$$ https://github.com/FoxUserbot/FoxUserbot/archive/refs/heads/main.zip && (unzip foxub.$$ && rm foxub.$$ && cd FoxUserbot-main && python3 -m venv venv && source venv/bin/activate && python3 main.py)
@@ -175,6 +180,7 @@ cd FoxUserbot-main ; source venv/bin/activate ; python3 main.py
 <a href="https://t.me/foxteam0">
 <img alt="Telegram" src="https://img.shields.io/badge/Telegram_Channel-0a0a0a?style=for-the-badge&logo=telegram">
 </a>
+
 
 
 
