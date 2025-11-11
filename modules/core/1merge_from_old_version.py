@@ -85,14 +85,17 @@ if os.path.exists("firstlaunch.temp"):
     os.remove("firstlaunch.temp")
 
 # 2.5
-if os.path.exists("__pycache__"):
-    shutil.rmtree("__pycache__")
+try:
+    if os.path.exists("__pycache__"):
+        shutil.rmtree("__pycache__")
     
-if os.path.exists("modules/plugins_1system/__pycache__"):
-    shutil.rmtree("modules/plugins_1system/__pycache__")
+    if os.path.exists("modules/plugins_1system/__pycache__"):
+        shutil.rmtree("modules/plugins_1system/__pycache__")
     
-if os.path.exists("modules/plugins_2custom/__pycache__"):
-    shutil.rmtree("modules/plugins_2custom/__pycache__")
+    if os.path.exists("modules/plugins_2custom/__pycache__"):
+        shutil.rmtree("modules/plugins_2custom/__pycache__")
+except Exception as f:
+    print(f)
 
 # 2.6
 if os.path.exists("modules/plugins_1system"):
@@ -111,6 +114,3 @@ if os.path.exists("modules/plugins_2custom"):
     shutil.rmtree("modules/plugins_2custom")
     restart_executor()
 
-# 2.7.1
-if os.path.exists("replit-main.py"):
-    os.remove("replit-main.py")
