@@ -1,6 +1,6 @@
 """Please, ignore this file."""
 
-version = "2.7.0.1 [BugFix]"
+version = "2.7.1 [BETA2"
 module_list = {}
 file_list = {}
 
