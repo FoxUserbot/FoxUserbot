@@ -13,14 +13,14 @@ LANGUAGES = {
         "connect_good": "🟠 Good",
         "connect_unstable": """<emoji id='5411225014148014586'>🔴</emoji> Unstable""", 
         "connect_bad": "⚠ Check your network connection",
-        "text_return": """<emoji id='5269563867305879894'>🏓</emoji> Pong\n<emoji id='5783105032350075795'>📶</emoji> {ping} ms\n{connect}"""
+        "text_return": """Pong {ping} ms {connect}"""
     },
     "ru": {
         "connect_stable": """<emoji id='5416081784641168838'>🟢</emoji> Стабильно""",
         "connect_good": "🟠 Терпимо",
         "connect_unstable": """<emoji id='5411225014148014586'>🔴</emoji> Нестабильно""",
         "connect_bad": "⚠ Проверьте подключение", 
-        "text_return": """<emoji id='5269563867305879894'>🏓</emoji> Понг\n<emoji id='5783105032350075795'>📶</emoji> {ping} мс\n{connect}"""
+        "text_return": """Понг {ping} мс {connect}"""
     },
 }
 
@@ -60,4 +60,5 @@ async def ping(client, message):
         )
         await message.edit(f)
                            
+
 
