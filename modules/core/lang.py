@@ -37,7 +37,7 @@ def get_lang_config():
     if lang_config_path.exists():
         config = configparser.ConfigParser()
         config.read(lang_config_path)
-        return config.get("language", "lang", fallback="en")
+        return config.get("language", "language", fallback="en")
     else:
         return "en"
 
@@ -53,7 +53,7 @@ def save_lang_config(lang: str):
     
     if not config.has_section("language"):
         config.add_section("language")
-    config.set("language", "lang", lang)
+    config.set("language", "language", lang)
     
     with open(lang_config_path, "w") as f:
         config.write(f)
