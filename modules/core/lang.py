@@ -5,11 +5,10 @@ from pathlib import Path
 
 from pyrogram import Client
 
-from command import all_lang, fox_command, fox_sudo, my_prefix, who_message
+from command import all_lang, fox_command, fox_sudo, my_prefix, who_message, set_global_lang, get_global_lang
 
 filename = os.path.basename(__file__)
 Module_Name = 'Language'
-
 
 LANGUAGES = {
     "en": {
@@ -38,7 +37,7 @@ def get_lang_config():
     if lang_config_path.exists():
         config = configparser.ConfigParser()
         config.read(lang_config_path)
-        return config.get("language", "language", fallback="en")
+        return config.get("language", "lang", fallback="en")  # исправлено на "lang"
     else:
         return "en"
 
@@ -54,7 +53,7 @@ def save_lang_config(lang: str):
     
     if not config.has_section("language"):
         config.add_section("language")
-    config.set("language", "language", lang)
+    config.set("language", "lang", lang)  # исправлено на "lang"
     
     with open(lang_config_path, "w") as f:
         config.write(f)
@@ -66,7 +65,10 @@ async def set_language(client, message):
     
     if len(message.text.split()) < 2:
         available_langs = ", ".join(all_lang) 
-        usage_text = LANGUAGES[get_lang_config()]["usage"].format(langs=available_langs, my_prefix=my_prefix())
+        usage_text = LANGUAGES[get_lang_config()]["usage"].format(
+            langs=available_langs, 
+            my_prefix=my_prefix()
+        )
         await message.edit(usage_text)
         return
     
@@ -76,7 +78,6 @@ async def set_language(client, message):
     if lang in all_lang: 
         save_lang_config(lang)
         
-        from command import set_global_lang
         if set_global_lang(lang):
             success_text = LANGUAGES.get(lang, LANGUAGES["en"])["success"].format(lang=lang.upper())
             await message.edit(success_text)
@@ -94,12 +95,10 @@ async def get_current_language(client, message):
     message = await who_message(client, message)
     
     current_lang = get_lang_config()
-    from command import get_global_lang
     global_lang = get_global_lang()
     
     text = (f"🌐 <b>Current language:</b> {current_lang.upper()}\n"
             f"🔧 <b>Global lang:</b> {global_lang}\n"
             f"💡 <b>Available:</b> {', '.join(all_lang)}")
     
-
     await message.edit(text)
