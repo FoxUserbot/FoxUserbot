@@ -11,6 +11,12 @@ from modules.core.settings.main_settings import (add_command_help,
                                                             file_list)
 
 
+#* language ===================
+all_lang = ["en", "ru", "ua"]
+default_lang = "en"
+#* ============================
+
+# prefix
 def my_prefix():
     PATH_FILE = "userdata/config.ini"
 
@@ -27,6 +33,7 @@ def my_prefix():
     return prefix
 
 
+# alias
 def load_aliases() -> dict:
     try:
         if os.path.exists("userdata/command_aliases.json"):
@@ -36,7 +43,7 @@ def load_aliases() -> dict:
         pass
     return {}
 
-
+# sudo check
 async def who_message(client, message):
     me = await client.get_me()
     if message.from_user.id == me.id:
@@ -53,6 +60,7 @@ async def who_message(client, message):
             reply_parameters=ReplyParameters(message_id=reply_id)
         )
 
+# sudo trigger
 def fox_sudo():
     sudo_file = Path("userdata/sudo_users.json")
     sudo_users_list = []
@@ -63,7 +71,6 @@ def fox_sudo():
             return i
     except:
         return filters.me
-
 
 def fox_command(
     command: Union[str, List[str]], 
@@ -91,3 +98,64 @@ def fox_command(
     file_list[module_name] = filename
     
     return filters.command(all_commands, prefixes=my_prefix())
+
+
+# language
+def get_global_lang() -> str:
+    return_lang = default_lang
+    lang_config_path = Path("userdata/language.ini")
+    
+    if lang_config_path:
+        config = configparser.ConfigParser()
+        config.read(lang_config_path)
+        try:
+            lang = config.get("language", "language", fallback="en")
+            lang = lang.lower()
+            if lang in all_lang:
+                return_lang = lang
+                return return_lang
+        except:
+            pass
+    else:
+        return return_lang
+
+
+def set_global_lang(lang: str) -> bool:
+    if lang in all_lang:
+        lang_config_path = Path("userdata/language.ini")
+        lang_config_path.parent.mkdir(exist_ok=True)
+        
+        config = configparser.ConfigParser()
+        if lang_config_path.exists():
+            config.read(lang_config_path)
+        
+        if not config.has_section("language"):
+            config.add_section("language")
+        config.set("language", "language", lang)
+        
+        with open(lang_config_path, "w") as f:
+            config.write(f)
+        
+        return True
+    return False
+
+
+def get_module_text(key: str, LANGUAGES: dict, **kwargs) -> str:
+    lang = get_global_lang()
+    text = LANGUAGES.get(lang, LANGUAGES["en"]).get(key, key)
+    
+    if kwargs:
+        text = text.format(**kwargs)
+    return text
+
+
+def get_text(module: str, key: str, LANGUAGES: dict = None, **kwargs) -> str:
+    if LANGUAGES:
+        return get_module_text(key, LANGUAGES, **kwargs)
+    return key
+
+
+def get_available_langs() -> list:
+    return all_lang
+
+_ = get_global_lang()
