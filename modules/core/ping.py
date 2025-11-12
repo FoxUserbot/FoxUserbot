@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 from time import perf_counter
 from pyrogram import Client
@@ -54,3 +55,4 @@ async def ping(client, message):
         #debug
         await message.edit(f)
                            
+
