@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import configparser
 import json
 import os
@@ -159,3 +160,4 @@ def get_available_langs() -> list:
     return all_lang
 
 _ = get_global_lang()
+
