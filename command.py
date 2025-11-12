@@ -14,7 +14,6 @@ all_lang = ["en", "ru", "ua"]
 default_lang = "en"
 #* ============================
 
-# Глобальные переменные для кеширования
 _PREFIX = None
 _GLOBAL_LANG = None
 
@@ -151,7 +150,7 @@ def set_global_lang(lang: str) -> bool:
         
         if not config.has_section("language"):
             config.add_section("language")
-        config.set("language", "lang", lang)  # исправлено на "lang"
+        config.set("language", "lang", lang)
         
         with open(lang_config_path, "w") as f:
             config.write(f)
@@ -161,9 +160,12 @@ def set_global_lang(lang: str) -> bool:
 
 
 def get_module_text(key: str, LANGUAGES: dict, **kwargs) -> str:
+    
     lang = get_global_lang()
     text = LANGUAGES.get(lang, LANGUAGES["en"]).get(key, key)
     
+    text = text.replace("\n", """
+""")
     if kwargs:
         text = text.format(**kwargs)
     return text
