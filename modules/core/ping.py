@@ -53,6 +53,10 @@ async def ping(client, message):
         await message.edit(result_text)
     except Exception as f:
         #debug
+        print(result_text)
+        await client.send_message(
+            message.chat.id, 
+            result_text, 
+        )
         await message.edit(f)
                            
-
