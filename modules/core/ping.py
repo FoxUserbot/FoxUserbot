@@ -9,23 +9,23 @@ Module_Name = 'Ping'
 
 LANGUAGES = {
     "en": {
-        "connect_stable": """<emoji id='5416081784641168838'>🟢</emoji> Stable""",
+        "connect_stable": "<emoji id='5416081784641168838'>🟢</emoji> Stable",
         "connect_good": "🟠 Good",
-        "connect_unstable": """<emoji id='5411225014148014586'>🔴</emoji> Unstable""", 
+        "connect_unstable": "<emoji id='5411225014148014586'>🔴</emoji> Unstable", 
         "connect_bad": "⚠️ Check your network connection",
-        "text_return": """<emoji id='5269563867305879894'>🏓</emoji> Pong\n<emoji id='5874986954180791957'>📶</emoji> {ping} ms\n{connect}"""
+        "text_return": "<emoji id='5269563867305879894'>🏓</emoji> Pong\n<emoji id='5874986954180791957'>📶</emoji> {ping} ms\n{connect}"
     },
     "ru": {
-        "connect_stable": """<emoji id='5416081784641168838'>🟢</emoji> Стабильно""",
+        "connect_stable": "<emoji id='5416081784641168838'>🟢</emoji> Стабильно",
         "connect_good": "🟠 Терпимо",
-        "connect_unstable": """<emoji id='5411225014148014586'>🔴</emoji> Нестабильно""",
+        "connect_unstable": "<emoji id='5411225014148014586'>🔴</emoji> Нестабильно",
         "connect_bad": "⚠️ Проверьте подключение", 
-        "text_return": """<emoji id='5269563867305879894'>🏓</emoji> Понг\n<emoji id='5874986954180791957'>📶</emoji> {ping} мс\n{connect}"""
+        "text_return": "<emoji id='5269563867305879894'>🏓</emoji> Понг\n<emoji id='5874986954180791957'>📶</emoji> {ping} мс\n{connect}"
     },
 }
 
-# "text_return": """<emoji id='5269563867305879894'>🏓</emoji> Pong \n <emoji id='5874986954180791957'>📶</emoji> {ping} ms \n {connect}"""
-# "text_return": """<emoji id='5269563867305879894'>🏓</emoji> Понг \n <emoji id='5874986954180791957'>📶</emoji> {ping} мс \n {connect}"""
+# "text_return": "<emoji id='5269563867305879894'>🏓</emoji> Pong \n <emoji id='5874986954180791957'>📶</emoji> {ping} ms \n {connect}"
+# "text_return": "<emoji id='5269563867305879894'>🏓</emoji> Понг \n <emoji id='5874986954180791957'>📶</emoji> {ping} мс \n {connect}"
 
 @Client.on_message(fox_command("ping", Module_Name, filename) & fox_sudo())
 async def ping(client, message):
@@ -62,3 +62,4 @@ async def ping(client, message):
             result_text, 
         )
         await message.edit(f)
+
