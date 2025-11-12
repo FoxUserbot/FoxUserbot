@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import configparser
 import os
 from pathlib import Path
@@ -100,4 +101,5 @@ async def get_current_language(client, message):
             f"🔧 <b>Global lang:</b> {global_lang}\n"
             f"💡 <b>Available:</b> {', '.join(all_lang)}")
     
+
     await message.edit(text)
