@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import configparser
 import html
 import os
@@ -7,7 +8,7 @@ from pathlib import Path
 from pyrogram import Client
 from telegraph import Telegraph
 
-from command import fox_command, fox_sudo, who_message
+from command import fox_command, fox_sudo, who_message, get_text, my_prefix
 from modules.core.settings.main_settings import module_list, version
 
 # Default
@@ -16,6 +17,42 @@ THEME_PATH = "userdata/theme.ini"
 CACHE_DIR = "temp"
 CACHE_CONTENT_FILE = os.path.join(CACHE_DIR, "help_content.txt")
 CACHE_LINK_FILE = os.path.join(CACHE_DIR, "help_link.txt")
+
+LANGUAGES = {
+    "en": {
+        "loading": "Loading the help menu...",
+        "commands_list": "⬆️ | List of all commands.",
+        "default_text": """
+<emoji id="5190875290439525089">🦊</emoji><b> | FoxUserbot RUNNING</b>
+<emoji id="5197288647275071607">🔒</emoji><b> | Version: </b><b>{version}</b>
+<emoji id="5193177581888755275">💼</emoji><b> | Modules: {modules_count}</b>
+<emoji id="5444856076954520455">🔒</emoji><b> | Prefix: {prefix}</b>
+<emoji id="5436113877181941026">❓</emoji><a href="{commands_link}"><b> | List of all commands. </b></a>
+"""
+    },
+    "ru": {
+        "loading": "Загрузка меню помощи...",
+        "commands_list": "⬆️ | Список всех команд.",
+        "default_text": """
+<emoji id="5190875290439525089">🦊</emoji><b> | FoxUserbot ЗАПУЩЕН</b>
+<emoji id="5197288647275071607">🔒</emoji><b> | Версия: </b><b>{version}</b>
+<emoji id="5193177581888755275">💼</emoji><b> | Модули: {modules_count}</b>
+<emoji id="5444856076954520455">🔒</emoji><b> | Префикс: {prefix}</b>
+<emoji id="5436113877181941026">❓</emoji><a href="{commands_link}"><b> | Список всех команд. </b></a>
+"""
+    },
+    "ua": {
+        "loading": "Завантаження меню допомоги...",
+        "commands_list": "⬆️ | Список усіх команд.",
+        "default_text": """
+<emoji id="5190875290439525089">🦊</emoji><b> | FoxUserbot ЗАПУЩЕНИЙ</b>
+<emoji id="5197288647275071607">🔒</emoji><b> | Версія: </b><b>{version}</b>
+<emoji id="5193177581888755275">💼</emoji><b> | Модулі: {modules_count}</b>
+<emoji id="5444856076954520455">🔒</emoji><b> | Префікс: {prefix}</b>
+<emoji id="5436113877181941026">❓</emoji><a href="{commands_link}"><b> | Список усіх команд. </b></a>
+"""
+    }
+}
 
 def get_help_image():
     if not Path(THEME_PATH).exists():
@@ -89,8 +126,6 @@ def create_html_file(content):
     return file_path
 
 def get_help_text():
-    from command import my_prefix
-    
     cached_link = get_cached_telegraph_link()
     
     lists = []
@@ -151,15 +186,14 @@ def get_help_text():
         except Exception as e:
             pass
     
-    text = f"""
-<emoji id="5190875290439525089">🦊</emoji><b> | FoxUserbot RUNNING</b>
-<emoji id="5197288647275071607">🔒</emoji><b> | Version: </b><b>{version}</b>
-<emoji id="5193177581888755275">💼</emoji><b> | Modules: {len(module_list)}</b>
-<emoji id="5444856076954520455">🔒</emoji><b> | Prefix: {my_prefix()}</b>
-<emoji id="5436113877181941026">❓</emoji><a href="{link}"><b> | List of all commands. </b></a>
-"""
+    default_text = get_text("help", "default_text", LANGUAGES=LANGUAGES)
+    text = default_text.format(
+        version=version,
+        modules_count=len(module_list),
+        prefix=my_prefix(),
+        commands_link=link
+    )
     return text, html_file_path
-
 
 @Client.on_message(fox_command("help", "Help", os.path.basename(__file__)) & fox_sudo())
 async def helps(client, message):
@@ -167,11 +201,13 @@ async def helps(client, message):
     html_file_path = None
     try:
         image_url = get_help_image()
+        loading_text = get_text("help", "loading", LANGUAGES=LANGUAGES)
+        
         if image_url.split(".")[-1].lower() in ["mp4", "mov", "avi", "mkv", "webm"]:
             da = await client.send_video(
                 message.chat.id, 
                 video=image_url, 
-                caption="Loading the help menu...", 
+                caption=loading_text, 
                 message_thread_id=message.message_thread_id
             )
 
@@ -179,14 +215,14 @@ async def helps(client, message):
             da = await client.send_animation(
                 message.chat.id, 
                 animation=image_url, 
-                caption="Loading the help menu...", 
+                caption=loading_text, 
                 message_thread_id=message.message_thread_id
             )
         else:
             da = await client.send_photo(
             message.chat.id, 
             photo=image_url, 
-            caption="Loading the help menu...", 
+            caption=loading_text, 
             message_thread_id=message.message_thread_id 
         )
         await message.delete()
@@ -194,10 +230,11 @@ async def helps(client, message):
         await client.edit_message_caption(message.chat.id, da.id, caption)
         
         if html_file_path:
+            commands_list_text = get_text("help", "commands_list", LANGUAGES=LANGUAGES)
             await client.send_document(
                 message.chat.id,
                 document=html_file_path,
-                caption="⬆️ | List of all commands.",
+                caption=commands_list_text,
                 message_thread_id=message.message_thread_id
             )
             os.remove(html_file_path)
@@ -207,7 +244,7 @@ async def helps(client, message):
             da = await client.send_photo(
                 message.chat.id, 
                 photo=DEFAULT_HELP_IMAGE, 
-                caption="Loading the help menu...", 
+                caption=loading_text, 
                 message_thread_id=message.message_thread_id
             )
             await message.delete()
@@ -215,10 +252,11 @@ async def helps(client, message):
             await client.edit_message_caption(message.chat.id, da.id, caption)
             
             if html_file_path:
+                commands_list_text = get_text("help", "commands_list", LANGUAGES=LANGUAGES)
                 await client.send_document(
                     message.chat.id,
                     document=html_file_path,
-                    caption="⬆️ | List of all commands.",
+                    caption=commands_list_text,
                     message_thread_id=message.message_thread_id
                 )
                 os.remove(html_file_path)
@@ -228,7 +266,7 @@ async def helps(client, message):
                 da = await client.send_photo(
                     message.chat.id, 
                     photo="photos/FoxUB_help.jpg", 
-                    caption="Loading the help menu...", 
+                    caption=loading_text, 
                     message_thread_id=message.message_thread_id
                 )
                 await message.delete()
@@ -236,24 +274,26 @@ async def helps(client, message):
                 await client.edit_message_caption(message.chat.id, da.id, caption)
                 
                 if html_file_path:
+                    commands_list_text = get_text("help", "commands_list", LANGUAGES=LANGUAGES)
                     await client.send_document(
                         message.chat.id,
                         document=html_file_path,
-                        caption="⬆️ | List of all commands.",
+                        caption=commands_list_text,
                         message_thread_id=message.message_thread_id
                     )
                     os.remove(html_file_path)
                     
             except:
-                await message.edit("Loading the help menu...")
+                await message.edit(loading_text)
                 caption, html_file_path = get_help_text()
                 await message.edit(caption)
                 
                 if html_file_path:
+                    commands_list_text = get_text("help", "commands_list", LANGUAGES=LANGUAGES)
                     await client.send_document(
                         message.chat.id,
                         document=html_file_path,
-                        caption="⬆️ | List of all commands.",
+                        caption=commands_list_text,
                         message_thread_id=message.message_thread_id
                     )
                     os.remove(html_file_path)
