@@ -22,12 +22,12 @@ LANGUAGES = {
         "error": "<b>префикс не может быть пустым</b>"
     },
     "ua": {
-        "success": "<emoji id='5237699328843200968'>✅</emoji> <b>префікс [ <code>{prefix}</code> ] встановлено!</b>\n<emoji id='5264727218734524899'>🔄</emoji> Перезапускаю юзербот...",
+        "success": "<emoji id='5237699328843200968'>✅</emoji> <b>префікс [ <code>{prefix}</code> ] встановлено!</b>\n<emoji id='5264727218734524899'>🔄</emoji> Перезавантажую юзербот...",
         "error": "<b>префікс не може бути порожнім</b>"
     }
 }
 
-@Client.on_message(fox_command("sp", "SetPrefix", os.path.basename(__file__), "[new prefix]") & fox_sudo())
+@Client.on_message(fox_command(["sp", "setprefix"], "SetPrefix", os.path.basename(__file__), "[new prefix]") & fox_sudo())
 async def sprefix(client, message):
     message = await who_message(client, message)
     if len(message.text.split()) > 1:
@@ -41,4 +41,5 @@ async def sprefix(client, message):
         await restart(message, restart_type="restart")
     else:
         error_text = get_text("sprefix", "error", LANGUAGES=LANGUAGES)
+
         await message.edit(error_text)
