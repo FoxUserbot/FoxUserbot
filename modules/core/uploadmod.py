@@ -30,7 +30,7 @@ async def uploadmod(client, message):
     message = await who_message(client, message)
     try:
         from command import my_prefix
-        module_name = message.text.replace(f'{await my_prefix()}uploadmod', '')
+        module_name = message.text.replace(f'{my_prefix()}uploadmod', '')
         params = module_name.split()
         module_name = params[0]
         file = file_list[module_name]
@@ -43,4 +43,5 @@ async def uploadmod(client, message):
         )
         await message.delete()
     except Exception as error:
+
         await message.edit(get_text("uploadmod", "error", LANGUAGES=LANGUAGES, error=str(error)))
