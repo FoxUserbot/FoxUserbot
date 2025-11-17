@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import configparser
 import os
 import re
@@ -6,13 +7,78 @@ from datetime import datetime
 from pathlib import Path
 from platform import python_version, release, system, uname
 
-from command import fox_command, fox_sudo, who_message
+from command import fox_command, fox_sudo, who_message, get_text
 from modules.core.uptime import bot_start_time
 from pyrogram import Client, __version__
 
 DEFAULT_INFO_IMAGE = "https://raw.githubusercontent.com/FoxUserbot/FoxUserbot/refs/heads/main/photos/FoxUB_info.jpg"
 THEME_PATH = "userdata/theme.ini"
 
+LANGUAGES = {
+    "en": {
+        "default_text": """
+<emoji id="5190875290439525089">🦊</emoji><b> | FoxUserbot INFO</b>
+<emoji id="5372878077250519677">🐍</emoji><b> | Python: {python_version}</b>
+<emoji id="5190637731503415052">🥧</emoji><b> | Kurigram: {pyrogram_version}</b>
+<emoji id="5282843764451195532">⏰</emoji><b> | Uptime: {uptime}</b>
+<emoji id="5350554349074391003">💻</emoji><b> | Platform: {hosting} | {platform}</b>
+<emoji id="5420323339723881652">🛡️</emoji><b> | Safe Mode: {safe_mode}</b>
+    
+<emoji id="5330237710655306682">💻</emoji><a href="https://t.me/foxteam0"><b> | Official FoxTeam Channel.</b></a>
+<emoji id="5346181118884331907">🐈‍⬛</emoji><a href="https://github.com/FoxUserbot/FoxUserbot"><b> | Github Repository.</b></a>
+<emoji id="5379999674193172777">🤔</emoji><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install"><b> | Installation Guide.</b></a>
+    
+<emoji id=5350554349074391003>💻</emoji> | <b>Developers:</b>
+<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/a9_fm">A9FM</a>
+<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/ArThirtyFour">ArThirtyFour</a>
+
+<emoji id="5359480394922082925">🖼</emoji> | <b>Designer:</b>
+<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/nw_off">Nw_Off</a>
+"""
+    },
+    "ru": {
+        "default_text": """
+<emoji id="5190875290439525089">🦊</emoji><b> | FoxUserbot ИНФО</b>
+<emoji id="5372878077250519677">🐍</emoji><b> | Python: {python_version}</b>
+<emoji id="5190637731503415052">🥧</emoji><b> | Kurigram: {pyrogram_version}</b>
+<emoji id="5282843764451195532">⏰</emoji><b> | Время работы: {uptime}</b>
+<emoji id="5350554349074391003">💻</emoji><b> | Платформа: {hosting} | {platform}</b>
+<emoji id="5420323339723881652">🛡️</emoji><b> | Безопасный режим: {safe_mode}</b>
+    
+<emoji id="5330237710655306682">💻</emoji><a href="https://t.me/foxteam0"><b> | Официальный канал FoxTeam.</b></a>
+<emoji id="5346181118884331907">🐈‍⬛</emoji><a href="https://github.com/FoxUserbot/FoxUserbot"><b> | Github репозиторий.</b></a>
+<emoji id="5379999674193172777">🤔</emoji><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install"><b> | Руководство по установке.</b></a>
+    
+<emoji id=5350554349074391003>💻</emoji> | <b>Разработчики:</b>
+<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/a9_fm">A9FM</a>
+<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/ArThirtyFour">ArThirtyFour</a>
+
+<emoji id="5359480394922082925">🖼</emoji> | <b>Дизайнер:</b>
+<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/nw_off">Nw_Off</a>
+"""
+    },
+    "ua": {
+        "default_text": """
+<emoji id="5190875290439525089">🦊</emoji><b> | FoxUserbot ІНФО</b>
+<emoji id="5372878077250519677">🐍</emoji><b> | Python: {python_version}</b>
+<emoji id="5190637731503415052">🥧</emoji><b> | Kurigram: {pyrogram_version}</b>
+<emoji id="5282843764451195532">⏰</emoji><b> | Час роботи: {uptime}</b>
+<emoji id="5350554349074391003">💻</emoji><b> | Платформа: {hosting} | {platform}</b>
+<emoji id="5420323339723881652">🛡️</emoji><b> | Безпечний режим: {safe_mode}</b>
+    
+<emoji id="5330237710655306682">💻</emoji><a href="https://t.me/foxteam0"><b> | Офіційний канал FoxTeam.</b></a>
+<emoji id="5346181118884331907">🐈‍⬛</emoji><a href="https://github.com/FoxUserbot/FoxUserbot"><b> | Github репозиторій.</b></a>
+<emoji id="5379999674193172777">🤔</emoji><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install"><b> | Посібник з встановлення.</b></a>
+    
+<emoji id=5350554349074391003>💻</emoji> | <b>Розробники:</b>
+<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/a9_fm">A9FM</a>
+<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/ArThirtyFour">ArThirtyFour</a>
+
+<emoji id="5359480394922082925">🖼</emoji> | <b>Дизайнер:</b>
+<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/nw_off">Nw_Off</a>
+"""
+    }
+}
 
 def linux_distro():
     # /etc/os-release 
@@ -117,7 +183,6 @@ def raspberry_pi():
     except:
         return None
 
-
 def hosting_text():
     os_name = system()
     os_release = release()
@@ -141,7 +206,6 @@ def hosting_text():
         return '<emoji id="5301137237050663843">👩‍💻</emoji> Docker'
     else:
         return '<emoji id="5807465992363710697">💎</emoji> VPS'
-
 
 def get_platform_info():
     os_name = system()
@@ -174,7 +238,6 @@ def get_platform_info():
             return f"💻 {os_name} ({os_release})"
     else:
         return f'<emoji id="5300957668762987048">🐧</emoji> {distributive} ({distro_version})'
-
 
 def format_uptime():
     uptime = datetime.now() - bot_start_time()
@@ -222,7 +285,6 @@ def replace_aliases(text, message):
 """
     return text + footer
 
-
 def get_info_image():
     if not Path(THEME_PATH).exists():
         return DEFAULT_INFO_IMAGE
@@ -233,9 +295,6 @@ def get_info_image():
         return config.get("info", "image", fallback=DEFAULT_INFO_IMAGE)
     except:
         return DEFAULT_INFO_IMAGE
-
-
-
 
 def get_info_text(message):
     uptime_text = format_uptime()
@@ -254,26 +313,15 @@ def get_info_text(message):
         except Exception as e:
             pass
     
-    return f"""
-<emoji id="5190875290439525089">🦊</emoji><b> | FoxUserbot INFO</b>
-<emoji id="5372878077250519677">🐍</emoji><b> | Python: {python_version()}</b>
-<emoji id="5190637731503415052">🥧</emoji><b> | Kurigram: {__version__}</b>
-<emoji id="5282843764451195532">⏰</emoji><b> | Uptime: {uptime_text}</b>
-<emoji id="5350554349074391003">💻</emoji><b> | Platform: {hosting} | {platform_text}</b>
-<emoji id="5420323339723881652">🛡️</emoji><b> | Safe Mode: {safe_mode}</b>
-    
-<emoji id="5330237710655306682">💻</emoji><a href="https://t.me/foxteam0"><b> | Official FoxTeam Channel.</b></a>
-<emoji id="5346181118884331907">🐈‍⬛</emoji><a href="https://github.com/FoxUserbot/FoxUserbot"><b> | Github Repository.</b></a>
-<emoji id="5379999674193172777">🤔</emoji><a href="https://github.com/FoxUserbot/FoxUserbot#how-to-install"><b> | Installation Guide.</b></a>
-    
-<emoji id=5350554349074391003>💻</emoji> | <b>Developers:</b>
-<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/a9_fm">A9FM</a>
-<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/ArThirtyFour">ArThirtyFour</a>
-
-<emoji id="5359480394922082925">🖼</emoji> | <b>Designer:</b>
-<emoji id="5330237710655306682">📞</emoji> | <a href="https://t.me/nw_off">Nw_Off</a>
-    """
-
+    default_text = get_text("info", "default_text", LANGUAGES=LANGUAGES)
+    return default_text.format(
+        python_version=python_version(),
+        pyrogram_version=__version__,
+        uptime=uptime_text,
+        hosting=hosting,
+        platform=platform_text,
+        safe_mode='Enabled' if safe_mode else 'Disabled'
+    )
 
 @Client.on_message(fox_command("info", "info", os.path.basename(__file__)) & fox_sudo())
 async def info(client, message):

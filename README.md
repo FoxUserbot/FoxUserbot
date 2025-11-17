@@ -34,9 +34,13 @@
 <p>To add your module to the bot, create a pull request in the <a href='https://github.com/FoxUserbot/CustomModules/'>custom_modules</a> repository</p>
 
 ```python3
-from pyrogram import Client, filters
-from command import fox_command, fox_sudo, who_message
+# -*- coding: utf-8 -*-
 import os
+from pyrogram import Client, filters
+from command import fox_command, fox_sudo, who_message, get_text
+
+filename = os.path.basename(__file__)
+Module_Name = 'Example'
 
 
 # If you need to install an external module via pip
@@ -67,12 +71,41 @@ import os
 #        ^^^ enter the need data
 
 
-# fox_command(command, module_name, filename=os.path.basename(__file__), "[Arguments]"
-@Client.on_message(fox_command("example_edit", 'Example', os.path.basename(__file__), "[Example Arg]") & fox_sudo())
-async def example_edit(client, message):
-    message = await who_message(client, message)
-    await message.edit("<code>This is an example module</code>")
+LANGUAGES = {
+    "en": {
+        "simple_text": "🦊 <b>This is a simple example module</b>",
+        "text_with_var": "🎯 <b>Hello {name}! Module working.</b>"
+    },
+    "ru": {
+        "simple_text": "🦊 <b>Это простой пример модуля</b>", 
+        "text_with_var": "🎯 <b>Привет {name}! Модуль работает.</b>"
+    },
+    "ua": {
+        "simple_text": "🦊 <b>Це простий приклад модуля</b>",
+        "text_with_var": "🎯 <b>Привіт {name}! Модуль працює.</b>"
+    }
+}
 
+# fox_command(command, module_name, filename=os.path.basename(__file__), "[Arguments]")
+@Client.on_message(fox_command("example", Module_Name, filename) & fox_sudo())
+async def example_simple(client, message):
+    message = await who_message(client, message)
+    
+    # Simple edit without variable
+    text = get_text("example", "simple_text", LANGUAGES=LANGUAGES)
+    await message.edit(text)
+
+@Client.on_message(fox_command("example_hello", Module_Name, filename, "[name]") & fox_sudo())
+async def example_with_var(client, message):
+    message = await who_message(client, message)
+    
+    # Get variable (if none: = user)
+    args = message.text.split()
+    name = args[1] if len(args) > 1 else "User"
+    
+    # Text with variable
+    text = get_text("example", "text_with_var", LANGUAGES=LANGUAGES, name=name)
+    await message.edit(text)
 ```
 
 <h2>How to add Hikka/Heroku modules?</h2>
@@ -180,6 +213,7 @@ cd FoxUserbot-main ; source venv/bin/activate ; python3 main.py
 <a href="https://t.me/foxteam0">
 <img alt="Telegram" src="https://img.shields.io/badge/Telegram_Channel-0a0a0a?style=for-the-badge&logo=telegram">
 </a>
+
 
 
 

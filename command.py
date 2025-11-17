@@ -7,26 +7,43 @@ from typing import List, Union
 from pyrogram import filters
 from pyrogram.types import ReplyParameters
 
-from modules.core.settings.main_settings import (add_command_help,
-                                                            file_list)
+from modules.core.settings.main_settings import add_command_help, file_list
 
+#* language ===================
+all_lang = ["en", "ru", "ua"]
+default_lang = "en"
+#* ============================
 
+_PREFIX = None
+_GLOBAL_LANG = None
+
+# prefix
 def my_prefix():
+    global _PREFIX
+    if _PREFIX is not None:
+        return _PREFIX
+        
     PATH_FILE = "userdata/config.ini"
+    Path("userdata").mkdir(exist_ok=True)
 
     config = configparser.ConfigParser()
-    config.read(PATH_FILE)
-    try:
-        prefix = config.get("prefix", "prefix")
-    except:
+    if os.path.exists(PATH_FILE):
+        config.read(PATH_FILE)
+    else:
         config.add_section("prefix")
         config.set("prefix", "prefix", "!")
         with open(PATH_FILE, "w") as config_file:
             config.write(config_file)
-        prefix = "!"
-    return prefix
+    
+    try:
+        _PREFIX = config.get("prefix", "prefix")
+    except:
+        _PREFIX = "!"
+    
+    return _PREFIX
 
 
+# alias
 def load_aliases() -> dict:
     try:
         if os.path.exists("userdata/command_aliases.json"):
@@ -36,7 +53,7 @@ def load_aliases() -> dict:
         pass
     return {}
 
-
+# sudo check
 async def who_message(client, message):
     me = await client.get_me()
     if message.from_user.id == me.id:
@@ -53,6 +70,7 @@ async def who_message(client, message):
             reply_parameters=ReplyParameters(message_id=reply_id)
         )
 
+# sudo trigger
 def fox_sudo():
     sudo_file = Path("userdata/sudo_users.json")
     sudo_users_list = []
@@ -63,7 +81,6 @@ def fox_sudo():
             return i
     except:
         return filters.me
-
 
 def fox_command(
     command: Union[str, List[str]], 
@@ -91,3 +108,76 @@ def fox_command(
     file_list[module_name] = filename
     
     return filters.command(all_commands, prefixes=my_prefix())
+
+
+# language
+def get_global_lang() -> str:
+    global _GLOBAL_LANG
+    if _GLOBAL_LANG is not None:
+        return _GLOBAL_LANG
+        
+    lang_config_path = Path("userdata/language.ini")
+    Path("userdata").mkdir(exist_ok=True)
+    
+    if lang_config_path.exists():
+        config = configparser.ConfigParser()
+        config.read(lang_config_path)
+        try:
+            lang = config.get("language", "lang", fallback=default_lang)
+            lang = lang.lower()
+            if lang in all_lang:
+                _GLOBAL_LANG = lang
+                return _GLOBAL_LANG
+        except:
+            pass
+    
+    _GLOBAL_LANG = default_lang
+    return _GLOBAL_LANG
+
+
+def set_global_lang(lang: str) -> bool:
+    global _GLOBAL_LANG
+    
+    if lang in all_lang:
+        _GLOBAL_LANG = lang
+        
+        lang_config_path = Path("userdata/language.ini")
+        lang_config_path.parent.mkdir(exist_ok=True)
+        
+        config = configparser.ConfigParser()
+        if lang_config_path.exists():
+            config.read(lang_config_path)
+        
+        if not config.has_section("language"):
+            config.add_section("language")
+        config.set("language", "lang", lang)
+        
+        with open(lang_config_path, "w") as f:
+            config.write(f)
+        
+        return True
+    return False
+
+
+def get_module_text(key: str, LANGUAGES: dict, **kwargs) -> str:
+    
+    lang = get_global_lang()
+    text = LANGUAGES.get(lang, LANGUAGES["en"]).get(key, key)
+    
+    text = text.replace("\n", """
+""")
+    if kwargs:
+        text = text.format(**kwargs)
+    return text
+
+
+def get_text(module: str, key: str, LANGUAGES: dict = None, **kwargs) -> str:
+    if LANGUAGES:
+        return get_module_text(key, LANGUAGES, **kwargs)
+    return key
+
+
+def get_available_langs() -> list:
+    return all_lang
+
+_ = get_global_lang()

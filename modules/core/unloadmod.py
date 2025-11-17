@@ -1,26 +1,50 @@
+
+# -*- coding: utf-8 -*-
 import importlib
 import os
 import sys
 
 from pyrogram import Client
 
-from command import fox_command, fox_sudo, who_message
-from modules.core.settings.main_settings import (file_list,
-                                                            module_list)
+from command import fox_command, fox_sudo, who_message, get_text
+from modules.core.settings.main_settings import file_list, module_list
+
+filename = os.path.basename(__file__)
+Module_Name = 'Unloadmod'
+
+LANGUAGES = {
+    "en": {
+        "no_module": "<emoji id='5210952531676504517'>❌</emoji> <b>Specify module name</b>",
+        "success": "<emoji id='5237699328843200968'>✅</emoji> <b>Module successfully unloaded</b>",
+        "error": "<emoji id='5210952531676504517'>❌</emoji> <b>Error while unloading</b> \n <spoiler>{error}</spoiler>"
+    },
+    "ru": {
+        "no_module": "<emoji id='5210952531676504517'>❌</emoji> <b>Укажите название модуля</b>",
+        "success": "<emoji id='5237699328843200968'>✅</emoji> <b>Модуль успешно выгружен</b>",
+        "error": "<emoji id='5210952531676504517'>❌</emoji> <b>Ошибка при выгрузке</b> \n <spoiler>{error}</spoiler>"
+    },
+    "ua": {
+        "no_module": "<emoji id='5210952531676504517'>❌</emoji> <b>Вкажіть назву модуля</b>",
+        "success": "<emoji id='5237699328843200968'>✅</emoji> <b>Модуль успішно вивантажено</b>",
+        "error": "<emoji id='5210952531676504517'>❌</emoji> <b>Помилка при вивантаженні</b> \n <spoiler>{error}</spoiler>"
+    }
+}
 
 
-@Client.on_message(fox_command("unloadmod", "Unloadmod", os.path.basename(__file__), "[module name]") & fox_sudo())
+@Client.on_message(fox_command("unloadmod", Module_Name, filename, "[module name]") & fox_sudo())
 async def unloadmod(client, message):
     message = await who_message(client, message)
     try:
         text = (message.text or "").strip()
         parts = text.split(maxsplit=1)
         if len(parts) < 2:
-            await message.edit("<emoji id='5210952531676504517'>❌</emoji> <b>Specify module name</b>")
+            await message.edit(get_text("unloadmod", "no_module", LANGUAGES=LANGUAGES))
             return
+        
         module_stem = parts[1].strip().replace('.py', '')
         module_qualname = f"modules.loaded.{module_stem}"
         _remove_module_handlers(client, module_qualname)
+        
         try:
             file = file_list.get(module_stem) or file_list.get(f"{module_stem}.py")
             if file:
@@ -32,10 +56,10 @@ async def unloadmod(client, message):
             file_list.pop(f"{module_stem}.py", None)
         except Exception:
             pass
-        await message.edit(f"<emoji id='5237699328843200968'>✅</emoji> <b>Module successfully unloaded</b>")
+        
+        await message.edit(get_text("unloadmod", "success", LANGUAGES=LANGUAGES))
     except Exception as e:
-        await message.edit(f"<emoji id='5210952531676504517'>❌</emoji> <b>Error while unloading</b> \n <spolier>{e}</spolier>")
-
+        await message.edit(get_text("unloadmod", "error", LANGUAGES=LANGUAGES, error=str(e)))
 
 
 def _iter_plugin_handlers(module):
@@ -50,6 +74,7 @@ def _remove_module_handlers(client: Client, module_qualname: str):
         mod = importlib.import_module(module_qualname)
     except Exception:
         return
+    
     for h in list(_iter_plugin_handlers(mod)):
         try:
             handler, group = h
@@ -69,6 +94,3 @@ def _load_module_handlers(client: Client, module_qualname: str):
         mod = importlib.import_module(module_qualname)
     for h in _iter_plugin_handlers(mod):
         client.add_handler(*h)
-
-
-

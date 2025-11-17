@@ -1,11 +1,50 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 from io import StringIO
 
 from pyrogram import Client
 
-from command import fox_command, fox_sudo, who_message
+from command import fox_command, fox_sudo, who_message, get_text
 
+LANGUAGES = {
+    "en": {
+        "success": """<emoji id='5300928913956938544'>👩‍💻</emoji> <b>Code:</b>
+<code>{code}</code>
+
+<emoji id='5447410659077661506'>🌐</emoji> <b>Result</b>:
+<code>{result}</code>""",
+        "error": """<emoji id='5300928913956938544'>👩‍💻</emoji> <b>Code:</b>
+<code>{code}</code>
+
+<emoji id='5447410659077661506'>🌐</emoji> <b>Result</b>:
+<code>{error_type}: {error_message}</code>"""
+    },
+    "ru": {
+        "success": """<emoji id='5300928913956938544'>👩‍💻</emoji> <b>Код:</b>
+<code>{code}</code>
+
+<emoji id='5447410659077661506'>🌐</emoji> <b>Результат</b>:
+<code>{result}</code>""",
+        "error": """<emoji id='5300928913956938544'>👩‍💻</emoji> <b>Код:</b>
+<code>{code}</code>
+
+<emoji id='5447410659077661506'>🌐</emoji> <b>Результат</b>:
+<code>{error_type}: {error_message}</code>"""
+    },
+    "ua": {
+        "success": """<emoji id='5300928913956938544'>👩‍💻</emoji> <b>Код:</b>
+<code>{code}</code>
+
+<emoji id='5447410659077661506'>🌐</emoji> <b>Результат</b>:
+<code>{result}</code>""",
+        "error": """<emoji id='5300928913956938544'>👩‍💻</emoji> <b>Код:</b>
+<code>{code}</code>
+
+<emoji id='5447410659077661506'>🌐</emoji> <b>Результат</b>:
+<code>{error_type}: {error_message}</code>"""
+    }
+}
 
 @Client.on_message(fox_command("eval", "Eval", os.path.basename(__file__), "[code/reply]") & fox_sudo())
 async def user_exec(client, message):
@@ -23,16 +62,10 @@ async def user_exec(client, message):
     result = sys.stdout = StringIO()
     try:
         exec(code)
-        await message.edit(
-            f"<emoji id='5300928913956938544'>👩‍💻</emoji> <b>Code:</b>\n"
-            f"<code>{code}</code>\n\n"
-            f"<emoji id='5447410659077661506'>🌐</emoji> <b>Result</b>:\n"
-            f"<code>{result.getvalue()}</code>"
-        )
+        result_text = get_text("eval", "success", LANGUAGES=LANGUAGES, 
+                              code=code, result=result.getvalue())
+        await message.edit(result_text)
     except Exception as e:
-        await message.edit(
-            f"<emoji id='5300928913956938544'>👩‍💻</emoji> <b>Code:</b>\n"
-            f"<code>{code}</code>\n\n"
-            f"<emoji id='5447410659077661506'>🌐</emoji> <b>Result</b>:\n"
-            f"<code>{type(e).__name__}: {str(e)}</code>"
-        )
+        error_text = get_text("eval", "error", LANGUAGES=LANGUAGES,
+                             code=code, error_type=type(e).__name__, error_message=str(e))
+        await message.edit(error_text)

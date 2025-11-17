@@ -1,26 +1,46 @@
+# -*- coding: utf-8 -*-
 import os
 
 from pyrogram import Client
 
-from command import fox_command, fox_sudo, who_message
+from command import fox_command, fox_sudo, who_message, get_text
 from modules.core.settings.main_settings import file_list
 
+filename = os.path.basename(__file__)
+Module_Name = 'Uploadmod'
 
-@Client.on_message(fox_command("uploadmod", "Uploadmod", os.path.basename(__file__), "[module name]") & fox_sudo())
+LANGUAGES = {
+    "en": {
+        "caption": "<emoji id='5283051451889756068'>🦊</emoji> Module `{module_name}`\nfor FoxUserbot <emoji id='5283051451889756068'>🦊</emoji>\n<b>You can install the module by replying [prefix]loadmod</b>",
+        "error": "<emoji id='5210952531676504517'>❌</emoji> **An error has occurred.**\nLog: {error}"
+    },
+    "ru": {
+        "caption": "<emoji id='5283051451889756068'>🦊</emoji> Модуль `{module_name}`\nдля FoxUserbot <emoji id='5283051451889756068'>🦊</emoji>\n<b>Вы можете установить модуль ответом [prefix]loadmod</b>",
+        "error": "<emoji id='5210952531676504517'>❌</emoji> **Произошла ошибка.**\nЛог: {error}"
+    },
+    "ua": {
+        "caption": "<emoji id='5283051451889756068'>🦊</emoji> Модуль `{module_name}`\nдля FoxUserbot <emoji id='5283051451889756068'>🦊</emoji>\n<b>Ви можете встановити модуль відповіддю [prefix]loadmod</b>",
+        "error": "<emoji id='5210952531676504517'>❌</emoji> **Сталася помилка.**\nЛог: {error}"
+    }
+}
+
+
+@Client.on_message(fox_command("uploadmod", Module_Name, filename, "[module name]") & fox_sudo())
 async def uploadmod(client, message):
     message = await who_message(client, message)
     try:
         from command import my_prefix
-        module_name = message.text.replace(f'{my_prefix()}uploadmod', '')
+        module_name = message.text.replace(f'{await my_prefix()}uploadmod', '')
         params = module_name.split()
         module_name = params[0]
         file = file_list[module_name]
+        
         await client.send_document(
             message.chat.id,
             f"modules/loaded/{file}",
-            caption=f"<emoji id='5283051451889756068'>🦊</emoji> Module `{module_name}`\nfor FoxUserbot <emoji id='5283051451889756068'>🦊</emoji>\n<b>You can install the module by replying [prefix]loadmod</b>",
+            caption=get_text("uploadmod", "caption", LANGUAGES=LANGUAGES, module_name=module_name),
             message_thread_id=message.message_thread_id
         )
         await message.delete()
     except Exception as error:
-        await message.edit(f"<emoji id='5210952531676504517'>❌</emoji> **An error has occurred.**\nLog: {error}")
+        await message.edit(get_text("uploadmod", "error", LANGUAGES=LANGUAGES, error=str(error)))
