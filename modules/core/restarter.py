@@ -30,7 +30,7 @@ LANGUAGES = {
     },
     "ua": {
         "updating": "<emoji id='5264727218734524899'>🔄</emoji> **Оновлення {repo_type}...**",
-        "update_success": "<emoji id='5237699328843200968'>✅</emoji> **Юзербот успішно оновлено\n<emoji id='5264727218734524899'>🔄</emoji> Перезапуск...**",
+        "update_success": "<emoji id='5237699328843200968'>✅</emoji> **Юзербот успішно оновлено\n<emoji id='5264727218734524899'>🔄</emoji> Перезавантаження...**",
         "error_occurred": "<emoji id='5210952531676504517'>❌</emoji> **Сталася помилка:**\n\n`{error}`",
         "restarting": "<emoji id='5264727218734524899'>🔄</emoji> **Перезапуск юзербота...**",
         "restart_error": "<emoji id='5210952531676504517'>❌</emoji> **Сталася помилка...**"
@@ -142,4 +142,5 @@ async def update(client, message):
 @Client.on_message(fox_command("beta", Module_Name, filename) & fox_sudo())
 async def update_beta(client, message):
     message = await who_message(client, message)
+
     await update_repository(client, message, "https://github.com/FoxUserbot/FoxUserbot-dev/archive/refs/heads/main.zip", "beta")
